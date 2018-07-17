@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="io.gripxtech.odoojsonrpcclient.UtilsKt" />
+
+        <variable
+            name="customer"
+            type="io.gripxtech.odoojsonrpcclient.customer.entities.Customer" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageSmall"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:image_small="@{UtilsKt.trimFalse(customer.imageSmall)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:name="@{UtilsKt.trimFalse(customer.name)}"
+            tools:src="@mipmap/ic_launcher_round" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{UtilsKt.trimFalse(customer.name)}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintBottom_toTopOf="@+id/email"
+            app:layout_constraintStart_toEndOf="@+id/imageSmall"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Aliasgar Vadivala" />
+
+        <TextView
+            android:id="@+id/company_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="@{UtilsKt.trimFalse(customer.companyName)}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="YourCompany" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_8dp"
+            android:paddingEnd="56dp"
+            android:paddingStart="0dp"
+            android:singleLine="true"
+            android:text="@{UtilsKt.trimFalse(customer.email)}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintStart_toEndOf="@+id/imageSmall"
+            app:layout_constraintTop_toBottomOf="@+id/name"
+            tools:text="charlie.barnard@wealthyandsons.example.com" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

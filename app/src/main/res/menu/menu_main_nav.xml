@@ -1,0 +1,55 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/nav_menu_1"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_customer"
+            android:icon="@drawable/ic_people_black_24dp"
+            android:title="@string/action_customer" />
+        <item
+            android:id="@+id/nav_supplier"
+            android:icon="@drawable/ic_local_shipping_black_24dp"
+            android:title="@string/action_supplier" />
+        <item
+            android:id="@+id/nav_company"
+            android:icon="@drawable/ic_location_city_black_24dp"
+            android:title="@string/action_company" />
+    </group>
+    <group
+        android:id="@+id/nav_menu_2"
+        android:checkableBehavior="none">
+        <item android:title="@string/action_profile">
+            <menu>
+                <item
+                    android:id="@+id/nav_profile"
+                    android:icon="@drawable/ic_person_black_24dp"
+                    android:title="@string/action_profile" />
+            </menu>
+        </item>
+    </group>
+    <group
+        android:id="@+id/nav_menu_3"
+        android:checkableBehavior="none">
+        <item android:title="@string/action_settings">
+            <menu>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_settings_black_24dp"
+                    android:title="@string/action_settings" />
+            </menu>
+        </item>
+    </group>
+    <group
+        android:id="@+id/nav_menu_4"
+        android:checkableBehavior="none"
+        android:visible="false">
+        <item
+            android:id="@+id/nav_add_account"
+            android:icon="@drawable/ic_add_box_black_24dp"
+            android:title="@string/action_add_account" />
+        <item
+            android:id="@+id/nav_manage_account"
+            android:icon="@drawable/ic_build_black_24dp"
+            android:title="@string/action_manage_account" />
+    </group>
+</menu>

@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--android:theme="@style/AppTheme.AppBarOverlay"-->
+    <!--android:background="?attr/colorPrimary"-->
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f1f1f1"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/_64sdp"
+        tools:context=".core.authenticator.LoginActivity">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_16sdp">
+
+            <!-- Banner Start -->
+
+            <Space
+                android:id="@+id/spcBannerTop"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_16sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- app:srcCompat="@drawable/ic_android_white_192dp" -->
+            <!-- android:tint="@color/android_green_dark" -->
+            <ImageView
+                android:id="@+id/ivBanner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/odoo_logo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spcBannerTop"
+                tools:ignore="ContentDescription" />
+
+            <Space
+                android:id="@+id/spcBannerBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_16sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ivBanner" />
+
+            <!-- Banner End -->
+            <!-- Server URL & Protocol Start-->
+
+            <TextView
+                android:id="@+id/lblProtocol"
+                style="@style/DisabledHintTextAppearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_protocol"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spcBannerBottom" />
+
+            <Space
+                android:id="@+id/spcProtocolTop"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_5sdp"
+                app:layout_constraintStart_toStartOf="@id/lblProtocol"
+                app:layout_constraintTop_toBottomOf="@id/lblProtocol" />
+
+            <Spinner
+                android:id="@+id/spProtocol"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/protocols"
+                app:layout_constraintStart_toStartOf="@id/lblProtocol"
+                app:layout_constraintTop_toBottomOf="@id/spcProtocolTop" />
+
+            <Space
+                android:id="@+id/spcHostTop"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_5sdp"
+                app:layout_constraintStart_toStartOf="@id/lblProtocol"
+                app:layout_constraintTop_toBottomOf="@id/spProtocol" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlHost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/lblProtocol"
+                app:layout_constraintTop_toBottomOf="@id/spcHostTop">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/etHost"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_host_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="textWebEmailAddress" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/bnCheckVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_check_odoo_version"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+                android:textColor="@color/icons"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tlHost" />
+
+            <android.support.constraint.Group
+                android:id="@+id/grpCheckVersion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="lblProtocol,spcProtocolTop,spProtocol,spcHostTop,tlHost,bnCheckVersion" />
+
+            <LinearLayout
+                android:id="@+id/llCheckingVersion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bnCheckVersion">
+
+                <ProgressBar
+                    android:id="@+id/pbCheckingVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Space
+                    android:id="@+id/spcCheckingVersion"
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/lblCheckingVersion"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/login_checking_odoo_version"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCheckVersionResult"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/_5sdp"
+                android:paddingTop="@dimen/_5sdp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llCheckingVersion">
+
+                <ImageView
+                    android:id="@+id/ivCheckVersionResultSuccess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tint="@color/android_green_dark"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_done_black_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <ImageView
+                    android:id="@+id/ivCheckVersionResultFail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tint="@color/android_red_dark"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_clear_black_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <Space
+                    android:id="@+id/spcCheckVersionResult"
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvCheckVersionResultMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="Odoo Version 10.0 is compatible" />
+
+            </LinearLayout>
+
+            <!-- Server URL & Protocol End-->
+            <!-- Login Start -->
+
+            <Space
+                android:id="@+id/spcLoginTop"
+                android:layout_width="wrap_content"
+                android:layout_height="6dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llCheckVersionResult" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/spcLoginTop"
+                app:layout_constraintTop_toBottomOf="@id/spcLoginTop">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/etLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_username_hint"
+                    android:imeOptions="actionNext"
+                    android:inputType="textWebEmailAddress"
+                    android:nextFocusDown="@+id/etPassword" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/spcLoginTop"
+                app:layout_constraintTop_toBottomOf="@id/tlLogin"
+                app:passwordToggleEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/login_password_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:id="@+id/lblDatabase"
+                style="@style/DisabledHintTextAppearance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_database_hint"
+                app:layout_constraintStart_toStartOf="@id/spcLoginTop"
+                app:layout_constraintTop_toBottomOf="@id/tlPassword" />
+
+            <Space
+                android:id="@+id/spcDatabaseTop"
+                android:layout_width="wrap_content"
+                android:layout_height="6dp"
+                app:layout_constraintStart_toStartOf="@id/spcLoginTop"
+                app:layout_constraintTop_toBottomOf="@id/lblDatabase" />
+
+            <Spinner
+                android:id="@+id/spDatabase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/databases"
+                app:layout_constraintStart_toStartOf="@id/spcLoginTop"
+                app:layout_constraintTop_toBottomOf="@id/spcDatabaseTop"
+                tools:entries="@array/dummy_databases" />
+
+            <Space
+                android:id="@+id/spcDatabaseBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="6dp"
+                app:layout_constraintStart_toStartOf="@id/spcLoginTop"
+                app:layout_constraintTop_toBottomOf="@id/spDatabase" />
+
+            <Button
+                android:id="@+id/bn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_submit"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+                android:textColor="@color/icons"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spcDatabaseBottom" />
+
+            <android.support.constraint.Group
+                android:id="@+id/groupLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:constraint_referenced_ids="spcLoginTop,tlLogin,tlPassword,lblDatabase,spcDatabaseTop,spDatabase,spcDatabaseBottom,bn" />
+
+            <LinearLayout
+                android:id="@+id/llLoginProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bn">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvLoginProgress"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/login_progress"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llLoginError"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llLoginProgress">
+
+                <ImageView
+                    android:id="@+id/ivFail1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tint="@color/android_red_dark"
+                    app:srcCompat="@drawable/ic_clear_black_24dp"
+                    tools:ignore="ContentDescription" />
+
+                <Space
+                    android:layout_width="16dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvLoginError"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    tools:text="Odoo Version 10.0 is compatible" />
+            </LinearLayout>
+
+            <!-- Login End -->
+
+            <Button
+                android:id="@+id/bnOtherAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/action_login_other_account"
+                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Colored"
+                android:textColor="@color/icons"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llLoginError" />
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+</layout>

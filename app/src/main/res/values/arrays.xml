@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="protocols">
+        <item>HTTP</item>
+        <item>HTTPS</item>
+    </string-array>
+    <string-array name="databases" />
+    <string-array name="dummy_databases">
+        <item>base_v10</item>
+        <item>crm_v10</item>
+    </string-array>
+    <array name="letter_tile_colors">
+        <item>@color/android_red</item>
+        <item>@color/android_red_dark</item>
+        <item>@color/android_green</item>
+        <item>@color/android_green_dark</item>
+        <item>@color/android_orange</item>
+        <item>@color/android_orange_dark</item>
+        <item>@color/android_violet</item>
+        <item>@color/android_violet_dark</item>
+        <item>@color/android_blue</item>
+        <item>@color/android_blue_dark</item>
+    </array>
+
+</resources>

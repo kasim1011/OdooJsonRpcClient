@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- if self_hosted_url set to true, it allows user to manually set protocol and host URL. -->
+    <!-- if false then define your protocol and host URL below. -->
+    <bool name="self_hosted_url">false</bool>
+
+    <!-- if host URL starts with http:// then set protocol to 0. -->
+    <!-- if host URL starts with https:// then set protocol value to 1.-->
+    <integer name="protocol">0</integer>
+
+    <!-- set your host_url without leading http:// or https:// -->
+    <string name="host_url" translatable="false">192.168.43.51:8069</string>
+
+    <!-- organization name -->
+    <string name="preference_organization_summary" translatable="false">Kasim Rangwala</string>
+
+    <!-- organization website -->
+    <string name="preference_organization_website" translatable="false">https://github.com/kasim1011/OdooJsonRpcClient</string>
+
+    <!-- organization privacy policy -->
+    <string name="preference_privacy_policy_url" translatable="false">https://github.com/kasim1011/OdooJsonRpcClient/blob/master/LICENSE</string>
+
+    <!-- organization email -->
+    <string name="preference_contact_summary" translatable="false">rangwalakasim@ymail.com</string>
+</resources>
