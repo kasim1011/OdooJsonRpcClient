@@ -6,9 +6,21 @@ import com.google.gson.JsonObject
 import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDb
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDbReqBody
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw.CallKw
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw.CallKwParams
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw.CallKwReqBody
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.execworkflow.ExecWorkflow
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.execworkflow.ExecWorkflowParams
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.execworkflow.ExecWorkflowReqBody
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.load.Load
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.load.LoadParams
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.load.LoadReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchRead
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadParams
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadReqBody
+import io.gripxtech.odoojsonrpcclient.core.entities.method.create.Create
+import io.gripxtech.odoojsonrpcclient.core.entities.route.Route
+import io.gripxtech.odoojsonrpcclient.core.entities.route.RouteReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.Authenticate
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateParams
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateReqBody
@@ -25,7 +37,13 @@ import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.ResponseObserver
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdb.ListDbRequest
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdbv8.ListDbV8Request
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdbv9.ListDbV9Request
+import io.gripxtech.odoojsonrpcclient.core.web.dataset.callKw.CallKwRequest
+import io.gripxtech.odoojsonrpcclient.core.web.dataset.execworkflow.ExecWorkflowRequest
+import io.gripxtech.odoojsonrpcclient.core.web.dataset.load.LoadRequest
 import io.gripxtech.odoojsonrpcclient.core.web.dataset.searchread.SearchReadRequest
+import io.gripxtech.odoojsonrpcclient.core.web.route.Route3PathRequest
+import io.gripxtech.odoojsonrpcclient.core.web.route.Route4PathRequest
+import io.gripxtech.odoojsonrpcclient.core.web.route.RouteRequest
 import io.gripxtech.odoojsonrpcclient.core.web.session.authenticate.AuthenticateRequest
 import io.gripxtech.odoojsonrpcclient.core.web.session.check.CheckRequest
 import io.gripxtech.odoojsonrpcclient.core.web.session.destroy.DestroyRequest
@@ -38,7 +56,6 @@ import okhttp3.Cookie
 
 object Odoo {
 
-    const val TAG = "Odoo"
     lateinit var app: App
 
     var protocol: Retrofit2Helper.Companion.Protocol = Retrofit2Helper.Companion.Protocol.HTTP
@@ -198,4 +215,110 @@ object Odoo {
                 .subscribe(ResponseObserver<SearchRead>().apply(callback))
     }
 
+    fun load(
+            id: Int,
+            model: String,
+            fields: List<String> = listOf(),
+            context: JsonObject = user.context,
+            callback: ResponseObserver<Load>.() -> Unit
+    ) {
+        val request = retrofit.create(LoadRequest::class.java)
+        val requestBody = LoadReqBody(id = jsonRpcId, params = LoadParams(
+                id, model, fields, context
+        ))
+        val observable = request.load(requestBody)
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<Load>().apply(callback))
+    }
+
+    fun callKw(
+            model: String,
+            method: String,
+            args: List<Any>,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
+            callback: ResponseObserver<CallKw>.() -> Unit
+    ) {
+        val request = retrofit.create(CallKwRequest::class.java)
+        val requestBody = CallKwReqBody(id = jsonRpcId, params = CallKwParams(
+                model, method, args, kwArgs, context
+        ))
+        val observable = request.callKw(requestBody)
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<CallKw>().apply(callback))
+    }
+
+    fun execWorkflow(
+            model: String,
+            id: Int,
+            signal: String,
+            context: JsonObject = user.context,
+            callback: ResponseObserver<ExecWorkflow>.() -> Unit
+    ) {
+        val request = retrofit.create(ExecWorkflowRequest::class.java)
+        val requestBody = ExecWorkflowReqBody(id = jsonRpcId, params = ExecWorkflowParams(
+                model, id, signal, context
+        ))
+        val observable = request.execWorkflow(requestBody)
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<ExecWorkflow>().apply(callback))
+    }
+
+    fun route(
+            path1: String,
+            path2: String,
+            args: Map<String, Any>,
+            callback: ResponseObserver<Route>.() -> Unit
+    ) {
+        val request = retrofit.create(RouteRequest::class.java)
+        val requestBody = RouteReqBody(id = jsonRpcId, params = args)
+        val observable = request.route(path1, path2, requestBody)
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<Route>().apply(callback))
+    }
+
+    fun route3Path(
+            path1: String,
+            path2: String,
+            path3: String,
+            args: Map<String, Any>,
+            callback: ResponseObserver<Route>.() -> Unit
+    ) {
+        val request = retrofit.create(Route3PathRequest::class.java)
+        val requestBody = RouteReqBody(id = jsonRpcId, params = args)
+        val observable = request.route(path1, path2, path3, requestBody)
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<Route>().apply(callback))
+    }
+
+    fun route4Path(
+            path1: String,
+            path2: String,
+            path3: String,
+            path4: String,
+            args: Map<String, Any>,
+            callback: ResponseObserver<Route>.() -> Unit
+    ) {
+        val request = retrofit.create(Route4PathRequest::class.java)
+        val requestBody = RouteReqBody(id = jsonRpcId, params = args)
+        val observable = request.route(path1, path2, path3, path4, requestBody)
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<Route>().apply(callback))
+    }
+
+    fun create(
+            model: String,
+            keyValues: Map<String, Any>,
+            callback: ResponseObserver<Create>.() -> Unit
+    ) {
+        callKw(model, "create", listOf(keyValues)) {
+
+        }
+    }
 }
