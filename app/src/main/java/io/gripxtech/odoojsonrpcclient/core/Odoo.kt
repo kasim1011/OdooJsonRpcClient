@@ -2,13 +2,14 @@ package io.gripxtech.odoojsonrpcclient.core
 
 import android.accounts.Account
 import android.accounts.AccountManager
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDb
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDbReqBody
-import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw.CallKw
-import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw.CallKwParams
-import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw.CallKwReqBody
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callkw.CallKw
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callkw.CallKwParams
+import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callkw.CallKwReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.execworkflow.ExecWorkflow
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.execworkflow.ExecWorkflowParams
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.execworkflow.ExecWorkflowReqBody
@@ -19,6 +20,12 @@ import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchRea
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadParams
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.method.create.Create
+import io.gripxtech.odoojsonrpcclient.core.entities.method.nameget.NameGet
+import io.gripxtech.odoojsonrpcclient.core.entities.method.namesearch.NameSearch
+import io.gripxtech.odoojsonrpcclient.core.entities.method.read.Read
+import io.gripxtech.odoojsonrpcclient.core.entities.method.searchcount.SearchCount
+import io.gripxtech.odoojsonrpcclient.core.entities.method.unlink.Unlink
+import io.gripxtech.odoojsonrpcclient.core.entities.method.write.Write
 import io.gripxtech.odoojsonrpcclient.core.entities.route.Route
 import io.gripxtech.odoojsonrpcclient.core.entities.route.RouteReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.Authenticate
@@ -37,7 +44,7 @@ import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.ResponseObserver
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdb.ListDbRequest
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdbv8.ListDbV8Request
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdbv9.ListDbV9Request
-import io.gripxtech.odoojsonrpcclient.core.web.dataset.callKw.CallKwRequest
+import io.gripxtech.odoojsonrpcclient.core.web.dataset.callkw.CallKwRequest
 import io.gripxtech.odoojsonrpcclient.core.web.dataset.execworkflow.ExecWorkflowRequest
 import io.gripxtech.odoojsonrpcclient.core.web.dataset.load.LoadRequest
 import io.gripxtech.odoojsonrpcclient.core.web.dataset.searchread.SearchReadRequest
@@ -53,6 +60,7 @@ import io.gripxtech.odoojsonrpcclient.toJsonObject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Cookie
+import retrofit2.Response
 
 object Odoo {
 
@@ -317,8 +325,268 @@ object Odoo {
             keyValues: Map<String, Any>,
             callback: ResponseObserver<Create>.() -> Unit
     ) {
+        val callbackEx = ResponseObserver<Create>()
+        callbackEx.callback()
         callKw(model, "create", listOf(keyValues)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
 
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<Create>(Create(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asLong
+                                    else
+                                        0L
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<Create>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
         }
+    }
+
+    fun read(
+            model: String,
+            id: Int,
+            fields: List<String>,
+            callback: ResponseObserver<Read>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<Read>()
+        callbackEx.callback()
+        callKw(model, "read", listOf(id, fields)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<Read>(Read(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result
+                                    else
+                                        JsonArray()
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<Read>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun write(
+            model: String,
+            ids: List<Int>,
+            keyValues: Map<String, Any>,
+            callback: ResponseObserver<Write>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<Write>()
+        callbackEx.callback()
+        callKw(model, "write", listOf(ids, keyValues)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<Write>(Write(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asBoolean
+                                    else
+                                        false
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<Write>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun unlink(
+            model: String,
+            ids: List<Int>,
+            callback: ResponseObserver<Unlink>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<Unlink>()
+        callbackEx.callback()
+        callKw(model, "unlink", listOf(ids)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<Unlink>(Unlink(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asBoolean
+                                    else
+                                        false
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<Unlink>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun nameGet(
+            model: String,
+            ids: List<Int>,
+            callback: ResponseObserver<NameGet>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<NameGet>()
+        callbackEx.callback()
+        callKw(model, "name_get", listOf(ids)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<NameGet>(NameGet(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asJsonArray
+                                    else
+                                        JsonArray()
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<NameGet>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun nameSearch(
+            model: String,
+            name: String = "",
+            args: List<Any> = listOf(),
+            operator: String = "ilike",
+            limit: Int = 0,
+            callback: ResponseObserver<NameSearch>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<NameSearch>()
+        callbackEx.callback()
+        callKw(model, "name_search", listOf(), mapOf(
+                "name" to name,
+                "args" to args,
+                "operator" to operator,
+                "limit" to limit
+        )) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<NameSearch>(NameSearch(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asJsonArray
+                                    else
+                                        JsonArray()
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<NameSearch>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun searchCount(
+            model: String,
+            args: List<Any> = listOf(),
+            callback: ResponseObserver<SearchCount>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<SearchCount>()
+        callbackEx.callback()
+        callKw(model, "search_count", listOf(args)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<SearchCount>(SearchCount(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asInt
+                                    else
+                                        0
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<SearchCount>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun fieldsGet(
+            model: String,
+            fields: List<String> = listOf(),
+            callback: ResponseObserver<SearchRead>.() -> Unit
+    ) {
+        searchRead("ir.model.fields", fields, listOf(listOf("model_id", "=", model)), callback = callback)
+    }
+
+    fun modulesGet(
+            fields: List<String> = listOf(),
+            callback: ResponseObserver<SearchRead>.() -> Unit
+    ) {
+        searchRead("ir.model.module", fields, callback = callback)
     }
 }

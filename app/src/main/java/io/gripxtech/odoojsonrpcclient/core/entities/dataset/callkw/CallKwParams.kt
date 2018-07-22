@@ -1,4 +1,4 @@
-package io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw
+package io.gripxtech.odoojsonrpcclient.core.entities.dataset.callkw
 
 import com.google.gson.JsonObject
 import com.google.gson.annotations.Expose

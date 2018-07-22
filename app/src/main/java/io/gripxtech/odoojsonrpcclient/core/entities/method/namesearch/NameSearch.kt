@@ -1,21 +1,19 @@
-package io.gripxtech.odoojsonrpcclient.core.entities.dataset.callKw
+package io.gripxtech.odoojsonrpcclient.core.entities.method.namesearch
 
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
+import com.google.gson.JsonArray
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.gripxtech.odoojsonrpcclient.core.entities.odooError.OdooError
 
-data class CallKw(
+data class NameSearch(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: JsonElement = JsonObject(),
+        val result: JsonArray = JsonArray(),
 
         @field:Expose
         @field:SerializedName("error")
         val odooError: OdooError = OdooError()
-
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()
