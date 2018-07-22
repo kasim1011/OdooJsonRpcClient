@@ -1,0 +1,504 @@
+{
+	"info": {
+		"_postman_id": "2051bda3-e957-fd7c-66a5-ecb62129598b",
+		"name": "OdooJsonRpc",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"login\": \"admin\",\n    \"password\": \"admin\",\n    \"db\": \"db_v11\",\n    \"context\": {}\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/session/authenticate",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"session",
+						"authenticate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Server Version",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {}\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/webclient/version_info",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"webclient",
+						"version_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Database List",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {}\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/database/list",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"database",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Read",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"fields\":[\"id\",\"name\",\"email\",\"company_name\",\"image_small\",\"website\",\"phone\",\"mobile\",\"state_id\",\"country_id\",\"comment\",\"is_company\"],\n    \"domain\": [[\"customer\",\"=\",true]],\n    \"offset\": 10,\n    \"limit\": 10,\n    \"sort\": \"name ASC\",\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/search_read",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"search_read"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Session Info",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {}\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/session/get_session_info",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"session",
+						"get_session_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"context\": {}\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/session/check",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"session",
+						"check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Load",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"id\": 5,\n    \"fields\": [],\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/load",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"load"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Call Kw",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"create\",\n    \"args\": [\n        {\"name\": \"Kasim Rangwala\", \"email\": \"rangwalakasim@live.in\"}\n      ],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"create\",\n    \"args\": [\n        {\"name\": \"Kasim Rangwala\", \"email\": \"rangwalakasim@live.in\"}\n      ],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Read",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"read\",\n    \"args\": [40, [\"id\", \"name\", \"email\"]],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Name Search",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"name_search\",\n    \"args\": [],\n    \"kwargs\": {\"name\": \"\", \"args\": [], \"operator\": \"ilike\", \"limit\": 0},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Name Get",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"name_get\",\n    \"args\": [[1, 3]],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search Count",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"search_count\",\n    \"args\": [[[\"name\", \"ilike\", \"kasim rangwala\"]]],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Unlink",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"unlink\",\n    \"args\": [[47, 48]],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Write",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"write\",\n    \"args\": [[45, 46], {\"name\": \"Kasim3 Rangwala1\", \"email\": \"rangwalakasim@live.in\"}],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/dataset/call_kw",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"dataset",
+						"call_kw"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Destroy",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"context\": {}\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/session/destroy",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"session",
+						"destroy"
+					]
+				},
+				"description": "Destroys current session."
+			},
+			"response": []
+		},
+		{
+			"name": "Modules",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"context\": {}\n  }\n}"
+				},
+				"url": {
+					"raw": "localhost:8069/web/session/modules",
+					"host": [
+						"localhost"
+					],
+					"port": "8069",
+					"path": [
+						"web",
+						"session",
+						"modules"
+					]
+				},
+				"description": "Destroys current session."
+			},
+			"response": []
+		}
+	]
+}
