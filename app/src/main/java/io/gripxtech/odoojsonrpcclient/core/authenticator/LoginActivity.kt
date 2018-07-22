@@ -232,7 +232,7 @@ class LoginActivity : AppCompatActivity() {
             binding.ivCheckVersionResultSuccess.visibility = View.GONE
             binding.ivCheckVersionResultFail.visibility = View.GONE
         }
-        changeDbSpinnerVisibility(View.VISIBLE)
+        // changeDbSpinnerVisibility(View.GONE)
         binding.spDatabase.adapter.run {
             when (this) {
                 is ArrayAdapter<*> -> {

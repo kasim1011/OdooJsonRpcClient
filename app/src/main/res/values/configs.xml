@@ -2,7 +2,7 @@
 <resources>
     <!-- if self_hosted_url set to true, it allows user to manually set protocol and host URL. -->
     <!-- if false then define your protocol and host URL below. -->
-    <bool name="self_hosted_url">false</bool>
+    <bool name="self_hosted_url">true</bool>
 
     <!-- if host URL starts with http:// then set protocol to 0. -->
     <!-- if host URL starts with https:// then set protocol value to 1.-->
