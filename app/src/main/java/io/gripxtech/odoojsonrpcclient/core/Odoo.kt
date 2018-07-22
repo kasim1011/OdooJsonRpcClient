@@ -5,6 +5,7 @@ import android.accounts.AccountManager
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import io.gripxtech.odoojsonrpcclient.App
+import io.gripxtech.odoojsonrpcclient.R
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDb
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDbReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callkw.CallKw
@@ -120,7 +121,7 @@ object Odoo {
             return field
         }
 
-    val supportedOdooVersions = listOf("10.", "11.")
+    val supportedOdooVersions: Array<String> by lazy { app.resources.getStringArray(R.array.supported_odoo_versions) }
 
     fun versionInfo(callback: ResponseObserver<VersionInfo>.() -> Unit) {
         val request = retrofit.create(VersionInfoRequest::class.java)
