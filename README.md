@@ -7,7 +7,83 @@ This project is developed against **Odoo 10.0 Community Edition** and it's compa
 
 Configure Odoo host address, Project website, Privacy policy and Contact email from [configs.xml](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/app/src/main/res/values/configs.xml)
 
-Get the Odoo Json-rpc request [Postman Collection v2.1](https://raw.githubusercontent.com/kasim1011/OdooJsonRpcClient/master/OdooJsonRpc.postman_collection.json)
+Get the Odoo Json-rpc request collection for [Postman](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/OdooJsonRpc.postman_collection.json)
+
+How to use
+=======
+
+Odoo specific methods can be access using [singleton object](https://kotlinlang.org/docs/reference/object-declarations.html#object-declarations) `Odoo`.
+Login Account related functionality can be access using `AppcompatActivity`'s Extension methods.
+Authentication as well as Sessions are managed inside application's `core` module. You should not use any session related methods anywhere in application, It may lead to unexpected behaviour of application.
+
+Odoo specific methods are following:
+
+**SearchRead**
+```kotlin
+Odoo.searchRead(model = "res.partner", fields = listOf(
+        "id", "name", "email", "company_name"
+), domain = listOf(listOf("customer", "=", true)), offset = 0, limit = 4, sort = "name ASC") {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val searchRead = response.body()!!
+            if (searchRead.isSuccessful) {
+                val result = searchRead.result
+                // use gson to convert records (jsonArray) to list of pojo
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("searchRead failed with ${searchRead.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**result:**
+```json
+{
+  "result": {
+    "length": 25,
+    "records": [
+      {
+        "id": 9,
+        "name": "Agrolait",
+        "email": "agrolait@yourcompany.example.com",
+        "company_name": false
+      },
+      {
+        "id": 31,
+        "name": "Ayaan Agarwal",
+        "email": "ayaan.agarwal@bestdesigners.example.com",
+        "company_name": false
+      },
+      {
+        "id": 37,
+        "name": "Benjamin Flores",
+        "email": "benjamin.flores@nebula.example.com",
+        "company_name": false
+      },
+      {
+        "id": 13,
+        "name": "Camptocamp",
+        "email": "camptocamp@yourcompany.example.com",
+        "company_name": false
+      }
+    ]
+  }
+}
+```
 
 License
 =======
