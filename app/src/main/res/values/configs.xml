@@ -11,6 +11,8 @@
     <!-- set your host_url without leading http:// or https:// -->
     <string name="host_url" translatable="false">192.168.43.51:8069</string>
 
+    <!-- Compatible Odoo versions -->
+    <!-- Any other Odoo versions which are not in the array are considered as incompatible versions. -->
     <string-array name="supported_odoo_versions">
         <item>10</item>
         <item>11</item>
