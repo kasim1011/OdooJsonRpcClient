@@ -18,7 +18,8 @@ Login Account related functionality can be access using `AppcompatActivity`'s [E
 
 Odoo specific methods are following:
 
-###SearchRead
+SearchRead
+==========
 **Request**
 ```kotlin
 Odoo.searchRead(model = "res.partner", fields = listOf(
@@ -86,7 +87,8 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
 }
 ```
 
-###Load
+Load
+==========
 **Request**
 ```kotlin
 Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
@@ -141,9 +143,6 @@ Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
         
       ],
       "website": "http://www.example.com",
-      // ...
-      // ...
-      // ...
       "opportunity_count": 0,
       "meeting_count": 0,
       "__last_update": "2018-07-23 18:10:57"
@@ -152,7 +151,8 @@ Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
 }
 ```
 
-###callKw
+CallKw
+==========
 **Request**
 ```kotlin
 Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group_user")) {
@@ -190,7 +190,8 @@ Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group
 }
 ```
 
-###create
+Create
+==========
 **Request**
 ```kotlin
 Odoo.create(model = "res.partner", keyValues = mapOf(
