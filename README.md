@@ -18,8 +18,8 @@ Login Account related functionality can be access using `AppcompatActivity`'s [E
 
 Odoo specific methods are following:
 
-**SearchRead**
->Request
+###SearchRead
+**Request**
 ```kotlin
 Odoo.searchRead(model = "res.partner", fields = listOf(
         "id", "name", "email", "company_name"
@@ -51,7 +51,7 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
     onComplete { }
 }
 ```
->Result
+**Result**
 ```json
 {
   "result": {
@@ -86,8 +86,8 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
 }
 ```
 
-**Load**
->Request
+###Load
+**Request**
 ```kotlin
 Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
     onSubscribe { disposable ->
@@ -117,7 +117,7 @@ Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
     onComplete { }
 }
 ```
->Result
+**Result**
 ```json
 {
   "result": {
@@ -152,8 +152,8 @@ Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
 }
 ```
 
-**callKw**
->Request
+###callKw
+**Request**
 ```kotlin
 Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group_user")) {
     onSubscribe { disposable ->
@@ -183,15 +183,15 @@ Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group
     onComplete { }
 }
 ```
->Result
+**Result**
 ```json
 {
   "result": true
 }
 ```
 
-**create**
->Request
+###create
+**Request**
 ```kotlin
 Odoo.create(model = "res.partner", keyValues = mapOf(
         "name" to "Kasim Rangwala", "email" to "rangwalakasim@live.in"
@@ -223,7 +223,7 @@ Odoo.create(model = "res.partner", keyValues = mapOf(
     onComplete { }
 }
 ```
->Result
+**Result**
 ```json
 {
   "result": 45
