@@ -13,12 +13,13 @@ How to use
 =======
 
 Odoo specific methods can be access using [singleton object](https://kotlinlang.org/docs/reference/object-declarations.html#object-declarations) `Odoo`.
-Login Account related functionality can be access using `AppcompatActivity`'s Extension methods.
-Authentication as well as Sessions are managed inside application's `core` module. You should not use any session related methods anywhere in application, It may lead to unexpected behaviour of application.
+Login Account related functionality can be access using `AppcompatActivity`'s [Extension functions](https://kotlinlang.org/docs/reference/extensions.html#extension-functions).
+`Authentication` as well as `Sessions` are managed inside application's `core` module. You should not use any `session` related methods anywhere in application, It may lead to unexpected behaviour of application.
 
 Odoo specific methods are following:
 
 **SearchRead**
+>Request
 ```kotlin
 Odoo.searchRead(model = "res.partner", fields = listOf(
         "id", "name", "email", "company_name"
@@ -50,7 +51,7 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
     onComplete { }
 }
 ```
-**result:**
+>Result
 ```json
 {
   "result": {
@@ -85,6 +86,149 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
 }
 ```
 
+**Load**
+>Request
+```kotlin
+Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val load = response.body()!!
+            if (load.isSuccessful) {
+                val result = load.result
+                // use gson to convert records (jsonArray) to list of pojo
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("load failed with ${load.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+>Result
+```json
+{
+  "result": {
+    "value": {
+      "id": 1,
+      "name": "YourCompany",
+      "display_name": "YourCompany",
+      "date": false,
+      "title": false,
+      "parent_id": false,
+      "child_ids": [
+        42,
+        43
+      ],
+      "ref": false,
+      "lang": "en_US",
+      "tz": false,
+      "user_id": false,
+      "vat": false,
+      "bank_ids": [
+        
+      ],
+      "website": "http://www.example.com",
+      // ...
+      // ...
+      // ...
+      "opportunity_count": 0,
+      "meeting_count": 0,
+      "__last_update": "2018-07-23 18:10:57"
+    }
+  }
+}
+```
+
+**callKw**
+>Request
+```kotlin
+Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group_user")) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val callKw = response.body()!!
+            if (callKw.isSuccessful) {
+                val result = callKw.result
+                // use gson to convert records (jsonArray) to list of pojo
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("callkw failed with ${callKw.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+>Result
+```json
+{
+  "result": true
+}
+```
+
+**create**
+>Request
+```kotlin
+Odoo.create(model = "res.partner", keyValues = mapOf(
+        "name" to "Kasim Rangwala", "email" to "rangwalakasim@live.in"
+)) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val create = response.body()!!
+            if (create.isSuccessful) {
+                val result = create.result
+                // use gson to convert records (jsonArray) to list of pojo
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("create failed with ${create.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+>Result
+```json
+{
+  "result": 45
+}
+```
 License
 =======
     MIT License
