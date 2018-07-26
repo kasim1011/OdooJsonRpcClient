@@ -38,7 +38,7 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("searchRead failed with ${searchRead.errorMessage}")
+                Timber.w("searchRead() failed with ${searchRead.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -101,11 +101,10 @@ Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
             val load = response.body()!!
             if (load.isSuccessful) {
                 val result = load.result
-                // use gson to convert records (jsonArray) to list of pojo
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("load failed with ${load.errorMessage}")
+                Timber.w("load() failed with ${load.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -165,11 +164,10 @@ Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group
             val callKw = response.body()!!
             if (callKw.isSuccessful) {
                 val result = callKw.result
-                // use gson to convert records (jsonArray) to list of pojo
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("callkw failed with ${callKw.errorMessage}")
+                Timber.w("callkw() failed with ${callKw.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -206,11 +204,10 @@ Odoo.create(model = "res.partner", keyValues = mapOf(
             val create = response.body()!!
             if (create.isSuccessful) {
                 val result = create.result
-                // use gson to convert records (jsonArray) to list of pojo
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("create failed with ${create.errorMessage}")
+                Timber.w("create() failed with ${create.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -230,6 +227,341 @@ Odoo.create(model = "res.partner", keyValues = mapOf(
   "result": 45
 }
 ```
+
+Read
+=======
+**Request**
+```kotlin
+Odoo.read(model = "res.partner", id = 13, fields = listOf("id", "name", "email")) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val read = response.body()!!
+            if (read.isSuccessful) {
+                val result = read.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("read() failed with ${read.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": [
+    {
+      "id": 13,
+      "name": "Camptocamp",
+      "email": "camptocamp@yourcompany.example.com"
+    }
+  ]
+}
+```
+
+NameSearch
+==========
+**Request**
+```kotlin
+Odoo.nameSearch(model = "res.partner", name = "Delta PC", args = listOf(), operator = "ilike", limit = 0) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val nameSearch = response.body()!!
+            if (nameSearch.isSuccessful) {
+                val result = nameSearch.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("nameSearch() failed with ${nameSearch.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": [
+    [
+      11,
+      "Delta PC"
+    ],
+    [
+      28,
+      "Delta PC, Charlie Bernard"
+    ],
+    [
+      29,
+      "Delta PC, Jessica Dupont"
+    ],
+    [
+      41,
+      "Delta PC, Kevin Clarke"
+    ],
+    [
+      40,
+      "Delta PC, Morgan Rose"
+    ],
+    [
+      17,
+      "Delta PC, Richard Ellis"
+    ],
+    [
+      35,
+      "Delta PC, Robert Anderson"
+    ],
+    [
+      39,
+      "Delta PC, Robin Smith"
+    ]
+  ]
+}
+```
+
+NameGet
+=======
+**Request**
+```kotlin
+Odoo.nameGet(model = "res.partner", ids = listOf(1, 3)) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val nameGet = response.body()!!
+            if (nameGet.isSuccessful) {
+                val result = nameGet.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("nameGet() failed with ${nameGet.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": [
+    [
+      1,
+      "YourCompany"
+    ],
+    [
+      3,
+      "YourCompany, Administrator"
+    ]
+  ]
+}
+```
+
+SearchCount
+===========
+**Request**
+```kotlin
+Odoo.searchCount(model = "res.partner", args = listOf(listOf("name", "ilike", "kasim rangwala"))) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val searchCount = response.body()!!
+            if (searchCount.isSuccessful) {
+                val result = searchCount.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("searchCount() failed with ${searchCount.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": 2
+}
+```
+
+Unlink
+=======
+**Request**
+```kotlin
+Odoo.unlink(model = "res.partner", ids = listOf(47, 48)) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val unlink = response.body()!!
+            if (unlink.isSuccessful) {
+                val result = unlink.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("unlink() failed with ${unlink.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": true
+}
+```
+
+Write
+=======
+**Request**
+```kotlin
+Odoo.write(model = "res.partner", ids = listOf(45, 46),
+        keyValues = mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val write = response.body()!!
+            if (write.isSuccessful) {
+                val result = write.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("write() failed with ${write.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": true
+}
+```
+
+Modules
+=======
+**Request**
+```kotlin
+Odoo.modules {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val modules = response.body()!!
+            if (modules.isSuccessful) {
+                val result = modules.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("modules() failed with ${modules.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": [
+    "base",
+    "web",
+    "bus",
+    "web_tour",
+    "mail",
+    "sales_team",
+    "calendar",
+    "web_planner",
+    "contacts",
+    "crm",
+    "auth_signup",
+    "base_import",
+    "iap",
+    "sms",
+    "web_diagram",
+    "web_editor",
+    "web_kanban_gauge",
+    "web_settings_dashboard"
+  ]
+}
+```
+
 License
 =======
     MIT License
