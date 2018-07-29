@@ -562,6 +562,91 @@ Odoo.modules {
 }
 ```
 
+GetSessionInfo
+==============
+**Request**
+```kotlin
+Odoo.getSessionInfo {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val getSessionInfo = response.body()!!
+            if (getSessionInfo.isSuccessful) {
+                val result = getSessionInfo.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("getSessionInfo() failed with ${getSessionInfo.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": {
+    "username": "admin",
+    "currencies": {
+      "1": {
+        "digits": [
+          69,
+          2
+        ],
+        "position": "after",
+        "symbol": "€"
+      },
+      "3": {
+        "digits": [
+          69,
+          2
+        ],
+        "position": "before",
+        "symbol": "$"
+      }
+    },
+    "uid": 1,
+    "db": "db_v10",
+    "is_admin": true,
+    "server_version_info": [
+      10,
+      0,
+      0,
+      "final",
+      0,
+      ""
+    ],
+    "server_version": "10.0",
+    "user_context": {
+      "lang": "en_US",
+      "tz": "Europe/Brussels",
+      "uid": 1
+    },
+    "web.base.url": "http://192.168.43.51:8069",
+    "name": "Administrator",
+    "partner_id": 3,
+    "web_tours": [
+      
+    ],
+    "company_id": 1,
+    "session_id": "080c1e6adc00e1f2229c6312224e33c522bc6f22",
+    "is_superuser": true,
+    "user_companies": false
+  }
+}
+```
+
 License
 =======
     MIT License

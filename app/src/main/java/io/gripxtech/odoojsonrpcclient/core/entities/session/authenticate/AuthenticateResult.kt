@@ -2,6 +2,7 @@ package io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate
 
 import android.os.Bundle
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
@@ -43,7 +44,7 @@ data class AuthenticateResult(
 
         @Expose
         @SerializedName("user_companies")
-        val userCompanies: Boolean = false,
+        val userCompanies: JsonElement = JsonObject(),
 
         @Expose
         @SerializedName("name")

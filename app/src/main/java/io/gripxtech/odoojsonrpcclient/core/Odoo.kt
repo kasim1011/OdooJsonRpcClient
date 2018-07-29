@@ -36,6 +36,8 @@ import io.gripxtech.odoojsonrpcclient.core.entities.session.check.Check
 import io.gripxtech.odoojsonrpcclient.core.entities.session.check.CheckReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.session.destroy.Destroy
 import io.gripxtech.odoojsonrpcclient.core.entities.session.destroy.DestroyReqBody
+import io.gripxtech.odoojsonrpcclient.core.entities.session.info.GetSessionInfo
+import io.gripxtech.odoojsonrpcclient.core.entities.session.info.GetSessionInfoReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.session.modules.Modules
 import io.gripxtech.odoojsonrpcclient.core.entities.session.modules.ModulesReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.webclient.versionInfo.VersionInfo
@@ -55,6 +57,7 @@ import io.gripxtech.odoojsonrpcclient.core.web.route.RouteRequest
 import io.gripxtech.odoojsonrpcclient.core.web.session.authenticate.AuthenticateRequest
 import io.gripxtech.odoojsonrpcclient.core.web.session.check.CheckRequest
 import io.gripxtech.odoojsonrpcclient.core.web.session.destroy.DestroyRequest
+import io.gripxtech.odoojsonrpcclient.core.web.session.info.GetSessionInfoRequest
 import io.gripxtech.odoojsonrpcclient.core.web.session.modules.ModulesRequest
 import io.gripxtech.odoojsonrpcclient.core.web.webclient.versionInfo.VersionInfoRequest
 import io.gripxtech.odoojsonrpcclient.toJsonObject
@@ -202,6 +205,15 @@ object Odoo {
         observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ResponseObserver<Modules>().apply(callback))
+    }
+
+    fun getSessionInfo(callback: ResponseObserver<GetSessionInfo>.() -> Unit) {
+        val request = retrofit.create(GetSessionInfoRequest::class.java)
+        val requestBody = GetSessionInfoReqBody(id = jsonRpcId)
+        val observable = request.getSessionInfo(requestBody)
+        observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<GetSessionInfo>().apply(callback))
     }
 
     fun searchRead(
