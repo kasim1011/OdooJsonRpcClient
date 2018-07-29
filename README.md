@@ -7,7 +7,7 @@ This project is developed against **Odoo 10.0 Community Edition** and it's compa
 
 Configure Odoo host address, Project website, Privacy policy and Contact email from [configs.xml](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/app/src/main/res/values/configs.xml)
 
-Get the Odoo Json-rpc request collection for [Postman](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/OdooJsonRpc.postman_collection.json?raw=true)
+Get the Odoo Json-rpc request collection for [Postman](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/OdooJsonRpc.postman_collection.json?raw=true) **(Right Click -> Save Link As...)**.
 
 How to use
 =======
@@ -562,6 +562,302 @@ Odoo.modules {
 }
 ```
 
+FieldsGet
+=========
+**Request**
+```kotlin
+Odoo.fieldsGet(model = "res.partner", fields = listOf("name", "ttype", "modules", "relation", "relation_field", "relation_table", "required") /*or just listOf() for all detail*/) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val fieldsGet = response.body()!!
+            if (fieldsGet.isSuccessful) {
+                val result = fieldsGet.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("fieldsGet() failed with ${fieldsGet.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": {
+    "length": 88,
+    "records": [
+      {
+        "id": 877,
+        "name": "name",
+        "ttype": "char",
+        "relation": false,
+        "relation_field": false,
+        "relation_table": false,
+        "required": false,
+        "modules": "base"
+      },
+      {
+        "id": 908,
+        "name": "email",
+        "ttype": "char",
+        "relation": false,
+        "relation_field": false,
+        "relation_table": false,
+        "required": false,
+        "modules": "base"
+      },
+      {
+        "id": 907,
+        "name": "country_id",
+        "ttype": "many2one",
+        "relation": "res.country",
+        "relation_field": false,
+        "relation_table": false,
+        "required": false,
+        "modules": "base"
+      },
+      {
+        "id": 893,
+        "name": "category_id",
+        "ttype": "many2many",
+        "relation": "res.partner.category",
+        "relation_field": false,
+        "relation_table": "res_partner_res_partner_category_rel",
+        "required": false,
+        "modules": "base"
+      },
+      {
+        "id": 917,
+        "name": "user_ids",
+        "ttype": "one2many",
+        "relation": "res.users",
+        "relation_field": "partner_id",
+        "relation_table": false,
+        "required": false,
+        "modules": "base"
+      }
+    ]
+  }
+}
+```
+
+AccessGet
+=========
+**Request**
+```kotlin
+Odoo.accessGet(model = "res.partner", fields = listOf("name", "group_id", "perm_read", "perm_write", "perm_create", "perm_unlink") /*or just listOf() for all detail*/) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val accessGet = response.body()!!
+            if (accessGet.isSuccessful) {
+                val result = accessGet.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("accessGet() failed with ${accessGet.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": {
+    "length": 6,
+    "records": [
+      {
+        "id": 53,
+        "name": "res_partner group_public",
+        "group_id": [
+          11,
+          "Other Extra Rights / Public"
+        ],
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      },
+      {
+        "id": 54,
+        "name": "res_partner group_portal",
+        "group_id": [
+          10,
+          "Other Extra Rights / Portal"
+        ],
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      },
+      {
+        "id": 55,
+        "name": "res_partner group_partner_manager",
+        "group_id": [
+          8,
+          "Extra Rights / Contact Creation"
+        ],
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": true
+      },
+      {
+        "id": 56,
+        "name": "res_partner group_user",
+        "group_id": [
+          1,
+          "Employees / Employee"
+        ],
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      },
+      {
+        "id": 201,
+        "name": "res.partner.crm.manager",
+        "group_id": [
+          14,
+          "Sales / Manager"
+        ],
+        "perm_read": true,
+        "perm_write": false,
+        "perm_create": false,
+        "perm_unlink": false
+      },
+      {
+        "id": 203,
+        "name": "res.partner.crm.user",
+        "group_id": [
+          12,
+          "Sales / User: Own Documents Only"
+        ],
+        "perm_read": true,
+        "perm_write": true,
+        "perm_create": true,
+        "perm_unlink": false
+      }
+    ]
+  }
+}
+```
+
+GroupsGet
+=========
+**Request**
+```kotlin
+Odoo.groupsGet(fields = listOf("name", "full_name", "display_name") /*or just listOf() for all detail*/) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val groupsGet = response.body()!!
+            if (groupsGet.isSuccessful) {
+                val result = groupsGet.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("groupsGet() failed with ${groupsGet.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": {
+    "length": 8,
+    "records": [
+      {
+        "id": 3,
+        "name": "Access Rights",
+        "full_name": "Administration / Access Rights",
+        "display_name": "Administration / Access Rights"
+      },
+      {
+        "id": 8,
+        "name": "Contact Creation",
+        "full_name": "Extra Rights / Contact Creation",
+        "display_name": "Extra Rights / Contact Creation"
+      },
+      {
+        "id": 1,
+        "name": "Employee",
+        "full_name": "Employees / Employee",
+        "display_name": "Employees / Employee"
+      },
+      {
+        "id": 14,
+        "name": "Manager",
+        "full_name": "Sales / Manager",
+        "display_name": "Sales / Manager"
+      },
+      {
+        "id": 4,
+        "name": "Settings",
+        "full_name": "Administration / Settings",
+        "display_name": "Administration / Settings"
+      },
+      {
+        "id": 7,
+        "name": "Technical Features",
+        "full_name": "Extra Rights / Technical Features",
+        "display_name": "Extra Rights / Technical Features"
+      },
+      {
+        "id": 13,
+        "name": "User: All Documents",
+        "full_name": "Sales / User: All Documents",
+        "display_name": "Sales / User: All Documents"
+      },
+      {
+        "id": 12,
+        "name": "User: Own Documents Only",
+        "full_name": "Sales / User: Own Documents Only",
+        "display_name": "Sales / User: Own Documents Only"
+      }
+    ]
+  }
+}
+```
+
 GetSessionInfo
 ==============
 **Request**
@@ -644,6 +940,57 @@ Odoo.getSessionInfo {
     "is_superuser": true,
     "user_companies": false
   }
+}
+```
+
+GetOdooUsers
+============
+```kotlin
+class SomeActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val users: List<OdooUser> = getOdooUsers()
+        for (user in users) {
+            Timber.i("user is $user")
+            // ...
+        }
+    }
+}
+```
+
+GetActiveOdooUser
+=================
+```kotlin
+class SomeActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val user: OdooUser? = getActiveOdooUser()
+        if (user != null) {
+            Timber.i("user is $user")
+            // ...
+        }
+    }
+}
+```
+
+OdooUserByAndroidName
+=====================
+```kotlin
+class SomeActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val user: OdooUser? = odooUserByAndroidName("admin[db_v11]")
+        if (user != null) {
+            Timber.i("user is $user")
+            // ...
+        }
+    }
 }
 ```
 

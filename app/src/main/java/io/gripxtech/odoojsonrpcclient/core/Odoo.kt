@@ -589,17 +589,33 @@ object Odoo {
     }
 
     fun fieldsGet(
-            model: String,
+            model: String = "",
             fields: List<String> = listOf(),
             callback: ResponseObserver<SearchRead>.() -> Unit
-    ) {
-        searchRead("ir.model.fields", fields, listOf(listOf("model_id", "=", model)), callback = callback)
-    }
+    ) =
+            searchRead("ir.model.fields", fields,
+                    if (model.isNotEmpty()) listOf(listOf("model_id", "=", model)) else listOf(),
+                    callback = callback
+            )
 
-    fun modulesGet(
+
+    fun accessGet(
+            model: String = "",
             fields: List<String> = listOf(),
             callback: ResponseObserver<SearchRead>.() -> Unit
-    ) {
-        searchRead("ir.model.module", fields, callback = callback)
-    }
+    ) =
+            searchRead("ir.model.access", fields,
+                    if (model.isNotEmpty()) listOf(listOf("model_id", "=", model)) else listOf(),
+                    callback = callback
+            )
+
+    fun groupsGet(
+            fields: List<String> = listOf(),
+            callback: ResponseObserver<SearchRead>.() -> Unit
+    ) =
+            searchRead("res.groups", fields,
+                    listOf(listOf("users", "in", listOf(user.id))),
+                    callback = callback
+            )
+
 }

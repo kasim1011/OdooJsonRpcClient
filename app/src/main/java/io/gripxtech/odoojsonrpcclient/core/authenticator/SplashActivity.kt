@@ -60,7 +60,7 @@ class SplashActivity : AppCompatActivity() {
                         }
 
                         showMessage(
-                                title = getString(R.string.server_request_error, response.code(), response.body()),
+                                title = getString(R.string.server_request_error, response.code(), response.message()),
                                 message = message,
                                 positiveButton = getString(R.string.try_again),
                                 positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
@@ -168,7 +168,8 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startMainActivity() {
-        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        // startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+        startActivity(Intent(this@SplashActivity, SomeActivity::class.java))
         finish()
     }
 
