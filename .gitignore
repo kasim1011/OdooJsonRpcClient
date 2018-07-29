@@ -8,4 +8,7 @@
 /build
 /captures
 .externalNativeBuild
-/keystore.properties
+# uncomment this in your app
+#/keystore.properties
+#*.keystore
+#*.jks
