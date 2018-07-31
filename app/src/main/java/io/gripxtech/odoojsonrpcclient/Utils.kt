@@ -108,6 +108,11 @@ val JsonElement.asManyToOne: Many2One
         Many2One(JsonArray().apply { add(0); add("") })
     }
 
+val JsonArray.asIntList: List<Int>
+    get() = this.map {
+        it.asInt
+    }
+
 @Suppress("DEPRECATION")
 val Response<*>.errorBodySpanned: Spanned
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)

@@ -18,8 +18,250 @@ Login Account related functionality can be access using `Context`'s [Extension f
 
 Odoo specific methods are following:
 
+Create
+==========
+
+Creates a new record for the model.
+
+**Request**
+```kotlin
+Odoo.create(model = "res.partner", values = mapOf(
+        "name" to "Kasim Rangwala", "email" to "rangwalakasim@live.in"
+)) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val create = response.body()!!
+            if (create.isSuccessful) {
+                val result = create.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("create() failed with ${create.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": 45
+}
+```
+
+Read
+=======
+
+Reads the requested fields for the records
+
+**Request**
+```kotlin
+Odoo.read(model = "res.partner", ids = listOf(1, 3), fields = listOf("id", "name", "email")) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val read = response.body()!!
+            if (read.isSuccessful) {
+                val result = read.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("read() failed with ${read.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": [
+    {
+      "email": "info@yourcompany.example.com",
+      "id": 1,
+      "name": "YourCompany"
+    },
+    {
+      "email": "admin@yourcompany.example.com",
+      "id": 3,
+      "name": "Administrator"
+    }
+  ]
+}
+```
+
+Write
+=======
+
+Updates all records in the current set with the provided values.
+
+**Request**
+```kotlin
+Odoo.write(model = "res.partner", ids = listOf(45, 46),
+        keyValues = mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val write = response.body()!!
+            if (write.isSuccessful) {
+                val result = write.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("write() failed with ${write.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": true
+}
+```
+
+Unlink
+=======
+
+Deletes the records of the current set
+
+**Request**
+```kotlin
+Odoo.unlink(model = "res.partner", ids = listOf(47, 48)) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val unlink = response.body()!!
+            if (unlink.isSuccessful) {
+                val result = unlink.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("unlink() failed with ${unlink.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": true
+}
+```
+
+Search
+===========
+
+Searches for records based on the ``args``
+
+domain: Use an empty list to match all records.
+offset: number of results to ignore (default: none)
+limit: maximum number of records to return (default: all)
+order: sort string
+count: if True, only counts and returns the number of matching records (default: False)
+
+returns: at most ``limit`` records matching the search criteria
+
+**Request**
+```kotlin
+Odoo.search(model = "res.partner", domain = listOf(listOf("name", "ilike", "Demo")),
+        offset = 0, limit = 0, sort = "", count = false) {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val search = response.body()!!
+            if (search.isSuccessful) {
+                val result = search.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("search() failed with ${search.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": [
+    44,
+    6
+  ]
+}
+```
+
 SearchRead
 ==========
+
+Performs a ``search()`` followed by a ``read()``.
+
+domain: Search domain, see ``args`` parameter in ``search()``. Defaults to an empty domain that will match all records.
+fields: List of fields to read, see ``fields`` parameter in ``read()``. Defaults to all fields.
+offset: Number of records to skip, see ``offset`` parameter in ``search()``. Defaults to 0.
+limit: Maximum number of records to return, see ``limit`` parameter in ``search()``. Defaults to no limit.
+order: Columns to sort result, see ``order`` parameter in ``search()``. Defaults to no sort.
+
+return: List of objects containing the asked fields.
+
 **Request**
 ```kotlin
 Odoo.searchRead(model = "res.partner", fields = listOf(
@@ -87,24 +329,27 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
 }
 ```
 
-Load
-==========
+SearchCount
+===========
+
+Returns the number of records in the current model matching the provided ``domain``.
+
 **Request**
 ```kotlin
-Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
+Odoo.searchCount(model = "res.partner", args = listOf(listOf("name", "ilike", "kasim rangwala"))) {
     onSubscribe { disposable ->
         compositeDisposable.add(disposable)
     }
 
     onNext { response ->
         if (response.isSuccessful) {
-            val load = response.body()!!
-            if (load.isSuccessful) {
-                val result = load.result
+            val searchCount = response.body()!!
+            if (searchCount.isSuccessful) {
+                val result = searchCount.result
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("load() failed with ${load.errorMessage}")
+                Timber.w("searchCount() failed with ${searchCount.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -121,131 +366,33 @@ Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
 **Result**
 ```json
 {
-  "result": {
-    "value": {
-      "id": 1,
-      "name": "YourCompany",
-      "display_name": "YourCompany",
-      "date": false,
-      "title": false,
-      "parent_id": false,
-      "child_ids": [
-        42,
-        43
-      ],
-      "ref": false,
-      "lang": "en_US",
-      "tz": false,
-      "user_id": false,
-      "vat": false,
-      "bank_ids": [
-        
-      ],
-      "website": "http://www.example.com",
-      "opportunity_count": 0,
-      "meeting_count": 0,
-      "__last_update": "2018-07-23 18:10:57"
-    }
-  }
+  "result": 2
 }
 ```
 
-CallKw
-==========
-**Request**
-```kotlin
-Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group_user")) {
-    onSubscribe { disposable ->
-        compositeDisposable.add(disposable)
-    }
-
-    onNext { response ->
-        if (response.isSuccessful) {
-            val callKw = response.body()!!
-            if (callKw.isSuccessful) {
-                val result = callKw.result
-                // ...
-            } else {
-                // Odoo specific error
-                Timber.w("callkw() failed with ${callKw.errorMessage}")
-            }
-        } else {
-            Timber.w("request failed with ${response.code()}:${response.message()}")
-        }
-    }
-
-    onError { error ->
-        error.printStackTrace()
-    }
-
-    onComplete { }
-}
-```
-**Result**
-```json
-{
-  "result": true
-}
-```
-
-Create
-==========
-**Request**
-```kotlin
-Odoo.create(model = "res.partner", keyValues = mapOf(
-        "name" to "Kasim Rangwala", "email" to "rangwalakasim@live.in"
-)) {
-    onSubscribe { disposable ->
-        compositeDisposable.add(disposable)
-    }
-
-    onNext { response ->
-        if (response.isSuccessful) {
-            val create = response.body()!!
-            if (create.isSuccessful) {
-                val result = create.result
-                // ...
-            } else {
-                // Odoo specific error
-                Timber.w("create() failed with ${create.errorMessage}")
-            }
-        } else {
-            Timber.w("request failed with ${response.code()}:${response.message()}")
-        }
-    }
-
-    onError { error ->
-        error.printStackTrace()
-    }
-
-    onComplete { }
-}
-```
-**Result**
-```json
-{
-  "result": 45
-}
-```
-
-Read
+NameGet
 =======
+
+Returns a textual representation for the records in ``self``. By default this is the value of the ``display_name`` field.
+
+return: list of pairs ``(id, text_repr)`` for each records
+
 **Request**
 ```kotlin
-Odoo.read(model = "res.partner", id = 13, fields = listOf("id", "name", "email")) {
+Odoo.nameGet(model = "res.partner", ids = listOf(1, 3)) {
     onSubscribe { disposable ->
         compositeDisposable.add(disposable)
     }
 
     onNext { response ->
         if (response.isSuccessful) {
-            val read = response.body()!!
-            if (read.isSuccessful) {
-                val result = read.result
+            val nameGet = response.body()!!
+            if (nameGet.isSuccessful) {
+                val result = nameGet.result
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("read() failed with ${read.errorMessage}")
+                Timber.w("nameGet() failed with ${nameGet.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -263,17 +410,82 @@ Odoo.read(model = "res.partner", id = 13, fields = listOf("id", "name", "email")
 ```json
 {
   "result": [
-    {
-      "id": 13,
-      "name": "Camptocamp",
-      "email": "camptocamp@yourcompany.example.com"
+    [
+      1,
+      "YourCompany"
+    ],
+    [
+      3,
+      "YourCompany, Administrator"
+    ]
+  ]
+}
+```
+
+NameCreate
+==========
+
+Create a new record by calling `create` with only one value provided, the display name of the new record.
+The new record will be initialized with any default values applicable to this model, or provided through the context. The usual behavior of `create` applies.
+
+name: display name of the record to create
+
+return: the `name_get` pair value of the created record
+
+**Request**
+```kotlin
+Odoo.nameCreate(model = "res.partner", name = "kasim") {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
     }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val nameCreate = response.body()!!
+            if (nameCreate.isSuccessful) {
+                val result = nameCreate.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("nameCreate() failed with ${nameCreate.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": [
+    47,
+    "kasim"
   ]
 }
 ```
 
 NameSearch
 ==========
+
+Search for records that have a display name matching the given ``name`` pattern when compared with the given ``operator``, while also matching the optional search domain (``args``).
+
+This is used for example to provide suggestions based on a partial value for a relational field. Sometimes be seen as the inverse function of `name_get`, but it is not guaranteed to be.
+This method is equivalent to calling `search` with a search domain based on ``display_name`` and then `name_get` on the result of the search.
+
+name: the name pattern to match
+args: optional search domain (see `search` for syntax), specifying further restrictions
+operator: domain operator for matching ``name``, such as ``'like'`` or ``'='``.
+limit: optional max number of records to return
+
+return: list of pairs ``(id, text_repr)`` for all matching records.
+
 **Request**
 ```kotlin
 Odoo.nameSearch(model = "res.partner", name = "Delta PC", args = listOf(), operator = "ilike", limit = 0) {
@@ -343,109 +555,34 @@ Odoo.nameSearch(model = "res.partner", name = "Delta PC", args = listOf(), opera
 }
 ```
 
-NameGet
-=======
+CallKw
+==========
+
+Calls the method of given model.
+for `@api.model`, don't pass `id` in `args`.
+
+    callKw(model = "res.users", method = "has_group", args = listOf("base.group_user"))
+
+for `@api.multi`, pass list of `id` in `args`.
+
+    callKw(model = "res.partner", "write", listOf(listOf(45, 46), mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")))
+
 **Request**
 ```kotlin
-Odoo.nameGet(model = "res.partner", ids = listOf(1, 3)) {
+Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group_user")) {
     onSubscribe { disposable ->
         compositeDisposable.add(disposable)
     }
 
     onNext { response ->
         if (response.isSuccessful) {
-            val nameGet = response.body()!!
-            if (nameGet.isSuccessful) {
-                val result = nameGet.result
+            val callKw = response.body()!!
+            if (callKw.isSuccessful) {
+                val result = callKw.result
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("nameGet() failed with ${nameGet.errorMessage}")
-            }
-        } else {
-            Timber.w("request failed with ${response.code()}:${response.message()}")
-        }
-    }
-
-    onError { error ->
-        error.printStackTrace()
-    }
-
-    onComplete { }
-}
-```
-**Result**
-```json
-{
-  "result": [
-    [
-      1,
-      "YourCompany"
-    ],
-    [
-      3,
-      "YourCompany, Administrator"
-    ]
-  ]
-}
-```
-
-SearchCount
-===========
-**Request**
-```kotlin
-Odoo.searchCount(model = "res.partner", args = listOf(listOf("name", "ilike", "kasim rangwala"))) {
-    onSubscribe { disposable ->
-        compositeDisposable.add(disposable)
-    }
-
-    onNext { response ->
-        if (response.isSuccessful) {
-            val searchCount = response.body()!!
-            if (searchCount.isSuccessful) {
-                val result = searchCount.result
-                // ...
-            } else {
-                // Odoo specific error
-                Timber.w("searchCount() failed with ${searchCount.errorMessage}")
-            }
-        } else {
-            Timber.w("request failed with ${response.code()}:${response.message()}")
-        }
-    }
-
-    onError { error ->
-        error.printStackTrace()
-    }
-
-    onComplete { }
-}
-```
-**Result**
-```json
-{
-  "result": 2
-}
-```
-
-Unlink
-=======
-**Request**
-```kotlin
-Odoo.unlink(model = "res.partner", ids = listOf(47, 48)) {
-    onSubscribe { disposable ->
-        compositeDisposable.add(disposable)
-    }
-
-    onNext { response ->
-        if (response.isSuccessful) {
-            val unlink = response.body()!!
-            if (unlink.isSuccessful) {
-                val result = unlink.result
-                // ...
-            } else {
-                // Odoo specific error
-                Timber.w("unlink() failed with ${unlink.errorMessage}")
+                Timber.w("callkw() failed with ${callKw.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -466,25 +603,24 @@ Odoo.unlink(model = "res.partner", ids = listOf(47, 48)) {
 }
 ```
 
-Write
-=======
+Load
+==========
 **Request**
 ```kotlin
-Odoo.write(model = "res.partner", ids = listOf(45, 46),
-        keyValues = mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")) {
+Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
     onSubscribe { disposable ->
         compositeDisposable.add(disposable)
     }
 
     onNext { response ->
         if (response.isSuccessful) {
-            val write = response.body()!!
-            if (write.isSuccessful) {
-                val result = write.result
+            val load = response.body()!!
+            if (load.isSuccessful) {
+                val result = load.result
                 // ...
             } else {
                 // Odoo specific error
-                Timber.w("write() failed with ${write.errorMessage}")
+                Timber.w("load() failed with ${load.errorMessage}")
             }
         } else {
             Timber.w("request failed with ${response.code()}:${response.message()}")
@@ -501,7 +637,32 @@ Odoo.write(model = "res.partner", ids = listOf(45, 46),
 **Result**
 ```json
 {
-  "result": true
+  "result": {
+    "value": {
+      "id": 1,
+      "name": "YourCompany",
+      "display_name": "YourCompany",
+      "date": false,
+      "title": false,
+      "parent_id": false,
+      "child_ids": [
+        42,
+        43
+      ],
+      "ref": false,
+      "lang": "en_US",
+      "tz": false,
+      "user_id": false,
+      "vat": false,
+      "bank_ids": [
+        
+      ],
+      "website": "http://www.example.com",
+      "opportunity_count": 0,
+      "meeting_count": 0,
+      "__last_update": "2018-07-23 18:10:57"
+    }
+  }
 }
 ```
 

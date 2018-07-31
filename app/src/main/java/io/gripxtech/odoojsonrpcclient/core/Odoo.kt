@@ -6,6 +6,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.R
+import io.gripxtech.odoojsonrpcclient.asIntList
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDb
 import io.gripxtech.odoojsonrpcclient.core.entities.database.listdb.ListDbReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.callkw.CallKw
@@ -21,9 +22,11 @@ import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchRea
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadParams
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.method.create.Create
+import io.gripxtech.odoojsonrpcclient.core.entities.method.namecreate.NameCreate
 import io.gripxtech.odoojsonrpcclient.core.entities.method.nameget.NameGet
 import io.gripxtech.odoojsonrpcclient.core.entities.method.namesearch.NameSearch
 import io.gripxtech.odoojsonrpcclient.core.entities.method.read.Read
+import io.gripxtech.odoojsonrpcclient.core.entities.method.search.Search
 import io.gripxtech.odoojsonrpcclient.core.entities.method.searchcount.SearchCount
 import io.gripxtech.odoojsonrpcclient.core.entities.method.unlink.Unlink
 import io.gripxtech.odoojsonrpcclient.core.entities.method.write.Write
@@ -335,12 +338,12 @@ object Odoo {
 
     fun create(
             model: String,
-            keyValues: Map<String, Any>,
+            values: Map<String, Any>,
             callback: ResponseObserver<Create>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Create>()
         callbackEx.callback()
-        callKw(model, "create", listOf(keyValues)) {
+        callKw(model, "create", listOf(values)) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -370,13 +373,13 @@ object Odoo {
 
     fun read(
             model: String,
-            id: Int,
+            ids: List<Int>,
             fields: List<String>,
             callback: ResponseObserver<Read>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Read>()
         callbackEx.callback()
-        callKw(model, "read", listOf(id, fields)) {
+        callKw(model, "read", listOf(ids, fields)) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -510,6 +513,41 @@ object Odoo {
         }
     }
 
+    fun nameCreate(
+            model: String,
+            name: String,
+            callback: ResponseObserver<NameCreate>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<NameCreate>()
+        callbackEx.callback()
+        callKw(model, "name_create", listOf(name)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<NameCreate>(NameCreate(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asJsonArray
+                                    else
+                                        JsonArray()
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<NameCreate>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
     fun nameSearch(
             model: String,
             name: String = "",
@@ -541,6 +579,45 @@ object Odoo {
                                     , response.body()!!.odooError))
                         else
                             Response.error<NameSearch>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun search(
+            model: String,
+            domain: List<Any> = listOf(),
+            offset: Int = 0,
+            limit: Int = 0,
+            sort: String = "",
+            count: Boolean = false,
+            callback: ResponseObserver<Search>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<Search>()
+        callbackEx.callback()
+        callKw(model, "search", listOf(domain, offset, limit, sort, count)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<Search>(Search(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asJsonArray.asIntList
+                                    else
+                                        listOf()
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<Search>(response.code(), response.errorBody()!!))
             }
 
             onError { error ->
