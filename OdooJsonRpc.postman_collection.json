@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"_postman_id": "c06678bc-3ba9-48f1-8b3e-cb125571f3fd",
+			"_postman_id": "926833a7-5be8-419f-ba3a-0be044c111b7",
 			"name": "Authenticate",
 			"request": {
 				"method": "POST",
@@ -36,7 +36,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "e0b7cedd-8645-4d46-867f-87c6f38c4f28",
+			"_postman_id": "51922a84-e1c2-432b-bdab-b4794bf1a55d",
 			"name": "Server Version",
 			"request": {
 				"method": "POST",
@@ -66,7 +66,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "39146e94-dfe6-4c74-8e97-4302049a5561",
+			"_postman_id": "b9f20a8b-0d10-4a4d-96c0-4ce1df81c8e1",
 			"name": "Database List",
 			"request": {
 				"method": "POST",
@@ -96,7 +96,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "84196063-dd53-463a-911d-e33a8bdcca58",
+			"_postman_id": "654327d5-7cfb-423f-abb3-71c7d8d201f0",
 			"name": "Search Read",
 			"request": {
 				"method": "POST",
@@ -126,7 +126,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "950c7565-6b5f-4b2a-818f-914d4b6effd0",
+			"_postman_id": "4a5bb2fd-3f07-4dd3-8b60-4cfd705b3714",
 			"name": "Session Info",
 			"request": {
 				"method": "POST",
@@ -156,7 +156,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "54f5eb41-5a8c-4359-a4d8-be1defd818fb",
+			"_postman_id": "df527f92-d485-4490-b0fd-b1c3e13b5e26",
 			"name": "Check",
 			"request": {
 				"method": "POST",
@@ -186,7 +186,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "19408058-f50f-42ac-b11c-6cacfafd8d37",
+			"_postman_id": "e2194ca1-d4be-4fc4-9ee8-7fc941ca2dab",
 			"name": "Load",
 			"request": {
 				"method": "POST",
@@ -216,7 +216,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "c658cc9b-0368-4d2b-804e-be2effcf5c68",
+			"_postman_id": "f723b150-cc35-4826-8896-80c90f718691",
 			"name": "Load Copy",
 			"request": {
 				"method": "POST",
@@ -246,7 +246,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "e48177fc-9864-4bab-b014-8cbfedec4a34",
+			"_postman_id": "594e1bed-4977-4c07-95c3-d6f4ed1e4333",
 			"name": "Call Kw",
 			"request": {
 				"method": "POST",
@@ -276,7 +276,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "e34524f6-67b7-4e58-8b3f-fce4217a8bcc",
+			"_postman_id": "6d3e6555-3a27-43e0-a3b6-35562201e910",
 			"name": "Create",
 			"request": {
 				"method": "POST",
@@ -306,7 +306,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "e0355e6e-db4b-483d-9a03-c4e20fcc5fb8",
+			"_postman_id": "d49cfd01-7b0d-4fc5-9437-63f8a1063c21",
 			"name": "Read",
 			"request": {
 				"method": "POST",
@@ -336,7 +336,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "82950892-bf74-425c-a60c-66820905a362",
+			"_postman_id": "ee470a45-c496-4592-9c48-b6c1553aeb35",
 			"name": "Name Search",
 			"request": {
 				"method": "POST",
@@ -366,7 +366,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "8d428898-0750-46c4-b35c-85e59402d24e",
+			"_postman_id": "0f04cfb4-c18d-4c81-bf21-cb6e1f7b644c",
 			"name": "Name Get",
 			"request": {
 				"method": "POST",
@@ -396,7 +396,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "60373b70-e90a-46ec-8732-4866494c5377",
+			"_postman_id": "d288fdf1-0bff-4a0c-8868-07bef845d403",
 			"name": "Name Create",
 			"request": {
 				"method": "POST",
@@ -408,7 +408,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"name_create\",\n    \"args\": [[1, 3]],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
+					"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"method\": \"call\",\n  \"id\": 1,\n  \"params\": {\n    \"model\": \"res.partner\",\n    \"method\": \"name_create\",\n    \"args\": [\"kasim\"],\n    \"kwargs\": {},\n    \"context\":  {\n            \"lang\": \"en_US\",\n            \"tz\": \"Europe/Brussels\",\n            \"uid\": 1\n        }\n  }\n}"
 				},
 				"url": {
 					"raw": "localhost:8069/web/dataset/call_kw",
@@ -426,7 +426,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "a797e8fe-8592-4cec-9890-8d61a23b2d43",
+			"_postman_id": "6cad321b-6dae-4578-9c72-5b4f6c30a246",
 			"name": "Search Count",
 			"request": {
 				"method": "POST",
@@ -456,7 +456,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "9bb5df5a-5ae3-48fb-98d0-47bf22070d78",
+			"_postman_id": "4ff3fe70-4b36-4e44-bdaa-e44e1f2ee2de",
 			"name": "Search",
 			"request": {
 				"method": "POST",
@@ -486,7 +486,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "0ebe9e4f-64d6-48bb-9244-55e01155b456",
+			"_postman_id": "c14a1aa8-6e0b-4172-87bb-f6ca68281710",
 			"name": "Unlink",
 			"request": {
 				"method": "POST",
@@ -516,7 +516,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "5a2af83f-97ea-41c2-8266-2a9544bb9d99",
+			"_postman_id": "3b87f119-92f5-4533-8aee-539d5e20a697",
 			"name": "Write",
 			"request": {
 				"method": "POST",
@@ -546,7 +546,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "45e96959-2b0e-4678-a214-497ba70bb8aa",
+			"_postman_id": "019fbacb-3cd6-426d-b244-7dc38f2e74a8",
 			"name": "Destroy",
 			"request": {
 				"method": "POST",
@@ -577,7 +577,7 @@
 			"response": []
 		},
 		{
-			"_postman_id": "a782fd7b-a5b6-4e52-bd46-45768b5c3a21",
+			"_postman_id": "48428949-7b4e-4848-a632-de2f554f82b9",
 			"name": "Modules",
 			"request": {
 				"method": "POST",
