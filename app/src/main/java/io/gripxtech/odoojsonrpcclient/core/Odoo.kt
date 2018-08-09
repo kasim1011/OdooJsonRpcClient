@@ -340,11 +340,13 @@ object Odoo {
     fun create(
             model: String,
             values: Map<String, Any>,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<Create>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Create>()
         callbackEx.callback()
-        callKw(model, "create", listOf(values)) {
+        callKw(model, "create", listOf(values), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -376,11 +378,13 @@ object Odoo {
             model: String,
             ids: List<Int>,
             fields: List<String>,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<Read>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Read>()
         callbackEx.callback()
-        callKw(model, "read", listOf(ids, fields)) {
+        callKw(model, "read", listOf(ids, fields), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -411,12 +415,14 @@ object Odoo {
     fun write(
             model: String,
             ids: List<Int>,
-            keyValues: Map<String, Any>,
+            values: Map<String, Any>,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<Write>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Write>()
         callbackEx.callback()
-        callKw(model, "write", listOf(ids, keyValues)) {
+        callKw(model, "write", listOf(ids, values), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -447,11 +453,13 @@ object Odoo {
     fun unlink(
             model: String,
             ids: List<Int>,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<Unlink>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Unlink>()
         callbackEx.callback()
-        callKw(model, "unlink", listOf(ids)) {
+        callKw(model, "unlink", listOf(ids), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -482,11 +490,13 @@ object Odoo {
     fun nameGet(
             model: String,
             ids: List<Int>,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<NameGet>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<NameGet>()
         callbackEx.callback()
-        callKw(model, "name_get", listOf(ids)) {
+        callKw(model, "name_get", listOf(ids), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -517,11 +527,13 @@ object Odoo {
     fun nameCreate(
             model: String,
             name: String,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<NameCreate>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<NameCreate>()
         callbackEx.callback()
-        callKw(model, "name_create", listOf(name)) {
+        callKw(model, "name_create", listOf(name), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -555,6 +567,7 @@ object Odoo {
             args: List<Any> = listOf(),
             operator: String = "ilike",
             limit: Int = 0,
+            context: JsonObject = user.context,
             callback: ResponseObserver<NameSearch>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<NameSearch>()
@@ -564,7 +577,7 @@ object Odoo {
                 "args" to args,
                 "operator" to operator,
                 "limit" to limit
-        )) {
+        ), context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -599,11 +612,13 @@ object Odoo {
             limit: Int = 0,
             sort: String = "",
             count: Boolean = false,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<Search>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Search>()
         callbackEx.callback()
-        callKw(model, "search", listOf(domain, offset, limit, sort, count)) {
+        callKw(model, "search", listOf(domain, offset, limit, sort, count), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -634,11 +649,13 @@ object Odoo {
     fun searchCount(
             model: String,
             args: List<Any> = listOf(),
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<SearchCount>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<SearchCount>()
         callbackEx.callback()
-        callKw(model, "search_count", listOf(args)) {
+        callKw(model, "search_count", listOf(args), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
@@ -670,11 +687,13 @@ object Odoo {
             model: String,
             operation: String,
             raiseException: Boolean = false,
+            kwArgs: Map<String, Any> = mapOf(),
+            context: JsonObject = user.context,
             callback: ResponseObserver<CheckAccessRights>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<CheckAccessRights>()
         callbackEx.callback()
-        callKw(model, "check_access_rights", listOf(operation, raiseException)) {
+        callKw(model, "check_access_rights", listOf(operation, raiseException), kwArgs, context) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }

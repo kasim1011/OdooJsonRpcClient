@@ -121,7 +121,7 @@ Updates all records in the current set with the provided values.
 **Request**
 ```kotlin
 Odoo.write(model = "res.partner", ids = listOf(45, 46),
-        keyValues = mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")) {
+        values = mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")) {
     onSubscribe { disposable ->
         compositeDisposable.add(disposable)
     }
@@ -199,15 +199,15 @@ Odoo.unlink(model = "res.partner", ids = listOf(47, 48)) {
 Search
 ===========
 
-Searches for records based on the ``args``
+Searches for records based on the following arguments
 
-domain: Use an empty list to match all records.
-offset: number of results to ignore (default: none)
-limit: maximum number of records to return (default: all)
-order: sort string
-count: if True, only counts and returns the number of matching records (default: False)
+- domain: Use an empty list to match all records.
+- offset: number of results to ignore (default: `0`)
+- limit: maximum number of records to return (default: all)
+- sort: order string
+- count: if `true`, only counts and returns the number of matching records (default: `false`)
 
-returns: at most ``limit`` records matching the search criteria
+returns: at most `limit` records matching the search criteria
 
 **Request**
 ```kotlin
@@ -252,13 +252,13 @@ Odoo.search(model = "res.partner", domain = listOf(listOf("name", "ilike", "Demo
 SearchRead
 ==========
 
-Performs a ``search()`` followed by a ``read()``.
+Performs a `search()` followed by a `read()`.
 
-domain: Search domain, see ``args`` parameter in ``search()``. Defaults to an empty domain that will match all records.
-fields: List of fields to read, see ``fields`` parameter in ``read()``. Defaults to all fields.
-offset: Number of records to skip, see ``offset`` parameter in ``search()``. Defaults to 0.
-limit: Maximum number of records to return, see ``limit`` parameter in ``search()``. Defaults to no limit.
-order: Columns to sort result, see ``order`` parameter in ``search()``. Defaults to no sort.
+- domain: Search domain, see arguments in [`search`](https://github.com/kasim1011/OdooJsonRpcClient#search). Defaults to an empty domain that will match all records.
+- fields: List of fields to read, see `fields` parameter in [`read`](https://github.com/kasim1011/OdooJsonRpcClient#read). Defaults to all fields.
+- offset: Number of records to skip, see `offset` parameter in [`search`](https://github.com/kasim1011/OdooJsonRpcClient#search). Defaults to `0`.
+- limit: Maximum number of records to return, see `limit` parameter in [`search`](https://github.com/kasim1011/OdooJsonRpcClient#search). Defaults to no limit.
+- sort: Columns to sort result, see `sort` parameter in [`search`](https://github.com/kasim1011/OdooJsonRpcClient#search). Defaults to no sort.
 
 return: List of objects containing the asked fields.
 
@@ -332,7 +332,7 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
 SearchCount
 ===========
 
-Returns the number of records in the current model matching the provided ``domain``.
+Returns the number of records in the current model matching the provided `domain`.
 
 **Request**
 ```kotlin
@@ -373,9 +373,9 @@ Odoo.searchCount(model = "res.partner", args = listOf(listOf("name", "ilike", "k
 NameGet
 =======
 
-Returns a textual representation for the records in ``self``. By default this is the value of the ``display_name`` field.
+Returns a textual representation for the records in `ids`. By default this is the value of the `display_name` field.
 
-return: list of pairs ``(id, text_repr)`` for each records
+return: list of pairs `[id, text_repr]` for each records
 
 **Request**
 ```kotlin
@@ -425,12 +425,12 @@ Odoo.nameGet(model = "res.partner", ids = listOf(1, 3)) {
 NameCreate
 ==========
 
-Create a new record by calling `create` with only one value provided, the display name of the new record.
+Create a new record by calling [`create`](https://github.com/kasim1011/OdooJsonRpcClient#create) with only one value provided, the display name of the new record.
 The new record will be initialized with any default values applicable to this model, or provided through the context. The usual behavior of `create` applies.
 
-name: display name of the record to create
+- name: display name of the record to create
 
-return: the `name_get` pair value of the created record
+return: the [`nameGet`](https://github.com/kasim1011/OdooJsonRpcClient#nameget) pair value of the created record
 
 **Request**
 ```kotlin
@@ -474,17 +474,17 @@ Odoo.nameCreate(model = "res.partner", name = "kasim") {
 NameSearch
 ==========
 
-Search for records that have a display name matching the given ``name`` pattern when compared with the given ``operator``, while also matching the optional search domain (``args``).
+Search for records that have a display name matching the given `name` pattern when compared with the given `operator`, while also matching the optional search domain (`args`).
 
-This is used for example to provide suggestions based on a partial value for a relational field. Sometimes be seen as the inverse function of `name_get`, but it is not guaranteed to be.
-This method is equivalent to calling `search` with a search domain based on ``display_name`` and then `name_get` on the result of the search.
+This is used for example to provide suggestions based on a partial value for a relational field. Sometimes be seen as the inverse function of [`nameGet`](https://github.com/kasim1011/OdooJsonRpcClient#nameget), but it is not guaranteed to be.
+This method is equivalent to calling [`search`](https://github.com/kasim1011/OdooJsonRpcClient#search) with a search domain based on `display_name` and then [`nameGet`](https://github.com/kasim1011/OdooJsonRpcClient#nameget) on the result of the search.
 
-name: the name pattern to match
-args: optional search domain (see `search` for syntax), specifying further restrictions
-operator: domain operator for matching ``name``, such as ``'like'`` or ``'='``.
-limit: optional max number of records to return
+- name: the name pattern to match
+- args: optional search domain (see [`search`](https://github.com/kasim1011/OdooJsonRpcClient#search) for syntax), specifying further restrictions
+- operator: domain operator for matching `name`, such as `like` or `=`.
+- limit: optional max number of records to return
 
-return: list of pairs ``(id, text_repr)`` for all matching records.
+return: list of pairs `[id, text_repr]` for all matching records.
 
 **Request**
 ```kotlin
@@ -605,13 +605,14 @@ CallKw
 ==========
 
 Calls the method of given model.
-for `@api.model`, don't pass `id` in `args`.
+
+for `@api.model`, avoid passing `id` in `args`.
 
     callKw(model = "res.users", method = "has_group", args = listOf("base.group_user"))
 
-for `@api.multi`, pass list of `id` in `args`.
+for `@api.multi`, pass list of `id(s)` in `args`.
 
-    callKw(model = "res.partner", "write", listOf(listOf(45, 46), mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")))
+    callKw(model = "res.partner", method = "write", args = listOf(listOf(45, 46), mapOf("name" to "Kasim3 Rangwala1", "email" to "rangwalakasim@live.in")))
 
 **Request**
 ```kotlin
@@ -651,9 +652,12 @@ Odoo.callKw(model = "res.users", method = "has_group", args = listOf("base.group
 
 Load
 ==========
+
+browse a record
+
 **Request**
 ```kotlin
-Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
+Odoo.load(id = 1, model = "res.partner") {
     onSubscribe { disposable ->
         compositeDisposable.add(disposable)
     }
@@ -714,6 +718,9 @@ Odoo.load(id = 1, model = "res.partner", fields = listOf()) {
 
 Modules
 =======
+
+Get installed modules
+
 **Request**
 ```kotlin
 Odoo.modules {
@@ -771,6 +778,9 @@ Odoo.modules {
 
 FieldsGet
 =========
+
+Get fields data for the model.
+
 **Request**
 ```kotlin
 Odoo.fieldsGet(model = "res.partner", fields = listOf("name", "ttype", "modules", "relation", "relation_field", "relation_table", "required") /*or just listOf() for all detail*/) {
@@ -863,6 +873,9 @@ Odoo.fieldsGet(model = "res.partner", fields = listOf("name", "ttype", "modules"
 
 AccessGet
 =========
+
+Get list of groups and their access rights.
+
 **Request**
 ```kotlin
 Odoo.accessGet(model = "res.partner", fields = listOf("name", "group_id", "perm_read", "perm_write", "perm_create", "perm_unlink") /*or just listOf() for all detail*/) {
@@ -977,6 +990,9 @@ Odoo.accessGet(model = "res.partner", fields = listOf("name", "group_id", "perm_
 
 GroupsGet
 =========
+
+Get list of groups assigned to current user.
+
 **Request**
 ```kotlin
 Odoo.groupsGet(fields = listOf("name", "full_name", "display_name") /*or just listOf() for all detail*/) {
@@ -1067,6 +1083,9 @@ Odoo.groupsGet(fields = listOf("name", "full_name", "display_name") /*or just li
 
 GetSessionInfo
 ==============
+
+Retrieves the current session.
+
 **Request**
 ```kotlin
 Odoo.getSessionInfo {
@@ -1152,6 +1171,9 @@ Odoo.getSessionInfo {
 
 GetOdooUsers
 ============
+
+List of all users in logged into the application
+
 ```kotlin
 class SomeActivity : AppCompatActivity() {
 
@@ -1169,6 +1191,9 @@ class SomeActivity : AppCompatActivity() {
 
 GetActiveOdooUser
 =================
+
+Current user in application.
+
 ```kotlin
 class SomeActivity : AppCompatActivity() {
 
@@ -1186,6 +1211,9 @@ class SomeActivity : AppCompatActivity() {
 
 OdooUserByAndroidName
 =====================
+
+Returns user based on given name, if available.
+
 ```kotlin
 class SomeActivity : AppCompatActivity() {
 
