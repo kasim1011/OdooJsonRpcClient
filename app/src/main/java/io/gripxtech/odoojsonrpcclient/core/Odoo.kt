@@ -21,6 +21,7 @@ import io.gripxtech.odoojsonrpcclient.core.entities.dataset.load.LoadReqBody
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchRead
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadParams
 import io.gripxtech.odoojsonrpcclient.core.entities.dataset.searchread.SearchReadReqBody
+import io.gripxtech.odoojsonrpcclient.core.entities.method.checkaccessrights.CheckAccessRights
 import io.gripxtech.odoojsonrpcclient.core.entities.method.create.Create
 import io.gripxtech.odoojsonrpcclient.core.entities.method.namecreate.NameCreate
 import io.gripxtech.odoojsonrpcclient.core.entities.method.nameget.NameGet
@@ -653,6 +654,42 @@ object Odoo {
                                     , response.body()!!.odooError))
                         else
                             Response.error<SearchCount>(response.code(), response.errorBody()!!))
+            }
+
+            onError { error ->
+                callbackEx.onError(error)
+            }
+
+            onComplete {
+                callbackEx.onComplete()
+            }
+        }
+    }
+
+    fun checkAccessRights(
+            model: String,
+            operation: String,
+            raiseException: Boolean = false,
+            callback: ResponseObserver<CheckAccessRights>.() -> Unit
+    ) {
+        val callbackEx = ResponseObserver<CheckAccessRights>()
+        callbackEx.callback()
+        callKw(model, "check_access_rights", listOf(operation, raiseException)) {
+            onSubscribe { disposable ->
+                callbackEx.onSubscribe(disposable)
+            }
+
+            onNext { response ->
+                callbackEx.onNext(
+                        if (response.isSuccessful)
+                            Response.success<CheckAccessRights>(CheckAccessRights(
+                                    if (response.body()!!.isSuccessful)
+                                        response.body()!!.result.asBoolean
+                                    else
+                                        false
+                                    , response.body()!!.odooError))
+                        else
+                            Response.error<CheckAccessRights>(response.code(), response.errorBody()!!))
             }
 
             onError { error ->

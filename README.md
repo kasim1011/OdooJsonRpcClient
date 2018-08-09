@@ -555,6 +555,52 @@ Odoo.nameSearch(model = "res.partner", name = "Delta PC", args = listOf(), opera
 }
 ```
 
+CheckAccessRights
+=================
+
+Verifies that the operation given by `operation` is allowed for the current user according to the access rights.
+
+- operation: one of `create`, `read`, `write`, `unlink`.
+- raiseException: if `true` then it raise `AccessError` when current operation is not allowed according to the access rights.
+
+return: `true` if the operation is allowed
+
+**Request**
+```kotlin
+Odoo.checkAccessRights(model = "res.users", operation = "unlink") {
+    onSubscribe { disposable ->
+        compositeDisposable.add(disposable)
+    }
+
+    onNext { response ->
+        if (response.isSuccessful) {
+            val checkAccessRights = response.body()!!
+            if (checkAccessRights.isSuccessful) {
+                val result = checkAccessRights.result
+                // ...
+            } else {
+                // Odoo specific error
+                Timber.w("checkAccessRights() failed with ${checkAccessRights.errorMessage}")
+            }
+        } else {
+            Timber.w("request failed with ${response.code()}:${response.message()}")
+        }
+    }
+
+    onError { error ->
+        error.printStackTrace()
+    }
+
+    onComplete { }
+}
+```
+**Result**
+```json
+{
+  "result": false
+}
+```
+
 CallKw
 ==========
 
