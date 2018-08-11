@@ -11,8 +11,8 @@ import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateResult
+import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.reactivex.Observable
-import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -139,13 +139,13 @@ class SplashActivity : AppCompatActivity() {
         }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<Boolean> {
-                    override fun onSubscribe(d: Disposable) {
+                .subscribeEx {
+                    onSubscribe { _: Disposable ->
                         // Must be complete, not dispose in between
                         // compositeDisposable.add(d)
                     }
 
-                    override fun onNext(t: Boolean) {
+                    onNext { t: Boolean ->
                         if (t) {
                             restartApp()
                         } else {
@@ -153,13 +153,11 @@ class SplashActivity : AppCompatActivity() {
                         }
                     }
 
-                    override fun onError(e: Throwable) {
-                        e.printStackTrace()
-                        closeApp(message = e.message ?: getString(R.string.generic_error))
+                    onError { error: Throwable ->
+                        error.printStackTrace()
+                        closeApp(message = error.message ?: getString(R.string.generic_error))
                     }
-
-                    override fun onComplete() = Unit
-                })
+                }
     }
 
     private fun startLoginActivity() {
@@ -168,8 +166,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun startMainActivity() {
-        // startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-        startActivity(Intent(this@SplashActivity, SomeActivity::class.java))
+        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
         finish()
     }
 

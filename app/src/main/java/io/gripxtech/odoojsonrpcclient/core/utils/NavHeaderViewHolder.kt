@@ -10,6 +10,7 @@ import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.GlideApp
 import io.gripxtech.odoojsonrpcclient.R
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
+import io.gripxtech.odoojsonrpcclient.trimFalse
 
 class NavHeaderViewHolder(view: View) {
     val pic: CircleImageView = view.findViewById(R.id.userImage)
@@ -22,7 +23,7 @@ class NavHeaderViewHolder(view: View) {
     fun setUser(user: OdooUser) {
         name.text = user.name
         email.text = user.login
-        if (user.imageSmall != "false") {
+        if (user.imageSmall.trimFalse().isNotEmpty()) {
             val byteArray = Base64.decode(user.imageSmall, Base64.DEFAULT)
             GlideApp.with(pic.context)
                     .asBitmap()
