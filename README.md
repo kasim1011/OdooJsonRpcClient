@@ -122,7 +122,7 @@ Odoo.read(model = "res.partner", ids = listOf(1, 3), fields = listOf("id", "name
 Write
 =======
 
-Updates all records in the current set with the provided values.
+Updates all records in the current `ids` with the provided values.
 
 **Request**
 ```kotlin
@@ -164,7 +164,7 @@ Odoo.write(model = "res.partner", ids = listOf(45, 46),
 Unlink
 =======
 
-Deletes the records of the current set
+Deletes the records of the current `ids`
 
 **Request**
 ```kotlin
