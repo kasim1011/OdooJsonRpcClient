@@ -9,11 +9,17 @@ Configure Odoo host address, Project website, Privacy policy and Contact email f
 
 Get the Odoo Json-rpc request collection for [Postman](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/OdooJsonRpc.postman_collection.json?raw=true) **(Right Click -> Save Link As... -> OdooJsonRpc.postman_collection.json)**.
 
-While changing the [`applicationId`](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/build.gradle#L29), perfrom the correspond changes at [`android:accountType`](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/src/main/res/xml/authenticator.xml#L3) inside [authenticator.xml](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/src/main/res/xml/authenticator.xml) as well as at [Gson's Proguard Rules](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/proguard-rules.pro#L59) inside [proguard-rules.pro](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/app/proguard-rules.pro).
+While changing the [`applicationId`](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/build.gradle#L29), perform the corresponding changes at [`android:accountType`](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/src/main/res/xml/authenticator.xml#L3) inside [authenticator.xml](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/src/main/res/xml/authenticator.xml) as well as at [Gson's Proguard Rules](https://github.com/kasim1011/OdooJsonRpcClient/blob/c26446ee93e9321805ab132b6370f9bde9b2631b/app/proguard-rules.pro#L59) inside [proguard-rules.pro](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/app/proguard-rules.pro).
+
+Update [`tokenKey`](https://github.com/kasim1011/OdooJsonRpcClient/blob/5edf9e5e66916ecbc6c427c90c0a320ddb00d14f/app/src/main/java/io/gripxtech/odoojsonrpcclient/core/utils/AesSecretKey.kt#L17) inside [AesSecretKey.kt
+](https://github.com/kasim1011/OdooJsonRpcClient/blob/master/app/src/main/java/io/gripxtech/odoojsonrpcclient/core/utils/AesSecretKey.kt) as base for performing encryption / decryption of user's sensitive information
 
 Do not hesitate to report [issues](https://github.com/kasim1011/OdooJsonRpcClient/issues) you may find.
 
 Get the **sample APK** from [release](https://github.com/kasim1011/OdooJsonRpcClient/releases) saction.
+
+Next Milestone:
+- **Synchronization** and **Persistence** using [Room Persistence Library](https://developer.android.com/topic/libraries/architecture/room)
 
 How to use
 =======
