@@ -29,8 +29,8 @@ android {
         applicationId "io.gripxtech.odoojsonrpcclient"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 2
-        versionName "1.01"
+        versionCode 3
+        versionName "1.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

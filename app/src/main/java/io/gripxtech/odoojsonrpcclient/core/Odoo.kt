@@ -48,6 +48,7 @@ import io.gripxtech.odoojsonrpcclient.core.entities.webclient.versionInfo.Versio
 import io.gripxtech.odoojsonrpcclient.core.entities.webclient.versionInfo.VersionInfoReqBody
 import io.gripxtech.odoojsonrpcclient.core.utils.Retrofit2Helper
 import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.ResponseObserver
+import io.gripxtech.odoojsonrpcclient.core.utils.decryptAES
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdb.ListDbRequest
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdbv8.ListDbV8Request
 import io.gripxtech.odoojsonrpcclient.core.web.database.listdbv9.ListDbV9Request
@@ -99,7 +100,7 @@ object Odoo {
             ),
             manager.getUserData(account, "host"),
             manager.getUserData(account, "login"),
-            manager.getUserData(account, "password"),
+            manager.getUserData(account, "password").decryptAES(),
             manager.getUserData(account, "database"),
             manager.getUserData(account, "serverVersion"),
             manager.getUserData(account, "isAdmin").toBoolean(),

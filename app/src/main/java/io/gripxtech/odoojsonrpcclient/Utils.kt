@@ -21,6 +21,7 @@ import io.gripxtech.odoojsonrpcclient.core.OdooUser
 import io.gripxtech.odoojsonrpcclient.core.authenticator.SplashActivity
 import io.gripxtech.odoojsonrpcclient.core.entities.Many2One
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateResult
+import io.gripxtech.odoojsonrpcclient.core.utils.encryptAES
 import retrofit2.Response
 
 const val RECORD_LIMIT = 10
@@ -34,7 +35,7 @@ fun Context.createOdooUser(authenticateResult: AuthenticateResult): Boolean {
     val account = Account(authenticateResult.androidName, App.KEY_ACCOUNT_TYPE)
     val result = accountManager.addAccountExplicitly(
             account,
-            authenticateResult.password,
+            authenticateResult.password.encryptAES(),
             authenticateResult.toBundle
     )
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

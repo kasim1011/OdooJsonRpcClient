@@ -7,6 +7,7 @@ import com.google.gson.JsonObject
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.gripxtech.odoojsonrpcclient.core.Odoo
+import io.gripxtech.odoojsonrpcclient.core.utils.encryptAES
 
 data class AuthenticateResult(
 
@@ -85,7 +86,7 @@ data class AuthenticateResult(
             putString("protocol", Odoo.protocol.name)
             putString("host", Odoo.host)
             putString("login", username)
-            putString("password", password)
+            putString("password", password.encryptAES())
             putString("database", db)
             putString("serverVersion", serverVersion)
             putString("isAdmin", admin.toString())
