@@ -1,6 +1,7 @@
 package io.gripxtech.odoojsonrpcclient.core.utils
 
 import io.gripxtech.odoojsonrpcclient.App
+import io.gripxtech.odoojsonrpcclient.R
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.gson
 import okhttp3.*
@@ -9,6 +10,11 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.security.SecureRandom
+import java.security.cert.X509Certificate
+import javax.net.ssl.SSLContext
+import javax.net.ssl.TrustManager
+import javax.net.ssl.X509TrustManager
 
 
 class Retrofit2Helper(
@@ -42,6 +48,9 @@ class Retrofit2Helper(
     val retrofit: Retrofit
         get() {
             if (_retrofit == null) {
+                if (host.isEmpty()) {
+                    host = app.getString(R.string.host_url)
+                }
                 _retrofit = Retrofit.Builder()
                     .baseUrl(
                         when (protocol) {
@@ -96,5 +105,24 @@ class Retrofit2Helper(
             }.apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
+            /*.apply(::unsafeCert)*/
             .build()
+
+    private fun unsafeCert(builder: OkHttpClient.Builder) {
+        val trustManagers = arrayOf<TrustManager>(object : X509TrustManager {
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit
+
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit
+
+            override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+
+        })
+
+        val sslSocketFactory = SSLContext.getInstance("SSL").apply {
+            init(null, trustManagers, SecureRandom())
+        }.socketFactory
+
+        builder.sslSocketFactory(sslSocketFactory, trustManagers[0] as X509TrustManager)
+        builder.hostnameVerifier { _, _ -> true }
+    }
 }
