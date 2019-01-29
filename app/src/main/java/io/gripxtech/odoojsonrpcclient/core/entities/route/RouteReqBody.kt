@@ -19,5 +19,5 @@ data class RouteReqBody(
 
         @field:Expose
         @field:SerializedName("params")
-        val params: Map<String, Any> = mapOf()
+        val params: Any = mapOf<String, Any>()
 )

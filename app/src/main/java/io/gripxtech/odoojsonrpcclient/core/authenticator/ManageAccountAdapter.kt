@@ -1,10 +1,10 @@
 package io.gripxtech.odoojsonrpcclient.core.authenticator
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
@@ -139,7 +139,7 @@ class ManageAccountAdapter(
         Odoo.authenticate(user.login, user.password, user.database) {
 
             onSubscribe { disposable ->
-                activity.compositeDisposable.add(disposable)
+                activity.compositeDisposable?.add(disposable)
             }
 
             onNext { response ->
@@ -184,12 +184,12 @@ class ManageAccountAdapter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeEx {
-                    onSubscribe { _ ->
+                    onSubscribe {
                         // Must be complete, not dispose in between
                         // compositeDisposable.add(d)
                     }
 
-                    onNext { _ ->
+                    onNext {
                         activity.restartApp()
                     }
 
@@ -211,12 +211,12 @@ class ManageAccountAdapter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeEx {
-                    onSubscribe { _ ->
+                    onSubscribe {
                         // Must be complete, not dispose in between
                         // compositeDisposable.add(d)
                     }
 
-                    onNext { _ ->
+                    onNext {
                         activity.restartApp()
                     }
 
@@ -238,7 +238,7 @@ class ManageAccountAdapter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeEx {
-                    onSubscribe { _ ->
+                    onSubscribe {
                         // Must be complete, not dispose in between
                         // compositeDisposable.add(d)
                     }

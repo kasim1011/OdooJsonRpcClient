@@ -1,13 +1,13 @@
 package io.gripxtech.odoojsonrpcclient.core.utils.recycler
 
-import android.databinding.DataBindingUtil
-import android.support.annotation.DrawableRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import androidx.annotation.DrawableRes
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.gripxtech.odoojsonrpcclient.R
 import io.gripxtech.odoojsonrpcclient.core.utils.recycler.entities.*
 import io.gripxtech.odoojsonrpcclient.databinding.ItemViewRecyclerEmptyBinding
@@ -188,9 +188,9 @@ abstract class RecyclerBaseAdapter(
         val layoutManager = recyclerView.layoutManager
         if (layoutManager != null && layoutManager is LinearLayoutManager) {
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(lclRecyclerView: RecyclerView?, dx: Int, dy: Int) {
+                override fun onScrolled(lclRecyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
-                    if (lclRecyclerView != null && pvtMoreListener != null || pvtLessListener != null) {
+                    if (pvtMoreListener != null || pvtLessListener != null) {
                         val totalItemCount = layoutManager.itemCount
                         val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                         val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
@@ -199,7 +199,7 @@ abstract class RecyclerBaseAdapter(
                                 if (pvtMoreListener != null) {
                                     synchronized(this) {
                                         isMoreLoading = true
-                                        lclRecyclerView?.post {
+                                        lclRecyclerView.post {
                                             hideMore()
                                             showMore()
                                             val lclPvtMoreListener = pvtMoreListener
@@ -211,7 +211,7 @@ abstract class RecyclerBaseAdapter(
                                 if (pvtLessListener != null) {
                                     synchronized(this) {
                                         isMoreLoading = true
-                                        lclRecyclerView?.post {
+                                        lclRecyclerView.post {
                                             hideLess()
                                             showLess()
                                             val lclPvtLessListener = pvtLessListener

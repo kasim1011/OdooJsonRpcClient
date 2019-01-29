@@ -1,17 +1,16 @@
 package io.gripxtech.odoojsonrpcclient
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
-import io.gripxtech.odoojsonrpcclient.core.authenticator.LoginActivity
-import io.gripxtech.odoojsonrpcclient.core.authenticator.ManageAccountActivity
-import io.gripxtech.odoojsonrpcclient.core.authenticator.ProfileActivity
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.GravityCompat
+import androidx.databinding.DataBindingUtil
 import io.gripxtech.odoojsonrpcclient.core.preferences.SettingsActivity
+import io.gripxtech.odoojsonrpcclient.core.utils.LocaleHelper
 import io.gripxtech.odoojsonrpcclient.core.utils.NavHeaderViewHolder
 import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.postEx
 import io.gripxtech.odoojsonrpcclient.customer.CustomerFragment
@@ -35,7 +34,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navHeader: NavHeaderViewHolder
 
     private var currentDrawerItemID: Int = 0
-    private var drawerClickStatus: Boolean = false
 
     private val customerFragment: CustomerFragment by lazy {
         CustomerFragment.newInstance(CustomerFragment.Companion.CustomerType.Customer)
@@ -47,6 +45,14 @@ class MainActivity : AppCompatActivity() {
 
     private val companyFragment: CustomerFragment by lazy {
         CustomerFragment.newInstance(CustomerFragment.Companion.CustomerType.Company)
+    }
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) {
+            super.attachBaseContext(LocaleHelper.setLocale(newBase))
+        } else {
+            super.attachBaseContext(newBase)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,8 +76,8 @@ class MainActivity : AppCompatActivity() {
         setTitle(R.string.app_name)
 
         drawerToggle = ActionBarDrawerToggle(
-                this, binding.dl, binding.tb,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            this, binding.dl, binding.tb,
+            R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
         binding.dl.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
@@ -81,28 +87,8 @@ class MainActivity : AppCompatActivity() {
             navHeader = NavHeaderViewHolder(view)
             val user = getActiveOdooUser()
             if (user != null) {
-                navHeader.setUser(user)
+                navHeader.setUser(user, GlideApp.with(this@MainActivity))
             }
-        }
-
-        drawerClickStatus = false
-
-        navHeader.menuToggle.setOnClickListener {
-            val menu = binding.nv.menu
-            if (drawerClickStatus) {
-                menu.setGroupVisible(R.id.nav_menu_1, true)
-                menu.setGroupVisible(R.id.nav_menu_2, true)
-                menu.setGroupVisible(R.id.nav_menu_3, true)
-                menu.setGroupVisible(R.id.nav_menu_4, false)
-                navHeader.menuToggleImage.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp)
-            } else {
-                menu.setGroupVisible(R.id.nav_menu_1, false)
-                menu.setGroupVisible(R.id.nav_menu_2, false)
-                menu.setGroupVisible(R.id.nav_menu_3, false)
-                menu.setGroupVisible(R.id.nav_menu_4, true)
-                navHeader.menuToggleImage.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)
-            }
-            drawerClickStatus = !drawerClickStatus
         }
 
         binding.nv.setNavigationItemSelectedListener { item ->
@@ -126,26 +112,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
-                R.id.nav_profile -> {
-                    if (getActiveOdooUser() != null) {
-                        startActivity(Intent(this, ProfileActivity::class.java))
-                    } else {
-                        showMessage(message = getString(R.string.error_active_user))
-                    }
-                    true
-                }
                 R.id.nav_settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
-                    true
-                }
-                R.id.nav_add_account -> {
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.putExtra(LoginActivity.FROM_APP_SETTINGS, true)
-                    startActivity(intent)
-                    true
-                }
-                R.id.nav_manage_account -> {
-                    startActivity(Intent(this, ManageAccountActivity::class.java))
                     true
                 }
                 else -> {
@@ -159,9 +127,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         drawerToggle.onConfigurationChanged(newConfig)
+        LocaleHelper.setLocale(this)
     }
 
     private fun loadFragment(currentDrawerItemID: Int) {
@@ -170,21 +139,21 @@ class MainActivity : AppCompatActivity() {
         when (currentDrawerItemID) {
             ACTION_CUSTOMER -> {
                 supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.clMain, customerFragment, getString(R.string.action_customer))
-                        .commit()
+                    .beginTransaction()
+                    .replace(R.id.clMain, customerFragment, getString(R.string.action_customer))
+                    .commit()
             }
             ACTION_SUPPLIER -> {
                 supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.clMain, supplierFragment, getString(R.string.action_supplier))
-                        .commit()
+                    .beginTransaction()
+                    .replace(R.id.clMain, supplierFragment, getString(R.string.action_supplier))
+                    .commit()
             }
             ACTION_COMPANY -> {
                 supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.clMain, companyFragment, getString(R.string.action_company))
-                        .commit()
+                    .beginTransaction()
+                    .replace(R.id.clMain, companyFragment, getString(R.string.action_company))
+                    .commit()
             }
         }
     }

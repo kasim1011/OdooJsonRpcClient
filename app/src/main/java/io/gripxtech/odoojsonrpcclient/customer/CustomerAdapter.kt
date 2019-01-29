@@ -1,15 +1,15 @@
 package io.gripxtech.odoojsonrpcclient.customer
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import io.gripxtech.odoojsonrpcclient.core.utils.recycler.RecyclerBaseAdapter
 import io.gripxtech.odoojsonrpcclient.customer.entities.Customer
 import io.gripxtech.odoojsonrpcclient.databinding.ItemViewCustomerBinding
 
 class CustomerAdapter(
-        val fragment: CustomerFragment,
-        items: ArrayList<Any>
+    private val fragment: CustomerFragment,
+    items: ArrayList<Any>
 ) : RecyclerBaseAdapter(items, fragment.binding.rv) {
 
     companion object {

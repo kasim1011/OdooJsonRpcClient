@@ -1,12 +1,16 @@
 package io.gripxtech.odoojsonrpcclient.core.authenticator
 
-import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v7.app.AppCompatDelegate
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.R
+import io.gripxtech.odoojsonrpcclient.core.utils.LocaleHelper
 import io.gripxtech.odoojsonrpcclient.core.utils.recycler.decorators.VerticalLinearItemDecorator
 import io.gripxtech.odoojsonrpcclient.databinding.ActivityManageAccountBinding
 import io.gripxtech.odoojsonrpcclient.getOdooUsers
@@ -21,13 +25,28 @@ class ManageAccountActivity : AppCompatActivity() {
     }
 
     lateinit var app: App private set
-    lateinit var compositeDisposable: CompositeDisposable private set
+    var compositeDisposable: CompositeDisposable? = null
+        private set
     lateinit var binding: ActivityManageAccountBinding private set
     lateinit var adapter: ManageAccountAdapter private set
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) {
+            super.attachBaseContext(LocaleHelper.setLocale(newBase))
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper.setLocale(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         app = application as App
+        compositeDisposable?.dispose()
         compositeDisposable = CompositeDisposable()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_manage_account)
 
@@ -40,7 +59,7 @@ class ManageAccountActivity : AppCompatActivity() {
 
         val users = getOdooUsers()
         val layoutManager = LinearLayoutManager(
-                this, LinearLayoutManager.VERTICAL, false
+            this, RecyclerView.VERTICAL, false
         )
         binding.rv.layoutManager = layoutManager
         binding.rv.addItemDecoration(VerticalLinearItemDecorator(
@@ -52,7 +71,7 @@ class ManageAccountActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        compositeDisposable.dispose()
+        compositeDisposable?.dispose()
         super.onDestroy()
     }
 }

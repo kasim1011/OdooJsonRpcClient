@@ -90,6 +90,7 @@ data class AuthenticateResult(
             putString("database", db)
             putString("serverVersion", serverVersion)
             putString("isAdmin", admin.toString())
+            putString("isSuperuser", superuser.toString())
             putString("id", uid.toString())
             putString("partnerId", partnerId.toString())
             putString("name", name)

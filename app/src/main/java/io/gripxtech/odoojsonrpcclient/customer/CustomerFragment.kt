@@ -2,13 +2,11 @@ package io.gripxtech.odoojsonrpcclient.customer
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
 import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
@@ -16,7 +14,7 @@ import io.gripxtech.odoojsonrpcclient.customer.entities.Customer
 import io.gripxtech.odoojsonrpcclient.databinding.FragmentCustomerBinding
 import io.reactivex.disposables.CompositeDisposable
 
-class CustomerFragment : Fragment() {
+class CustomerFragment : androidx.fragment.app.Fragment() {
 
     companion object {
 
@@ -29,18 +27,18 @@ class CustomerFragment : Fragment() {
         private const val TYPE = "type"
 
         fun newInstance(customerType: CustomerType) =
-                CustomerFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(TYPE, customerType.name)
-                    }
+            CustomerFragment().apply {
+                arguments = Bundle().apply {
+                    putString(TYPE, customerType.name)
                 }
+            }
     }
 
     lateinit var activity: MainActivity private set
     lateinit var binding: FragmentCustomerBinding private set
-    lateinit var compositeDisposable: CompositeDisposable private set
+    private var compositeDisposable: CompositeDisposable? = null
 
-    private lateinit var customerType: CustomerType
+    private var customerType: CustomerType = CustomerType.Customer
     private lateinit var drawerToggle: ActionBarDrawerToggle
 
     val adapter: CustomerAdapter by lazy {
@@ -50,8 +48,11 @@ class CustomerFragment : Fragment() {
     private val customerListType = object : TypeToken<ArrayList<Customer>>() {}.type
     private val limit = RECORD_LIMIT
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        compositeDisposable?.dispose()
         compositeDisposable = CompositeDisposable()
 
         // Inflate the layout for this fragment
@@ -63,7 +64,7 @@ class CustomerFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         activity = getActivity() as MainActivity
         arguments?.let {
-            customerType = CustomerType.valueOf(it.getString(TYPE))
+            customerType = CustomerType.valueOf(it.getString(TYPE) ?: "")
         }
 
         // Hiding MainActivity's AppBarLayout as well as NestedScrollView first
@@ -91,17 +92,22 @@ class CustomerFragment : Fragment() {
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
 
-        drawerToggle = ActionBarDrawerToggle(activity, activity.binding.dl,
-                binding.tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        drawerToggle = ActionBarDrawerToggle(
+            activity, activity.binding.dl,
+            binding.tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        )
         activity.binding.dl.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
-        val layoutManager = LinearLayoutManager(
-                activity, LinearLayoutManager.VERTICAL, false
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+            activity, RecyclerView.VERTICAL, false
         )
         binding.rv.layoutManager = layoutManager
         binding.rv.addItemDecoration(
-                DividerItemDecoration(activity, LinearLayoutManager.VERTICAL)
+            androidx.recyclerview.widget.DividerItemDecoration(
+                activity,
+                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+            )
         )
 
         adapter.setupScrollListener(binding.rv)
@@ -131,7 +137,7 @@ class CustomerFragment : Fragment() {
         binding.rv.adapter = adapter
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (::drawerToggle.isInitialized) {
             drawerToggle.onConfigurationChanged(newConfig)
@@ -139,26 +145,28 @@ class CustomerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        compositeDisposable.dispose()
+        compositeDisposable?.dispose()
         super.onDestroyView()
     }
 
     private fun fetchCustomer() {
-        Odoo.searchRead("res.partner", Customer.fields,
-                when (customerType) {
-                    CustomerType.Customer -> {
-                        listOf(listOf("customer", "=", true))
-                    }
-                    CustomerType.Supplier -> {
-                        listOf(listOf("supplier", "=", true))
-                    }
-                    CustomerType.Company -> {
-                        listOf(listOf("is_company", "=", true))
-                    }
-                }, adapter.rowItemCount, limit, "name ASC") {
+        Odoo.searchRead(
+            "res.partner", Customer.fields,
+            when (customerType) {
+                CustomerType.Customer -> {
+                    listOf(listOf("customer", "=", true))
+                }
+                CustomerType.Supplier -> {
+                    listOf(listOf("supplier", "=", true))
+                }
+                CustomerType.Company -> {
+                    listOf(listOf("is_company", "=", true))
+                }
+            }, adapter.rowItemCount, limit, "name ASC"
+        ) {
 
             onSubscribe { disposable ->
-                compositeDisposable.add(disposable)
+                compositeDisposable?.add(disposable)
             }
 
             onNext { response ->
@@ -182,10 +190,9 @@ class CustomerFragment : Fragment() {
                             }
                         }
                         adapter.addRowItems(items)
-                        compositeDisposable.dispose()
-                        compositeDisposable = CompositeDisposable()
                     } else {
                         adapter.showError(searchRead.errorMessage)
+                        activity.promptReport(searchRead.odooError)
                     }
                 } else {
                     adapter.showError(response.errorBodySpanned)

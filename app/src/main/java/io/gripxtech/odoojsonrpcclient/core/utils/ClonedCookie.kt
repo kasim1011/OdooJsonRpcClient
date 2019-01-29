@@ -1,12 +1,12 @@
 package io.gripxtech.odoojsonrpcclient.core.utils
 
-import android.annotation.SuppressLint
+import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import io.mironov.smuggler.AutoParcelable
+import kotlinx.android.parcel.Parcelize
 import okhttp3.Cookie
 
-@SuppressLint("ParcelCreator")
+@Parcelize
 data class ClonedCookie(
 
         @field:Expose
@@ -45,7 +45,7 @@ data class ClonedCookie(
         @field:SerializedName("hostOnly")
         private val hostOnly: Boolean
 
-) : AutoParcelable {
+) : Parcelable {
     companion object {
 
         fun fromCookie(cookie: Cookie) = ClonedCookie(

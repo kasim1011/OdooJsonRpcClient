@@ -1,31 +1,58 @@
 package io.gripxtech.odoojsonrpcclient.core.authenticator
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.text.Html
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateResult
+import io.gripxtech.odoojsonrpcclient.core.utils.LocaleHelper
 import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var app: App
-    private lateinit var compositeDisposable: CompositeDisposable
+    private var compositeDisposable: CompositeDisposable? = null
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) {
+            super.attachBaseContext(LocaleHelper.setLocale(newBase))
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper.setLocale(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!isTaskRoot
+            && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+            && intent.action != null
+            && intent.action == Intent.ACTION_MAIN
+        ) {
+            finish()
+            return
+        }
+
         app = application as App
+        compositeDisposable?.dispose()
         compositeDisposable = CompositeDisposable()
     }
 
@@ -40,29 +67,65 @@ class SplashActivity : AppCompatActivity() {
             Odoo.user = user
             Odoo.check {
                 onSubscribe { disposable ->
-                    compositeDisposable.add(disposable)
+                    compositeDisposable?.add(disposable)
                 }
 
                 onNext { response ->
-                    if (response.isSuccessful && response.body()!!.isSuccessful) {
-                        startMainActivity()
+                    if (response.isSuccessful) {
+                        val check = response.body()!!
+                        if (check.isSuccessful) {
+                            app.cookiePrefs.setCookies(Odoo.pendingAuthenticateCookies)
+                            startMainActivity()
+                        } else {
+                            val odooError = check.odooError
+                            showMessage(
+                                title = getString(R.string.server_request_error, response.code(), response.message()),
+                                message = check.errorMessage,
+                                positiveButton = getString(R.string.login_again),
+                                positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
+                                    authenticate(user)
+                                },
+                                showNegativeButton = true,
+                                negativeButton = getString(R.string.report_feedback),
+                                negativeButtonListener = DialogInterface.OnClickListener { _, _ ->
+                                    val intent = emailIntent(
+                                        address = arrayOf(getString(R.string.preference_contact_summary)),
+                                        cc = arrayOf(),
+                                        subject = "${getString(R.string.app_name)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) " +
+                                                getString(R.string.report_feedback),
+                                        body = "Name: ${odooError.data.name}\n\n" +
+                                                "Message: ${odooError.data.message}\n\n" +
+                                                "Exception Type: ${odooError.data.exceptionType}\n\n" +
+                                                "Arguments: ${odooError.data.arguments}\n\n" +
+                                                "Debug: ${odooError.data.debug}\n\n"
+                                    )
+                                    try {
+                                        startActivity(intent)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                        showMessage(message = getString(R.string.preference_error_email_intent))
+                                    }
+                                },
+                                showNeutralButton = true,
+                                neutralButton = getString(R.string.preference_logout_title),
+                                neutralButtonListener = DialogInterface.OnClickListener { _, _ ->
+                                    logoutApp()
+                                }
+                            )
+                        }
                     } else {
                         val errorBody = response.errorBody()?.string()
                                 ?: getString(R.string.generic_error)
                         @Suppress("DEPRECATION")
-                        val message: CharSequence = if (errorBody.contains("jsonrpc", ignoreCase = true)) {
-                            response.body()?.errorMessage ?: getString(R.string.generic_error)
-                        } else {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                                Html.fromHtml(errorBody, Html.FROM_HTML_MODE_COMPACT)
-                            else
-                                Html.fromHtml(errorBody)
-                        }
+                        val message: CharSequence = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                            Html.fromHtml(errorBody, Html.FROM_HTML_MODE_COMPACT)
+                        else
+                            Html.fromHtml(errorBody)
 
                         showMessage(
                                 title = getString(R.string.server_request_error, response.code(), response.message()),
                                 message = message,
-                                positiveButton = getString(R.string.try_again),
+                            positiveButton = getString(R.string.login_again),
                                 positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
                                     authenticate(user)
                                 },
@@ -70,7 +133,12 @@ class SplashActivity : AppCompatActivity() {
                                 negativeButton = getString(R.string.quit),
                                 negativeButtonListener = DialogInterface.OnClickListener { _, _ ->
                                     ActivityCompat.finishAffinity(this@SplashActivity)
-                                }
+                                },
+                            showNeutralButton = true,
+                            neutralButton = getString(R.string.preference_logout_title),
+                            neutralButtonListener = DialogInterface.OnClickListener { _, _ ->
+                                logoutApp()
+                            }
                         )
                     }
                 }
@@ -88,10 +156,26 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
+    private fun logoutApp() {
+        Single.fromCallable {
+            for (odooUser in getOdooUsers()) {
+                deleteOdooUser(odooUser)
+            }
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeEx {
+            onSuccess {
+                restartApp()
+            }
+
+            onError { error ->
+                error.printStackTrace()
+            }
+        }
+    }
+
     private fun authenticate(user: OdooUser) {
         Odoo.authenticate(login = user.login, password = user.password, database = user.database) {
             onSubscribe { disposable ->
-                compositeDisposable.add(disposable)
+                compositeDisposable?.add(disposable)
             }
 
             onNext { response ->
@@ -101,8 +185,7 @@ class SplashActivity : AppCompatActivity() {
                         createAccount(authenticateResult = authenticate.result, user = user)
                     } else {
                         // logoutOdooUser(user)
-                        deleteOdooUser(user)
-                        restartApp()
+                        logoutApp()
                     }
                 } else {
                     showServerErrorMessage(response, positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
@@ -140,7 +223,7 @@ class SplashActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeEx {
-                    onSubscribe { _: Disposable ->
+                    onSubscribe {
                         // Must be complete, not dispose in between
                         // compositeDisposable.add(d)
                     }
@@ -171,7 +254,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        compositeDisposable.dispose()
+        compositeDisposable?.dispose()
         super.onDestroy()
     }
 }

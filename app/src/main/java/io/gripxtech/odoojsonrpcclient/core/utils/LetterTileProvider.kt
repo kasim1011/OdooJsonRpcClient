@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
 import android.text.TextPaint
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 import io.gripxtech.odoojsonrpcclient.R
 import java.io.ByteArrayOutputStream
 

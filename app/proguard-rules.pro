@@ -59,6 +59,7 @@
 # Application classes that will be serialized/deserialized over Gson
 -keep class io.gripxtech.odoojsonrpcclient.core.entities.** { *; }
 -keep interface io.gripxtech.odoojsonrpcclient.core.web.** { *; }
+-keep class io.gripxtech.odoojsonrpcclient.customer.entities.** { *; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)

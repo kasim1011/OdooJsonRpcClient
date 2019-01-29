@@ -23,11 +23,13 @@ abstract class Prefs(val name: String, val context: Context) {
 
     protected fun putLong(key: String, value: Long) = preferences.edit().putLong(key, value).apply()
 
-    protected fun getString(key: String, defValue: String = ""): String = preferences.getString(key, defValue)
+    protected fun getString(key: String, defValue: String = ""): String =
+        preferences.getString(key, defValue) ?: defValue
 
     protected fun putString(key: String, value: String) = preferences.edit().putString(key, value).apply()
 
-    protected fun getStringSet(key: String, defValue: MutableSet<String> = mutableSetOf()): MutableSet<String> = preferences.getStringSet(key, defValue)
+    protected fun getStringSet(key: String, defValue: MutableSet<String> = mutableSetOf()): MutableSet<String> =
+        preferences.getStringSet(key, defValue) ?: defValue
 
     protected fun putStringSet(key: String, value: MutableSet<String>) = preferences.edit().putStringSet(key, value).apply()
 

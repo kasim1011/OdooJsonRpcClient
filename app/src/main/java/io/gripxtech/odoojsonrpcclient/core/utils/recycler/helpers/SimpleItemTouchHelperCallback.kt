@@ -16,9 +16,9 @@
 
 package io.gripxtech.odoojsonrpcclient.core.utils.recycler.helpers
 
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * An implementation of {@link ItemTouchHelper.Callback} that enables basic drag & drop and
@@ -31,19 +31,16 @@ import android.support.v7.widget.helper.ItemTouchHelper
  * @author Paul Burke (ipaulpro)
  */
 class SimpleItemTouchHelperCallback(
-        val adapter: ItemTouchHelperAdapter,
-        private val longPressDragEnabled: Boolean = false,
-        private val itemViewSwipeEnabled: Boolean = false
+    val adapter: ItemTouchHelperAdapter,
+    private val longPressDragEnabled: Boolean = false,
+    private val itemViewSwipeEnabled: Boolean = false
 ) : ItemTouchHelper.Callback() {
 
     companion object {
         const val ALPHA_FULL = 1.0f
     }
 
-    override fun getMovementFlags(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder?): Int {
-        if (recyclerView == null || viewHolder == null) {
-            return -1
-        }
+    override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         // Set movement flags based on the layout manager
         return if (recyclerView.layoutManager is GridLayoutManager) {
             val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -56,10 +53,11 @@ class SimpleItemTouchHelperCallback(
         }
     }
 
-    override fun onMove(recyclerView: RecyclerView?, source: RecyclerView.ViewHolder?, target: RecyclerView.ViewHolder?): Boolean {
-        if (recyclerView == null || source == null || target == null) {
-            return false
-        }
+    override fun onMove(
+        recyclerView: RecyclerView,
+        source: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
         if (source.itemViewType != target.itemViewType) {
             return false
         }
@@ -69,10 +67,7 @@ class SimpleItemTouchHelperCallback(
         return true
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int) {
-        if (viewHolder === null) {
-            return
-        }
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         // Notify the adapter of the dismiss
         adapter.onItemDismiss(viewHolder.adapterPosition)
     }

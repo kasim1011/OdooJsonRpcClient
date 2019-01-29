@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <color name="colorPrimaryLight">#C5CAE9</color>
-    <color name="colorAccent">#FF4081</color>
+    <!--<color name="colorAccent">#FF4081</color>-->
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
     <color name="black">#FF000000</color>
     <color name="textRed">#FFEF4738</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#34b7f1</color>
+    <color name="colorBg">#ece5dd</color>
+    <color name="colorMe">#dcf8c6</color>
+    <color name="colorFriend">#34b7f1</color>
 
     <!-- Android Style Colors -->
     <color name="android_blue">#33B5E5</color>
@@ -22,5 +29,8 @@
     <color name="android_orange_dark">#FF8800</color>
     <color name="android_red">#FF4444</color>
     <color name="android_red_dark">#CC0000</color>
+
+    <color name="map_stroke">#779933CC</color>
+    <color name="map_fill">#44CC0000</color>
 
 </resources>

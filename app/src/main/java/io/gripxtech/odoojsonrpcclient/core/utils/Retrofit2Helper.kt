@@ -12,8 +12,8 @@ import timber.log.Timber
 
 
 class Retrofit2Helper(
-        _protocol: Retrofit2Helper.Companion.Protocol,
-        _host: String
+    _protocol: Retrofit2Helper.Companion.Protocol,
+    _host: String
 ) {
     companion object {
         const val TAG = "Retrofit2Helper"
@@ -43,56 +43,58 @@ class Retrofit2Helper(
         get() {
             if (_retrofit == null) {
                 _retrofit = Retrofit.Builder()
-                        .baseUrl(when (protocol) {
+                    .baseUrl(
+                        when (protocol) {
                             Retrofit2Helper.Companion.Protocol.HTTP -> {
                                 "http://"
                             }
                             Retrofit2Helper.Companion.Protocol.HTTPS -> {
                                 "https://"
                             }
-                        } + host)
-                        .client(client)
-                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                        .addConverterFactory(GsonConverterFactory.create(gson))
-                        .build()
+                        } + host
+                    )
+                    .client(client)
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .build()
             }
             return _retrofit!!
         }
 
-    val client: OkHttpClient
+    private val client: OkHttpClient
         get() = OkHttpClient()
-                .newBuilder()
-                .cookieJar(object : CookieJar {
+            .newBuilder()
+            .cookieJar(object : CookieJar {
 
-                    private var cookies: MutableList<Cookie>? = Retrofit2Helper.app.cookiePrefs.getCookies()
+                private var cookies: MutableList<Cookie>? = Retrofit2Helper.app.cookiePrefs.getCookies()
 
-                    override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
-                        if (url.toString().contains("/web/session/authenticate")) {
-                            this.cookies = cookies
-                            if (cookies != null) {
-                                Odoo.pendingAuthenticateCookies.clear()
-                                Odoo.pendingAuthenticateCookies.addAll(cookies)
-                            }
+                override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
+                    if (url.toString().contains("/web/session/authenticate") || url.toString().contains("web/session/check")) {
+                        this.cookies = cookies
+                        if (cookies != null) {
+                            Odoo.pendingAuthenticateCookies.clear()
+                            Odoo.pendingAuthenticateCookies.addAll(cookies)
                         }
                     }
-
-                    override fun loadForRequest(url: HttpUrl?): MutableList<Cookie>? =
-                            cookies
-                })
-                .addInterceptor { chain: Interceptor.Chain? ->
-                    val original = chain!!.request()
-
-                    val request = original.newBuilder()
-                            .header("User-Agent", android.os.Build.MODEL)
-                            .method(original.method(), original.body())
-                            .build()
-
-                    chain.proceed(request)
                 }
-                .addInterceptor(HttpLoggingInterceptor {
-                    Timber.tag("OkHttp").d(it)
-                }.apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                })
-                .build()
+
+                override fun loadForRequest(url: HttpUrl?): MutableList<Cookie>? =
+                    cookies
+            })
+            .addInterceptor { chain: Interceptor.Chain? ->
+                val original = chain!!.request()
+
+                val request = original.newBuilder()
+                    .header("User-Agent", android.os.Build.MODEL)
+                    .method(original.method(), original.body())
+                    .build()
+
+                chain.proceed(request)
+            }
+            .addInterceptor(HttpLoggingInterceptor {
+                Timber.tag("OkHttp").d(it)
+            }.apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
 }

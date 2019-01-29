@@ -95,27 +95,28 @@ object Odoo {
 
     @Suppress("PlatformExtensionReceiverOfInline")
     fun fromAccount(manager: AccountManager, account: Account) = OdooUser(
-            Retrofit2Helper.Companion.Protocol.valueOf(
-                    manager.getUserData(account, "protocol")
-            ),
-            manager.getUserData(account, "host"),
-            manager.getUserData(account, "login"),
-            manager.getUserData(account, "password").decryptAES(),
-            manager.getUserData(account, "database"),
-            manager.getUserData(account, "serverVersion"),
-            manager.getUserData(account, "isAdmin").toBoolean(),
-            manager.getUserData(account, "id").toInt(),
-            manager.getUserData(account, "name"),
-            manager.getUserData(account, "imageSmall"),
-            manager.getUserData(account, "partnerId").toInt(),
-            manager.getUserData(account, "context").toJsonObject(),
-            manager.getUserData(account, "active").toBoolean(),
-            account
+        Retrofit2Helper.Companion.Protocol.valueOf(
+            manager.getUserData(account, "protocol")
+        ),
+        manager.getUserData(account, "host"),
+        manager.getUserData(account, "login"),
+        manager.getUserData(account, "password").decryptAES(),
+        manager.getUserData(account, "database"),
+        manager.getUserData(account, "serverVersion"),
+        manager.getUserData(account, "isAdmin").toBoolean(),
+        manager.getUserData(account, "isSuperuser").toBoolean(),
+        manager.getUserData(account, "id").toInt(),
+        manager.getUserData(account, "name"),
+        manager.getUserData(account, "imageSmall"),
+        manager.getUserData(account, "partnerId").toInt(),
+        manager.getUserData(account, "context").toJsonObject(),
+        manager.getUserData(account, "active").toBoolean(),
+        account
     )
 
     private val retrofit2Helper = Retrofit2Helper(
-            protocol,
-            host
+        protocol,
+        host
     )
     private val retrofit
         get() = retrofit2Helper.retrofit
@@ -136,52 +137,56 @@ object Odoo {
         val requestBody = VersionInfoReqBody(id = jsonRpcId)
         val observable = request.versionInfo(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<VersionInfo>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<VersionInfo>().apply(callback))
     }
 
     fun listDb(serverVersion: String, callback: ResponseObserver<ListDb>.() -> Unit) {
         val requestBody = ListDbReqBody(id = jsonRpcId)
         val observable =
-                when {
-                    serverVersion.startsWith("8.") -> {
-                        val request = retrofit.create(ListDbV8Request::class.java)
-                        request.listDb(requestBody)
-                    }
-                    serverVersion.startsWith("9.") -> {
-                        val request = retrofit.create(ListDbV9Request::class.java)
-                        request.listDb(requestBody)
-                    }
-                    else -> {
-                        val request = retrofit.create(ListDbRequest::class.java)
-                        request.listDb(requestBody)
-                    }
+            when {
+                serverVersion.startsWith("8.") -> {
+                    val request = retrofit.create(ListDbV8Request::class.java)
+                    request.listDb(requestBody)
                 }
+                serverVersion.startsWith("9.") -> {
+                    val request = retrofit.create(ListDbV9Request::class.java)
+                    request.listDb(requestBody)
+                }
+                else -> {
+                    val request = retrofit.create(ListDbRequest::class.java)
+                    request.listDb(requestBody)
+                }
+            }
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<ListDb>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<ListDb>().apply(callback))
     }
 
     private val pendingAuthenticateCallbacks: ArrayList<ResponseObserver<Authenticate>.() -> Unit> = arrayListOf()
     val pendingAuthenticateCookies: ArrayList<Cookie> = arrayListOf()
 
     @Synchronized
-    fun authenticate(login: String, password: String, database: String,
-                     callback: ResponseObserver<Authenticate>.() -> Unit) {
+    fun authenticate(
+        login: String, password: String, database: String,
+        callback: ResponseObserver<Authenticate>.() -> Unit
+    ) {
         pendingAuthenticateCallbacks += callback
         if (pendingAuthenticateCallbacks.size == 1) {
             val request = retrofit.create(AuthenticateRequest::class.java)
-            val requestBody = AuthenticateReqBody(id = jsonRpcId, params = AuthenticateParams(
+            val requestBody = AuthenticateReqBody(
+                id = jsonRpcId, params = AuthenticateParams(
                     host, login, password, database
-            ))
+                )
+            )
             val observable = request.authenticate(requestBody)
             observable.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseObserver<Authenticate>().apply {
-                        (pendingAuthenticateCallbacks.size - 1 downTo 0).map {
-                            pendingAuthenticateCallbacks.removeAt(it)
-                        }.forEach { it() }
-                    })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseObserver<Authenticate>().apply {
+                    (pendingAuthenticateCallbacks.size - 1 downTo 0).map {
+                        pendingAuthenticateCallbacks.removeAt(it)
+                    }.forEach { it() }
+                })
         }
     }
 
@@ -190,8 +195,8 @@ object Odoo {
         val requestBody = CheckReqBody(id = jsonRpcId)
         val observable = request.check(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<Check>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<Check>().apply(callback))
     }
 
     fun destroy(callback: ResponseObserver<Destroy>.() -> Unit) {
@@ -199,8 +204,8 @@ object Odoo {
         val requestBody = DestroyReqBody(id = jsonRpcId)
         val observable = request.destroy(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<Destroy>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<Destroy>().apply(callback))
     }
 
     fun modules(callback: ResponseObserver<Modules>.() -> Unit) {
@@ -208,8 +213,8 @@ object Odoo {
         val requestBody = ModulesReqBody(id = jsonRpcId)
         val observable = request.modules(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<Modules>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<Modules>().apply(callback))
     }
 
     fun getSessionInfo(callback: ResponseObserver<GetSessionInfo>.() -> Unit) {
@@ -217,133 +222,141 @@ object Odoo {
         val requestBody = GetSessionInfoReqBody(id = jsonRpcId)
         val observable = request.getSessionInfo(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<GetSessionInfo>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<GetSessionInfo>().apply(callback))
     }
 
     fun searchRead(
-            model: String,
-            fields: List<String> = listOf(),
-            domain: List<Any> = listOf(),
-            offset: Int = 0,
-            limit: Int = 0,
-            sort: String = "",
-            context: JsonObject = user.context,
-            callback: ResponseObserver<SearchRead>.() -> Unit
+        model: String,
+        fields: List<String> = listOf(),
+        domain: List<Any> = listOf(),
+        offset: Int = 0,
+        limit: Int = 0,
+        sort: String = "",
+        context: JsonObject = user.context,
+        callback: ResponseObserver<SearchRead>.() -> Unit
     ) {
         val request = retrofit.create(SearchReadRequest::class.java)
-        val requestBody = SearchReadReqBody(id = jsonRpcId, params = SearchReadParams(
+        val requestBody = SearchReadReqBody(
+            id = jsonRpcId, params = SearchReadParams(
                 model, fields, domain, offset, limit, sort, context
-        ))
+            )
+        )
         val observable = request.searchRead(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<SearchRead>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<SearchRead>().apply(callback))
     }
 
     fun load(
-            id: Int,
-            model: String,
-            fields: List<String> = listOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<Load>.() -> Unit
+        id: Int,
+        model: String,
+        fields: List<String> = listOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<Load>.() -> Unit
     ) {
         val request = retrofit.create(LoadRequest::class.java)
-        val requestBody = LoadReqBody(id = jsonRpcId, params = LoadParams(
+        val requestBody = LoadReqBody(
+            id = jsonRpcId, params = LoadParams(
                 id, model, fields, context
-        ))
+            )
+        )
         val observable = request.load(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<Load>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<Load>().apply(callback))
     }
 
     fun callKw(
-            model: String,
-            method: String,
-            args: List<Any>,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<CallKw>.() -> Unit
+        model: String,
+        method: String,
+        args: List<Any>,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<CallKw>.() -> Unit
     ) {
         val request = retrofit.create(CallKwRequest::class.java)
-        val requestBody = CallKwReqBody(id = jsonRpcId, params = CallKwParams(
+        val requestBody = CallKwReqBody(
+            id = jsonRpcId, params = CallKwParams(
                 model, method, args, kwArgs, context
-        ))
+            )
+        )
         val observable = request.callKw(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<CallKw>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<CallKw>().apply(callback))
     }
 
     fun execWorkflow(
-            model: String,
-            id: Int,
-            signal: String,
-            context: JsonObject = user.context,
-            callback: ResponseObserver<ExecWorkflow>.() -> Unit
+        model: String,
+        id: Int,
+        signal: String,
+        context: JsonObject = user.context,
+        callback: ResponseObserver<ExecWorkflow>.() -> Unit
     ) {
         val request = retrofit.create(ExecWorkflowRequest::class.java)
-        val requestBody = ExecWorkflowReqBody(id = jsonRpcId, params = ExecWorkflowParams(
+        val requestBody = ExecWorkflowReqBody(
+            id = jsonRpcId, params = ExecWorkflowParams(
                 model, id, signal, context
-        ))
+            )
+        )
         val observable = request.execWorkflow(requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<ExecWorkflow>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<ExecWorkflow>().apply(callback))
     }
 
     fun route(
-            path1: String,
-            path2: String,
-            args: Map<String, Any>,
-            callback: ResponseObserver<Route>.() -> Unit
+        path1: String,
+        path2: String,
+        args: Any = mapOf<String, Any>(),
+        callback: ResponseObserver<Route>.() -> Unit
     ) {
         val request = retrofit.create(RouteRequest::class.java)
         val requestBody = RouteReqBody(id = jsonRpcId, params = args)
         val observable = request.route(path1, path2, requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<Route>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<Route>().apply(callback))
     }
 
     fun route3Path(
-            path1: String,
-            path2: String,
-            path3: String,
-            args: Map<String, Any>,
-            callback: ResponseObserver<Route>.() -> Unit
+        path1: String,
+        path2: String,
+        path3: String,
+        args: Any = mapOf<String, Any>(),
+        callback: ResponseObserver<Route>.() -> Unit
     ) {
         val request = retrofit.create(Route3PathRequest::class.java)
         val requestBody = RouteReqBody(id = jsonRpcId, params = args)
         val observable = request.route(path1, path2, path3, requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<Route>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<Route>().apply(callback))
     }
 
     fun route4Path(
-            path1: String,
-            path2: String,
-            path3: String,
-            path4: String,
-            args: Map<String, Any>,
-            callback: ResponseObserver<Route>.() -> Unit
+        path1: String,
+        path2: String,
+        path3: String,
+        path4: String,
+        args: Any = mapOf<String, Any>(),
+        callback: ResponseObserver<Route>.() -> Unit
     ) {
         val request = retrofit.create(Route4PathRequest::class.java)
         val requestBody = RouteReqBody(id = jsonRpcId, params = args)
         val observable = request.route(path1, path2, path3, path4, requestBody)
         observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseObserver<Route>().apply(callback))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(ResponseObserver<Route>().apply(callback))
     }
 
     fun create(
-            model: String,
-            values: Map<String, Any>,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<Create>.() -> Unit
+        model: String,
+        values: Map<String, Any>,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<Create>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Create>()
         callbackEx.callback()
@@ -354,15 +367,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<Create>(Create(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asLong
-                                    else
-                                        0L
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<Create>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<Create>(
+                            Create(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asLong
+                                else
+                                    0L
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<Create>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -376,12 +393,12 @@ object Odoo {
     }
 
     fun read(
-            model: String,
-            ids: List<Int>,
-            fields: List<String>,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<Read>.() -> Unit
+        model: String,
+        ids: List<Int>,
+        fields: List<String>,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<Read>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Read>()
         callbackEx.callback()
@@ -392,15 +409,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<Read>(Read(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result
-                                    else
-                                        JsonArray()
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<Read>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<Read>(
+                            Read(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result
+                                else
+                                    JsonArray()
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<Read>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -414,12 +435,12 @@ object Odoo {
     }
 
     fun write(
-            model: String,
-            ids: List<Int>,
-            values: Map<String, Any>,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<Write>.() -> Unit
+        model: String,
+        ids: List<Int>,
+        values: Map<String, Any>,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<Write>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Write>()
         callbackEx.callback()
@@ -430,15 +451,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<Write>(Write(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asBoolean
-                                    else
-                                        false
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<Write>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<Write>(
+                            Write(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asBoolean
+                                else
+                                    false
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<Write>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -452,11 +477,11 @@ object Odoo {
     }
 
     fun unlink(
-            model: String,
-            ids: List<Int>,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<Unlink>.() -> Unit
+        model: String,
+        ids: List<Int>,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<Unlink>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Unlink>()
         callbackEx.callback()
@@ -467,15 +492,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<Unlink>(Unlink(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asBoolean
-                                    else
-                                        false
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<Unlink>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<Unlink>(
+                            Unlink(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asBoolean
+                                else
+                                    false
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<Unlink>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -489,11 +518,11 @@ object Odoo {
     }
 
     fun nameGet(
-            model: String,
-            ids: List<Int>,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<NameGet>.() -> Unit
+        model: String,
+        ids: List<Int>,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<NameGet>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<NameGet>()
         callbackEx.callback()
@@ -504,15 +533,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<NameGet>(NameGet(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asJsonArray
-                                    else
-                                        JsonArray()
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<NameGet>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<NameGet>(
+                            NameGet(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asJsonArray
+                                else
+                                    JsonArray()
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<NameGet>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -526,11 +559,11 @@ object Odoo {
     }
 
     fun nameCreate(
-            model: String,
-            name: String,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<NameCreate>.() -> Unit
+        model: String,
+        name: String,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<NameCreate>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<NameCreate>()
         callbackEx.callback()
@@ -541,15 +574,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<NameCreate>(NameCreate(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asJsonArray
-                                    else
-                                        JsonArray()
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<NameCreate>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<NameCreate>(
+                            NameCreate(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asJsonArray
+                                else
+                                    JsonArray()
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<NameCreate>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -563,37 +600,43 @@ object Odoo {
     }
 
     fun nameSearch(
-            model: String,
-            name: String = "",
-            args: List<Any> = listOf(),
-            operator: String = "ilike",
-            limit: Int = 0,
-            context: JsonObject = user.context,
-            callback: ResponseObserver<NameSearch>.() -> Unit
+        model: String,
+        name: String = "",
+        args: List<Any> = listOf(),
+        operator: String = "ilike",
+        limit: Int = 0,
+        context: JsonObject = user.context,
+        callback: ResponseObserver<NameSearch>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<NameSearch>()
         callbackEx.callback()
-        callKw(model, "name_search", listOf(), mapOf(
+        callKw(
+            model, "name_search", listOf(), mapOf(
                 "name" to name,
                 "args" to args,
                 "operator" to operator,
                 "limit" to limit
-        ), context) {
+            ), context
+        ) {
             onSubscribe { disposable ->
                 callbackEx.onSubscribe(disposable)
             }
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<NameSearch>(NameSearch(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asJsonArray
-                                    else
-                                        JsonArray()
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<NameSearch>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<NameSearch>(
+                            NameSearch(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asJsonArray
+                                else
+                                    JsonArray()
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<NameSearch>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -607,15 +650,15 @@ object Odoo {
     }
 
     fun search(
-            model: String,
-            domain: List<Any> = listOf(),
-            offset: Int = 0,
-            limit: Int = 0,
-            sort: String = "",
-            count: Boolean = false,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<Search>.() -> Unit
+        model: String,
+        domain: List<Any> = listOf(),
+        offset: Int = 0,
+        limit: Int = 0,
+        sort: String = "",
+        count: Boolean = false,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<Search>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<Search>()
         callbackEx.callback()
@@ -626,15 +669,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<Search>(Search(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asJsonArray.asIntList
-                                    else
-                                        listOf()
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<Search>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<Search>(
+                            Search(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asJsonArray.asIntList
+                                else
+                                    listOf()
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<Search>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -648,11 +695,11 @@ object Odoo {
     }
 
     fun searchCount(
-            model: String,
-            args: List<Any> = listOf(),
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<SearchCount>.() -> Unit
+        model: String,
+        args: List<Any> = listOf(),
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<SearchCount>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<SearchCount>()
         callbackEx.callback()
@@ -663,15 +710,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<SearchCount>(SearchCount(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asInt
-                                    else
-                                        0
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<SearchCount>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<SearchCount>(
+                            SearchCount(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asInt
+                                else
+                                    0
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<SearchCount>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -685,12 +736,12 @@ object Odoo {
     }
 
     fun checkAccessRights(
-            model: String,
-            operation: String,
-            raiseException: Boolean = false,
-            kwArgs: Map<String, Any> = mapOf(),
-            context: JsonObject = user.context,
-            callback: ResponseObserver<CheckAccessRights>.() -> Unit
+        model: String,
+        operation: String,
+        raiseException: Boolean = false,
+        kwArgs: Map<String, Any> = mapOf(),
+        context: JsonObject = user.context,
+        callback: ResponseObserver<CheckAccessRights>.() -> Unit
     ) {
         val callbackEx = ResponseObserver<CheckAccessRights>()
         callbackEx.callback()
@@ -701,15 +752,19 @@ object Odoo {
 
             onNext { response ->
                 callbackEx.onNext(
-                        if (response.isSuccessful)
-                            Response.success<CheckAccessRights>(CheckAccessRights(
-                                    if (response.body()!!.isSuccessful)
-                                        response.body()!!.result.asBoolean
-                                    else
-                                        false
-                                    , response.body()!!.odooError))
-                        else
-                            Response.error<CheckAccessRights>(response.code(), response.errorBody()!!))
+                    if (response.isSuccessful)
+                        Response.success<CheckAccessRights>(
+                            CheckAccessRights(
+                                if (response.body()!!.isSuccessful)
+                                    response.body()!!.result.asBoolean
+                                else
+                                    false
+                                , response.body()!!.odooError
+                            )
+                        )
+                    else
+                        Response.error<CheckAccessRights>(response.code(), response.errorBody()!!)
+                )
             }
 
             onError { error ->
@@ -723,33 +778,36 @@ object Odoo {
     }
 
     fun fieldsGet(
-            model: String = "",
-            fields: List<String> = listOf(),
-            callback: ResponseObserver<SearchRead>.() -> Unit
+        model: String = "",
+        fields: List<String> = listOf(),
+        callback: ResponseObserver<SearchRead>.() -> Unit
     ) =
-            searchRead("ir.model.fields", fields,
-                    if (model.isNotEmpty()) listOf(listOf("model_id", "=", model)) else listOf(),
-                    callback = callback
-            )
+        searchRead(
+            "ir.model.fields", fields,
+            if (model.isNotEmpty()) listOf(listOf("model_id", "=", model)) else listOf(),
+            callback = callback
+        )
 
 
     fun accessGet(
-            model: String = "",
-            fields: List<String> = listOf(),
-            callback: ResponseObserver<SearchRead>.() -> Unit
+        model: String = "",
+        fields: List<String> = listOf(),
+        callback: ResponseObserver<SearchRead>.() -> Unit
     ) =
-            searchRead("ir.model.access", fields,
-                    if (model.isNotEmpty()) listOf(listOf("model_id", "=", model)) else listOf(),
-                    callback = callback
-            )
+        searchRead(
+            "ir.model.access", fields,
+            if (model.isNotEmpty()) listOf(listOf("model_id", "=", model)) else listOf(),
+            callback = callback
+        )
 
     fun groupsGet(
-            fields: List<String> = listOf(),
-            callback: ResponseObserver<SearchRead>.() -> Unit
+        fields: List<String> = listOf(),
+        callback: ResponseObserver<SearchRead>.() -> Unit
     ) =
-            searchRead("res.groups", fields,
-                    listOf(listOf("users", "in", listOf(user.id))),
-                    callback = callback
-            )
+        searchRead(
+            "res.groups", fields,
+            listOf(listOf("users", "in", listOf(user.id))),
+            callback = callback
+        )
 
 }

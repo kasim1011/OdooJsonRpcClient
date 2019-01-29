@@ -1,11 +1,14 @@
 package io.gripxtech.odoojsonrpcclient.core.preferences
 
-import android.databinding.DataBindingUtil
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.databinding.DataBindingUtil
 import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.R
+import io.gripxtech.odoojsonrpcclient.core.utils.LocaleHelper
 import io.gripxtech.odoojsonrpcclient.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
@@ -18,6 +21,19 @@ class SettingsActivity : AppCompatActivity() {
 
     private lateinit var app: App
     lateinit var binding: ActivitySettingsBinding private set
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) {
+            super.attachBaseContext(LocaleHelper.setLocale(newBase))
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        LocaleHelper.setLocale(this)
+    }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)

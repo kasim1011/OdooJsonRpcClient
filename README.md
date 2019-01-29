@@ -16,7 +16,7 @@ Update [`tokenKey`](https://github.com/kasim1011/OdooJsonRpcClient/blob/5edf9e5e
 
 Do not hesitate to report [issues](https://github.com/kasim1011/OdooJsonRpcClient/issues) you may find.
 
-Get the **sample APK** from [release](https://github.com/kasim1011/OdooJsonRpcClient/releases) saction.
+Get the **sample APK** from [release](https://github.com/kasim1011/OdooJsonRpcClient/releases) section.
 
 Next Milestone:
 - **Synchronization** and **Persistence** using [Room Persistence Library](https://developer.android.com/topic/libraries/architecture/room)
@@ -288,7 +288,7 @@ Odoo.searchRead(model = "res.partner", fields = listOf(
             val searchRead = response.body()!!
             if (searchRead.isSuccessful) {
                 val result = searchRead.result
-                // use gson to convert records (jsonArray) to list of pojo
+                // use gson to convert records (jsonArray) to list of POJO
                 // ...
             } else {
                 // Odoo specific error

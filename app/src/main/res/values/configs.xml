@@ -9,13 +9,21 @@
     <integer name="protocol">0</integer>
 
     <!-- set your host_url without leading http:// or https:// -->
-    <string name="host_url" translatable="false">192.168.43.51:8069</string>
+    <string name="host_url" translatable="false">192.168.43.52:8069</string>
+
+    <!-- if pre_config_database set to false, it allows user to manually select the database. -->
+    <!-- if true then define pre_config_database_name with database name below. -->
+    <bool name="pre_config_database">true</bool>
+
+    <!-- set your database -->
+    <string name="pre_config_database_name" translatable="false">db_v11</string>
 
     <!-- Compatible Odoo versions -->
     <!-- Any other Odoo versions which are not in the array are considered as incompatible versions. -->
     <string-array name="supported_odoo_versions">
         <item>10</item>
         <item>11</item>
+        <item>12</item>
     </string-array>
 
     <!-- organization name -->
@@ -29,4 +37,22 @@
 
     <!-- organization email -->
     <string name="preference_contact_summary" translatable="false">rangwalakasim@ymail.com</string>
+
+    <!-- language -->
+    <string name="language_spanish" translatable="false">Español</string>
+    <string name="language_code_spanish" translatable="false">es</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_code_english" translatable="false">en</string>
+
+    <string-array name="languages">
+        <item>@string/language_system_default</item>
+        <item>@string/language_spanish</item>
+        <item>@string/language_english</item>
+    </string-array>
+
+    <string-array name="languages_codes">
+        <item>@string/language_code_system_default</item>
+        <item>@string/language_code_spanish</item>
+        <item>@string/language_code_english</item>
+    </string-array>
 </resources>

@@ -5,11 +5,14 @@
         <item>HTTP</item>
         <item>HTTPS</item>
     </string-array>
+
     <string-array name="databases" />
+
     <string-array name="dummy_databases">
         <item>base_v10</item>
         <item>crm_v10</item>
     </string-array>
+
     <array name="letter_tile_colors">
         <item>@color/android_red</item>
         <item>@color/android_red_dark</item>

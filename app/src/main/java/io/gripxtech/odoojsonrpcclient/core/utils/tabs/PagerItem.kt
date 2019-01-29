@@ -1,6 +1,6 @@
 package io.gripxtech.odoojsonrpcclient.core.utils.tabs
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 data class PagerItem(
         val title: String,

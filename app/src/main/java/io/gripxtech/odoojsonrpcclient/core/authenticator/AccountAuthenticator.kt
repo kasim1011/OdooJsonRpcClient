@@ -21,8 +21,9 @@ class AccountAuthenticator(
             requiredFeatures: Array<String>?,
             options: Bundle?
     ): Bundle {
-        val intent = Intent(context, LoginActivity::class.java)
-        intent.putExtra(LoginActivity.FROM_ANDROID_ACCOUNTS, true)
+//        val intent = Intent(context, LoginActivity::class.java)
+//        intent.putExtra(LoginActivity.FROM_ANDROID_ACCOUNTS, true)
+        val intent = Intent(context, SplashActivity::class.java)
 
         val bundle = Bundle()
         bundle.putParcelable(AccountManager.KEY_INTENT, intent)
