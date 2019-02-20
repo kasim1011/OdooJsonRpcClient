@@ -24,6 +24,7 @@
         <item>10</item>
         <item>11</item>
         <item>12</item>
+        <item>saas~12</item>
     </string-array>
 
     <!-- organization name -->
@@ -39,20 +40,24 @@
     <string name="preference_contact_summary" translatable="false">rangwalakasim@ymail.com</string>
 
     <!-- language -->
-    <string name="language_spanish" translatable="false">Español</string>
+    <string name="language_spanish" translatable="false">Español (experimental)</string>
     <string name="language_code_spanish" translatable="false">es</string>
     <string name="language_english" translatable="false">English</string>
     <string name="language_code_english" translatable="false">en</string>
+    <string name="language_arabic" translatable="false">العربية (تجريبية)</string>
+    <string name="language_code_arabic" translatable="false">ar</string>
 
     <string-array name="languages">
         <item>@string/language_system_default</item>
         <item>@string/language_spanish</item>
         <item>@string/language_english</item>
+        <item>@string/language_arabic</item>
     </string-array>
 
     <string-array name="languages_codes">
         <item>@string/language_code_system_default</item>
         <item>@string/language_code_spanish</item>
         <item>@string/language_code_english</item>
+        <item>@string/language_code_arabic</item>
     </string-array>
 </resources>

@@ -29,6 +29,7 @@
     <string name="login_protocol">Protocolo</string>
     <string name="login_host_hint">Anfitrión (e.g. 192.168.0.1:8069)</string>
     <string name="login_host_error">Por favor, escriba la URL del host</string>
+    <string name="login_host_error2">Por favor, escriba la URL del host válido</string>
     <string name="login_host_error1">Por favor, elimine http: // o https: // de la URL del host</string>
     <string name="login_check_odoo_version">Conectar al servidor</string>
     <string name="login_checking_odoo_version">Conectando al servidor&#8230;</string>

@@ -45,5 +45,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
+
+        title = getString(R.string.action_settings)
     }
 }

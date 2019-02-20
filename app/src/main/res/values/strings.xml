@@ -30,6 +30,7 @@
     <string name="login_protocol">Protocol</string>
     <string name="login_host_hint">Host (e.g. 192.168.0.1:8069)</string>
     <string name="login_host_error">Please, type host URL</string>
+    <string name="login_host_error2">Please, type valid host URL</string>
     <string name="login_host_error1">Please, Remove leading http:// or https:// from host URL</string>
     <string name="login_check_odoo_version">Connect to Server</string>
     <string name="login_checking_odoo_version">Connecting to Server&#8230;</string>
@@ -41,8 +42,6 @@
     <string name="login_password_error">Please, Type password</string>
     <string name="login_database_hint">Database</string>
     <string name="login_forgot_password">Forgot Password?</string>
-    <string name="login_new_dealer">New Dealer?</string>
-    <string name="login_action_sign_up">New Dealer? Sign up</string>
     <string name="login_database_error">Please, Select database</string>
     <string name="login_credential_error">Wrong login/password</string>
     <string name="login_submit">Login</string>

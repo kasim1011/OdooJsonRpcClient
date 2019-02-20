@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_header_desc">رأس التنقل</string>
+    <string name="ok">حسنا</string>
+    <string name="cancel">إلغاء</string>
+    <string name="fatal_error">خطأ فادح</string>
+    <string name="generic_error">هناك خطأ ما!</string>
+    <string name="operation_failed">فشلت العملية</string>
+    <string name="try_again">حاول مرة أخري</string>
+    <string name="login_again">تسجيل الدخول مرة أخرى</string>
+    <string name="quit">استقال</string>
+    <string name="odoo_error">حدث خطأ في الخادم</string>
+    <string name="exit">ىخرج</string>
+    <string name="action_settings">الإعدادات</string>
+    <string name="action_search">بحث</string>
+    <string name="action_customer">الزبائن</string>
+    <string name="action_supplier">الموردين</string>
+    <string name="action_company">شركة</string>
+    <string name="action_profile">الملف الشخصي</string>
+    <string name="action_add_account">إضافة حساب</string>
+    <string name="action_manage_account">إدارة الحسابات</string>
+    <string name="action_login_other_account">إدارة الحسابات الأخرى</string>
+    <string name="manage_account_remove_error">فشل في ازالة الحساب</string>
+    <string name="profile_full_name">الاسم:- غير متوفر</string>
+    <string name="profile_email">البريد الإلكتروني:- غير متوفر</string>
+    <string name="navigation_drawer_open">افتح درج التنقل</string>
+    <string name="navigation_drawer_close">إغلاق درج التنقل</string>
+    <string name="navigation_exit">اضغط مرة أخرى للخروج</string>
+    <string name="login_protocol">بروتوكول</string>
+    <string name="login_host_hint">المضيف (على سبيل المثال:- 192.168.0.1:8069)</string>
+    <string name="login_host_error">من فضلك، اكتب عنوان URL المضيف</string>
+    <string name="login_host_error2">من فضلك ، اكتب عنوان URL المضيف الصحيح</string>
+    <string name="login_host_error1">من فضلك ، قم بإزالة //:http أو //:https من عنوان URL المضيف</string>
+    <string name="login_check_odoo_version">اتصل بالخادم</string>
+    <string name="login_checking_odoo_version">الاتصال بالخادم…</string>
+    <string name="login_server_success">ال Odoo الإصدار %s متوافق</string>
+    <string name="login_server_error">الإصدار Odoo %s غير متوافق</string>
+    <string name="login_username_hint">اسم المستخدم (مثال:- user@odoo.com)</string>
+    <string name="login_username_error">من فضلك، اكتب اسم المستخدم</string>
+    <string name="login_password_hint">كلمه السر</string>
+    <string name="login_password_error">من فضلك ، اكتب كلمة المرور</string>
+    <string name="login_database_hint">قاعدة البيانات</string>
+    <string name="login_forgot_password">هل نسيت كلمة المرور؟</string>
+    <string name="login_database_error">من فضلك ، حدد قاعدة البيانات</string>
+    <string name="login_credential_error">خطأ دخول / كلمة المرور</string>
+    <string name="login_submit">تسجيل الدخول</string>
+    <string name="login_progress">مصادقة…</string>
+    <string name="login_success">إنشاء حساب المستخدم…</string>
+    <string name="login_create_account_error">حدث خطأ ما في إنشاء حساب مستخدم</string>
+    <string name="error_report">أبلغ عن</string>
+    <string name="forgot_pass_email_hint">أدخل عنوان بريدك الإلكتروني المسجل</string>
+    <string name="forgot_pass_submit">إرسال رابط إعادة تعيين كلمة المرور</string>
+    <string name="error_active_user">لا يوجد مستخدم نشط موجود!</string>
+    <string name="profile_name">اسم</string>
+    <string name="profile_login">تسجيل الدخول</string>
+    <string name="profile_server_url">عنوان الخادم</string>
+    <string name="profile_database">قاعدة البيانات</string>
+    <string name="profile_odoo_version">نسخة Odoo</string>
+    <string name="profile_timezone">وحدة زمنية</string>
+    <string name="language_system_default">النظام</string>
+    <string name="preference_build_category">معلومات الإصدار</string>
+    <string name="preference_build_title">بناء الإصدار</string>
+    <string name="preference_build_summary">الإصدار %s</string>
+    <string name="preference_language_title">لغة</string>
+    <string name="preference_language_summary">اختر لغتك</string>
+    <string name="preference_about_category">حول</string>
+    <string name="preference_organization_title">طورت بواسطة</string>
+    <string name="preference_privacy_policy_title">سياسة خاصة</string>
+    <string name="preference_contact_title">اتصل بنا</string>
+    <string name="preference_account_category">الحساب</string>
+    <string name="preference_logout_title">الخروج</string>
+    <string name="preference_prompt_email_intent">إرسال البريد الإلكتروني باستخدام</string>
+    <string name="preference_error_email_intent">لم يتم العثور على تطبيق لفتح روابط البريد الإلكتروني</string>
+    <string name="recycler_empty_title">تظهر سجلاتك هنا</string>
+    <string name="recycler_error_retry">إعادة المحاولة</string>
+    <string name="report_feedback">ردود الفعل:</string>
+
+    <!-- Network Connection Strings BEGIN -->
+    <string name="network_alert_title">اتصال إنترنت معطل</string>
+    <string name="network_alert_message">قم بتشغيل اتصال الإنترنت</string>
+    <string name="create_account_error" translatable="false">لم يتمكن %s من إنشاء حساب بسبب %s. من فضلك ، تسجيل الخروج
+        ثم تسجيل الدخول مرة أخرى
+    </string>
+    <string name="no_channel">لا توجد قناة في النظام</string>
+    <!-- Network Connection Strings END -->
+
+</resources>

@@ -100,6 +100,12 @@ class LoginActivity : AppCompatActivity() {
                     return@setOnClickListener
                 }
 
+                val urls = host.extractWebUrls()
+                if (!(urls.size == 1 && urls[0] == host)) {
+                    binding.tlHost.error = getString(R.string.login_host_error2)
+                    return@setOnClickListener
+                }
+
                 if (host.startsWith("http")) {
                     binding.tlHost.error = getString(R.string.login_host_error1)
                     return@setOnClickListener

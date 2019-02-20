@@ -14,6 +14,7 @@ import android.os.Handler
 import android.text.Html
 import android.text.Spanned
 import android.util.Base64
+import android.util.Patterns
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -44,9 +45,9 @@ fun Context.createOdooUser(authenticateResult: AuthenticateResult): Boolean {
     val accountManager = AccountManager.get(this)
     val account = Account(authenticateResult.androidName, App.KEY_ACCOUNT_TYPE)
     val result = accountManager.addAccountExplicitly(
-            account,
-            authenticateResult.password.encryptAES(),
-            authenticateResult.toBundle
+        account,
+        authenticateResult.password.encryptAES(),
+        authenticateResult.toBundle
     )
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         accountManager.notifyAccountAuthenticated(account)
@@ -58,24 +59,24 @@ fun Context.getOdooUsers(): List<OdooUser> {
     val manager = AccountManager.get(this)
     val odooUsers = ArrayList<OdooUser>()
     manager.getAccountsByType(App.KEY_ACCOUNT_TYPE)
-            .map {
-                Odoo.fromAccount(manager, it)
-            }
-            .forEach { odooUsers += it }
+        .map {
+            Odoo.fromAccount(manager, it)
+        }
+        .forEach { odooUsers += it }
     return odooUsers.toList()
 }
 
 fun Context.odooUserByAndroidName(androidName: String): OdooUser? {
     getOdooUsers()
-            .filter { it.androidName == androidName }
-            .forEach { return it }
+        .filter { it.androidName == androidName }
+        .forEach { return it }
     return null
 }
 
 fun Context.getActiveOdooUser(): OdooUser? {
     getOdooUsers()
-            .filter { it.isActive }
-            .forEach { return it }
+        .filter { it.isActive }
+        .forEach { return it }
     return null
 }
 
@@ -192,8 +193,8 @@ fun AppCompatActivity.hideSoftKeyboard() {
 
 fun AppCompatActivity.restartApp() {
     TaskStackBuilder.create(this)
-            .addNextIntent(Intent(this, SplashActivity::class.java))
-            .startActivities()
+        .addNextIntent(Intent(this, SplashActivity::class.java))
+        .startActivities()
 }
 
 var alertDialog: AlertDialog? = null
@@ -227,11 +228,13 @@ fun AppCompatActivity.showMessage(
     alertDialog?.dismiss()
     alertDialog = AlertDialog.Builder(this, R.style.AppAlertDialogTheme)
         .setTitle(title)
-        .setMessage(if (message?.isNotEmpty() == true) {
-            message
-        } else {
-            getString(R.string.generic_error)
-        })
+        .setMessage(
+            if (message?.isNotEmpty() == true) {
+                message
+            } else {
+                getString(R.string.generic_error)
+            }
+        )
         .setCancelable(cancelable)
         .setIcon(icon)
         .setPositiveButton(positiveButton, positiveButtonListener)
@@ -290,17 +293,17 @@ fun AppCompatActivity.emailIntent(
 
 @Suppress("DEPRECATION")
 fun AppCompatActivity.showServerErrorMessage(
-        response: Response<*>,
-        positiveButtonListener: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> }
+    response: Response<*>,
+    positiveButtonListener: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> }
 ): AlertDialog =
-        showMessage(
-                title = getString(R.string.server_request_error, response.code(), response.body()),
-                message = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-                    Html.fromHtml(response.errorBody()!!.string(), Html.FROM_HTML_MODE_COMPACT)
-                else
-                    Html.fromHtml(response.errorBody()!!.string()),
-                positiveButtonListener = positiveButtonListener
-        )
+    showMessage(
+        title = getString(R.string.server_request_error, response.code(), response.body()),
+        message = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            Html.fromHtml(response.errorBody()!!.string(), Html.FROM_HTML_MODE_COMPACT)
+        else
+            Html.fromHtml(response.errorBody()!!.string()),
+        positiveButtonListener = positiveButtonListener
+    )
 
 fun AppCompatActivity.closeApp(message: String = getString(R.string.generic_error)): AlertDialog =
     showMessage(
@@ -314,6 +317,18 @@ fun AppCompatActivity.closeApp(message: String = getString(R.string.generic_erro
         })
 
 fun String.trimFalse(): String = if (this != "false") this else ""
+
+fun String.extractWebUrls(): List<String> {
+    val urls = arrayListOf<String>()
+    val matcher = Patterns.WEB_URL.matcher(this)
+    while (matcher.find()) {
+        val url = matcher.group() ?: ""
+        if (url.isNotEmpty()) {
+            urls.add(url)
+        }
+    }
+    return urls
+}
 
 fun AppCompatActivity.filteredErrorMessage(errorMessage: String): String = when (errorMessage) {
     "Expected singleton: res.users()" -> {

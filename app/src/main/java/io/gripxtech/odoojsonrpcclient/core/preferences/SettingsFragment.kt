@@ -55,6 +55,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     getString(R.string.language_code_english) -> {
                         localePrefs.language = getString(R.string.language_code_english)
                     }
+                    getString(R.string.language_code_arabic) -> {
+                        localePrefs.language = getString(R.string.language_code_arabic)
+                    }
                     else -> {
                         localePrefs.clear()
                     }
