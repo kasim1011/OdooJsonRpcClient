@@ -358,7 +358,7 @@ object Odoo {
 
     fun create(
         model: String,
-        values: Map<String, Any>,
+        values: Any,
         kwArgs: Map<String, Any> = mapOf(),
         context: JsonObject = user.context,
         callback: ResponseObserver<Create>.() -> Unit
@@ -442,7 +442,7 @@ object Odoo {
     fun write(
         model: String,
         ids: List<Int>,
-        values: Map<String, Any>,
+        values: Any,
         kwArgs: Map<String, Any> = mapOf(),
         context: JsonObject = user.context,
         callback: ResponseObserver<Write>.() -> Unit
