@@ -3,6 +3,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="ok">Okay</string>
     <string name="cancel">Cancel</string>
+    <string name="retry">Retry</string>
     <string name="fatal_error">Fatal Error</string>
     <string name="generic_error">Something went wrong!</string>
     <string name="operation_failed">Operation Failed</string>

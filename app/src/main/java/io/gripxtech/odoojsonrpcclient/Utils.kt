@@ -184,9 +184,8 @@ val Response<*>.errorBodySpanned: Spanned
 fun AppCompatActivity.hideSoftKeyboard() {
     val view = currentFocus
     if (view != null) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager?
+        imm?.hideSoftInputFromWindow(view.windowToken, 0)
         view.clearFocus()
     }
 }
@@ -294,7 +293,9 @@ fun AppCompatActivity.emailIntent(
 @Suppress("DEPRECATION")
 fun AppCompatActivity.showServerErrorMessage(
     response: Response<*>,
-    positiveButtonListener: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> }
+    positiveButtonListener: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> },
+    showRetryButton: Boolean = false,
+    retryButtonListener: DialogInterface.OnClickListener = DialogInterface.OnClickListener { _, _ -> }
 ): AlertDialog =
     showMessage(
         title = getString(R.string.server_request_error, response.code(), response.body()),
@@ -302,7 +303,10 @@ fun AppCompatActivity.showServerErrorMessage(
             Html.fromHtml(response.errorBody()!!.string(), Html.FROM_HTML_MODE_COMPACT)
         else
             Html.fromHtml(response.errorBody()!!.string()),
-        positiveButtonListener = positiveButtonListener
+        positiveButtonListener = positiveButtonListener,
+        showNeutralButton = showRetryButton,
+        neutralButton = getString(R.string.retry),
+        neutralButtonListener = retryButtonListener
     )
 
 fun AppCompatActivity.closeApp(message: String = getString(R.string.generic_error)): AlertDialog =

@@ -45,6 +45,10 @@ class Retrofit2Helper(
 
     private var _retrofit: Retrofit? = null
 
+    fun resetClient() {
+        _retrofit = null
+    }
+
     val retrofit: Retrofit
         get() {
             if (_retrofit == null) {

@@ -118,6 +118,11 @@ object Odoo {
         protocol,
         host
     )
+
+    fun resetRetrofitClient() {
+        retrofit2Helper.resetClient()
+    }
+
     private val retrofit
         get() = retrofit2Helper.retrofit
 

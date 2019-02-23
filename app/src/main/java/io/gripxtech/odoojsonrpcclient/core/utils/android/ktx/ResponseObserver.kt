@@ -1,5 +1,6 @@
 package io.gripxtech.odoojsonrpcclient.core.utils.android.ktx
 
+import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import retrofit2.Response
@@ -32,6 +33,9 @@ class ResponseObserver<T> : Observer<Response<T>> {
     }
 
     override fun onNext(response: Response<T>) {
+        if (!response.isSuccessful) {
+            Odoo.resetRetrofitClient()
+        }
         this.next.invoke(response)
     }
 

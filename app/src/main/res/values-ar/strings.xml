@@ -3,6 +3,7 @@
     <string name="nav_header_desc">رأس التنقل</string>
     <string name="ok">حسنا</string>
     <string name="cancel">إلغاء</string>
+    <string name="retry">إعادة المحاولة</string>
     <string name="fatal_error">خطأ فادح</string>
     <string name="generic_error">هناك خطأ ما!</string>
     <string name="operation_failed">فشلت العملية</string>

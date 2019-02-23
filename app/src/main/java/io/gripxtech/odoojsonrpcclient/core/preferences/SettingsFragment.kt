@@ -49,17 +49,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
             if (newValue is String) {
                 val localePrefs = LocalePrefs(activity)
                 when (newValue) {
-                    getString(R.string.language_code_spanish) -> {
-                        localePrefs.language = getString(R.string.language_code_spanish)
-                    }
-                    getString(R.string.language_code_english) -> {
-                        localePrefs.language = getString(R.string.language_code_english)
-                    }
-                    getString(R.string.language_code_arabic) -> {
-                        localePrefs.language = getString(R.string.language_code_arabic)
+                    getString(R.string.language_code_system_default) -> {
+                        localePrefs.clear()
                     }
                     else -> {
-                        localePrefs.clear()
+                        localePrefs.language = newValue
                     }
                 }
                 TaskStackBuilder.create(activity)

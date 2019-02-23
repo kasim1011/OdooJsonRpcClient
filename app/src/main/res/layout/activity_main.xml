@@ -8,6 +8,8 @@
         android:id="@+id/dl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layoutDirection="locale"
+        android:textDirection="locale"
         android:fitsSystemWindows="true"
         tools:openDrawer="start">
 

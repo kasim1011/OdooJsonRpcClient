@@ -3,6 +3,7 @@
     <string name="nav_header_desc">Encabezado de navegación</string>
     <string name="ok">Bueno</string>
     <string name="cancel">Cancelar</string>
+    <string name="retry">Procesar de nuevo</string>
     <string name="fatal_error">Error fatal</string>
     <string name="generic_error">¡Algo salió mal!</string>
     <string name="operation_failed">Operación fallida</string>
