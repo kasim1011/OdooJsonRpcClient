@@ -64,6 +64,8 @@
     <string name="preference_build_summary">الإصدار %s</string>
     <string name="preference_language_title">لغة</string>
     <string name="preference_language_summary">اختر لغتك</string>
+    <string name="preference_logfile_title">مشاركة Logfile التطبيق</string>
+    <string name="preference_logfile">تطبيق logfile</string>
     <string name="preference_about_category">حول</string>
     <string name="preference_organization_title">طورت بواسطة</string>
     <string name="preference_privacy_policy_title">سياسة خاصة</string>

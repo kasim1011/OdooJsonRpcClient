@@ -68,6 +68,9 @@
     <string name="preference_language_key" translatable="false">language</string>
     <string name="preference_language_title">Language</string>
     <string name="preference_language_summary">Select Your Language</string>
+    <string name="preference_logfile_key" translatable="false">logfile</string>
+    <string name="preference_logfile_title">Share Application Logfile</string>
+    <string name="preference_logfile">Application Logfile</string>
     <string name="preference_about_category">About</string>
     <string name="preference_organization_key" translatable="false">organization</string>
     <string name="preference_organization_title">Developed By</string>

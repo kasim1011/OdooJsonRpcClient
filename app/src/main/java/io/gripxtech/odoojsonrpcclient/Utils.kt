@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.app.TaskStackBuilder
+import androidx.core.content.FileProvider
 import com.google.gson.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
@@ -27,10 +28,16 @@ import io.gripxtech.odoojsonrpcclient.core.authenticator.SplashActivity
 import io.gripxtech.odoojsonrpcclient.core.entities.Many2One
 import io.gripxtech.odoojsonrpcclient.core.entities.odooError.OdooError
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateResult
+import io.gripxtech.odoojsonrpcclient.core.utils.Retrofit2Helper
+import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.gripxtech.odoojsonrpcclient.core.utils.decryptAES
 import io.gripxtech.odoojsonrpcclient.core.utils.encryptAES
+import io.reactivex.Completable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import retrofit2.Response
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -255,22 +262,55 @@ fun AppCompatActivity.promptReport(odooError: OdooError) {
         showNeutralButton = true,
         neutralButton = getString(R.string.error_report),
         neutralButtonListener = DialogInterface.OnClickListener { _, _ ->
-            val intent = emailIntent(
-                address = arrayOf(getString(R.string.preference_contact_summary)),
-                cc = arrayOf(),
-                subject = "${getString(R.string.app_name)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) " +
-                        getString(R.string.report_feedback),
-                body = "Name: ${odooError.data.name}\n\n" +
-                        "Message: ${odooError.data.message}\n\n" +
-                        "Exception Type: ${odooError.data.exceptionType}\n\n" +
-                        "Arguments: ${odooError.data.arguments}\n\n" +
-                        "Debug: ${odooError.data.debug}\n\n"
-            )
-            try {
-                startActivity(intent)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                showMessage(message = getString(R.string.preference_error_email_intent))
+            val debugTraceFile = "debug-trace.txt"
+            Completable.fromCallable {
+                openFileOutput(debugTraceFile, Context.MODE_PRIVATE)?.use {
+                    it.write(
+                        ("Name: ${odooError.data.name}\n\n" +
+                                "Message: ${odooError.data.message}\n\n" +
+                                "Exception Type: ${odooError.data.exceptionType}\n\n" +
+                                "Arguments: ${odooError.data.arguments}\n\n" +
+                                "Debug: ${odooError.data.debug}\n\n").toByteArray(charset = Charsets.UTF_8)
+                    )
+                }
+            }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeEx {
+                onSubscribe { }
+
+                onError {
+                    it.printStackTrace()
+                }
+
+                onComplete {
+                    val logFileUri = Retrofit2Helper.getLogfile()
+                    val debugTraceUri = FileProvider.getUriForFile(
+                        this@promptReport,
+                        "$packageName.fileprovider",
+                        File("$filesDir${File.pathSeparator}$debugTraceFile")
+                    )
+                    startActivity(
+                        Intent.createChooser(
+                            Intent(Intent.ACTION_SEND_MULTIPLE).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.preference_contact_summary)))
+                                putExtra(
+                                    Intent.EXTRA_SUBJECT,
+                                    "${getString(R.string.app_name)} ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}) " +
+                                            getString(R.string.report_feedback)
+                                )
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "Name: ${odooError.data.name}\n\n" +
+                                            "Message: ${odooError.data.message}\n\n" +
+                                            "Exception Type: ${odooError.data.exceptionType}\n\n" +
+                                            "Arguments: ${odooError.data.arguments}\n\n"
+                                )
+                                putParcelableArrayListExtra(Intent.EXTRA_STREAM, arrayListOf(debugTraceUri, logFileUri))
+                                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                            }, getString(R.string.preference_logfile_title)
+                        )
+                    )
+                }
             }
         }
     )

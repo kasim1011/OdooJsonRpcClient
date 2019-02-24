@@ -1,5 +1,6 @@
 package io.gripxtech.odoojsonrpcclient.core.preferences
 
+import android.content.ClipData
 import android.content.Intent
 import android.net.MailTo
 import android.net.Uri
@@ -12,10 +13,12 @@ import com.google.android.material.snackbar.Snackbar
 import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.authenticator.SplashActivity
 import io.gripxtech.odoojsonrpcclient.core.utils.LocalePrefs
+import io.gripxtech.odoojsonrpcclient.core.utils.Retrofit2Helper
 import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -27,6 +30,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var build: Preference
     private lateinit var language: ListPreference
+    private lateinit var logfile: Preference
     private lateinit var organization: Preference
     private lateinit var privacy: Preference
     private lateinit var contact: Preference
@@ -38,6 +42,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         build = findPreference(getString(R.string.preference_build_key))
         language = findPreference(getString(R.string.preference_language_key)) as ListPreference
+        logfile = findPreference(getString(R.string.preference_logfile_key))
         organization = findPreference(getString(R.string.preference_organization_key))
         privacy = findPreference(getString(R.string.preference_privacy_policy_key))
         contact = findPreference(getString(R.string.preference_contact_key))
@@ -60,6 +65,29 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     .addNextIntent(Intent(activity, SplashActivity::class.java))
                     .startActivities()
             }
+            true
+        }
+
+        logfile.setOnPreferenceClickListener {
+            val logFileUri = Retrofit2Helper.getLogfile()
+            activity.startActivity(
+                Intent.createChooser(
+                    Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.preference_contact_summary)))
+                        putExtra(
+                            Intent.EXTRA_SUBJECT,
+                            "Contact by ${getString(R.string.app_name)} user: ${activity.getActiveOdooUser()?.name
+                                ?: "N/A"}"
+                        )
+                        putExtra(Intent.EXTRA_TEXT, "${getString(R.string.preference_logfile)}\n")
+                        putExtra(Intent.EXTRA_STREAM, logFileUri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                        clipData = ClipData.newRawUri(Retrofit2Helper.networkLogFile, logFileUri)
+                    }, getString(R.string.preference_logfile_title)
+                )
+            )
             true
         }
 
@@ -86,12 +114,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         contact.setOnPreferenceClickListener {
             val lclContext = context
             val url = ("mailto:" + getString(R.string.preference_contact_summary)
-                    + "?subject=Contact by " + getString(R.string.app_name) + " user " +
-                    if (lclContext != null && lclContext.getActiveOdooUser() != null) {
-                        lclContext.getActiveOdooUser()!!.name
-                    } else {
-                        "N/A"
-                    })
+                    + "?subject=Contact by " + getString(R.string.app_name) + " user "
+                    + (lclContext?.getActiveOdooUser()?.name ?: "N/A"))
             try {
                 val mt = MailTo.parse(url)
                 val i = emailIntent(arrayOf(mt.to), arrayOf(), mt.subject, "")

@@ -11,6 +11,9 @@
                 android:entries="@array/languages"
                 android:entryValues="@array/languages_codes"
                 android:defaultValue="@string/language_code_system_default"/>
+        <androidx.preference.Preference
+                android:key="@string/preference_logfile_key"
+                android:title="@string/preference_logfile_title"/>
     </androidx.preference.PreferenceCategory>
     <androidx.preference.PreferenceCategory android:title="@string/preference_about_category">
         <androidx.preference.Preference

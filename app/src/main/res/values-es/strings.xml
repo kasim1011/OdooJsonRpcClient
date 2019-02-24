@@ -64,6 +64,8 @@
     <string name="preference_build_summary">Versión %s</string>
     <string name="preference_language_title">Idioma</string>
     <string name="preference_language_summary">Elige tu idioma</string>
+    <string name="preference_logfile_title">Compartir la aplicación de archivo de registro</string>
+    <string name="preference_logfile">Aplicación de archivo de registro</string>
     <string name="preference_about_category">Acerca de</string>
     <string name="preference_organization_title">Desarrollado por</string>
     <string name="preference_privacy_policy_title">Política de privacidad</string>

@@ -18,6 +18,9 @@
     <!-- set your database -->
     <string name="pre_config_database_name" translatable="false">db_v11</string>
 
+    <!-- if your server is using self signed certificate for using HTTPS protocol then set self_signed_cert to true -->
+    <bool name="self_signed_cert">false</bool>
+
     <!-- Compatible Odoo versions -->
     <!-- Any other Odoo versions which are not in the array are considered as incompatible versions. -->
     <string-array name="supported_odoo_versions">
@@ -38,6 +41,12 @@
 
     <!-- organization email -->
     <string name="preference_contact_summary" translatable="false">rangwalakasim@ymail.com</string>
+
+    <!-- To add a new language: -->
+    <!-- 1) Add language name & language code below -->
+    <!-- 2) Reference language name to the languages array -->
+    <!-- 3) Reference language code to the languages_codes array -->
+    <!-- 4) Add strings.xml for that language -->
 
     <!-- language -->
     <string name="language_spanish" translatable="false">Español (experimental)</string>

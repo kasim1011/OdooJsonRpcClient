@@ -19,7 +19,7 @@ class SingleObserverEx<T> : SingleObserver<T> {
     }
 
     private var success: ((response: T) -> Unit) = {
-        Timber.d("onNext() called: response is $it")
+        Timber.d("onSuccess() called: response is $it")
     }
 
     fun onSuccess(success: (response: T) -> Unit) {
