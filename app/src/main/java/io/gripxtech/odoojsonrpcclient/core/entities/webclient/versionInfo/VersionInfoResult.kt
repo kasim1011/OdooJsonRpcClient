@@ -9,20 +9,20 @@ data class VersionInfoResult(
 
         @field:Expose
         @SerializedName("server_serie")
-        val serverSerie: String = "",
+        var serverSerie: String = "",
 
 
         @Expose
         @SerializedName("server_version_info")
-        val serverVersionInfo: JsonArray = JsonArray(),
+        var serverVersionInfo: JsonArray = JsonArray(),
 
         @Expose
         @SerializedName("server_version")
-        val serverVersion: String = "",
+        var serverVersion: String = "",
 
         @Expose
         @SerializedName("protocol_version")
-        val protocolVersion: Int = 0
+        var protocolVersion: Int = 0
 ) {
     val serverVersionType: String
         get() = if (serverVersionInfo.size() > 0) serverVersionInfo[3].asString else ""

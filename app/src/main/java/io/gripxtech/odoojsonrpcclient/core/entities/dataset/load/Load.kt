@@ -8,11 +8,11 @@ data class Load(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: LoadResult = LoadResult(),
+        var result: LoadResult = LoadResult(),
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 
 ) {
     val isSuccessful get() = !isOdooError

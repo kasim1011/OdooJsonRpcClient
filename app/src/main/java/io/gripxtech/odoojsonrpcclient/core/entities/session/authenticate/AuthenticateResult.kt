@@ -13,39 +13,39 @@ data class AuthenticateResult(
 
         @field:Expose
         @field:SerializedName("is_superuser")
-        val superuser: Boolean = false,
+        var superuser: Boolean = false,
 
         @Expose
         @SerializedName("company_id")
-        val companyId: Int = 0,
+        var companyId: Int = 0,
 
         @Expose
         @SerializedName("web.base.url")
-        val webBaseUrl: String = "",
+        var webBaseUrl: String = "",
 
         @Expose
         @SerializedName("session_id")
-        val sessionId: String = "",
+        var sessionId: String = "",
 
         @Expose
         @SerializedName("server_version")
-        val serverVersion: String = "",
+        var serverVersion: String = "",
 
         @Expose
         @SerializedName("is_admin")
-        val admin: Boolean = false,
+        var admin: Boolean = false,
 
         @Expose
         @SerializedName("uid")
-        val uid: Int = 0,
+        var uid: Int = 0,
 
         @Expose
         @SerializedName("partner_id")
-        val partnerId: Int = 0,
+        var partnerId: Int = 0,
 
         @Expose
         @SerializedName("user_companies")
-        val userCompanies: JsonElement = JsonObject(),
+        var userCompanies: JsonElement = JsonObject(),
 
         @Expose
         @SerializedName("name")
@@ -53,27 +53,27 @@ data class AuthenticateResult(
 
         @Expose
         @SerializedName("server_version_info")
-        val serverVersionInfo: JsonArray = JsonArray(),
+        var serverVersionInfo: JsonArray = JsonArray(),
 
         @Expose
         @SerializedName("user_context")
-        val userContext: JsonObject = JsonObject(),
+        var userContext: JsonObject = JsonObject(),
 
         @Expose
         @SerializedName("db")
-        val db: String = "",
+        var db: String = "",
 
         @Expose
         @SerializedName("username")
-        val username: String = "",
+        var username: String = "",
 
         @Expose
         @SerializedName("currencies")
-        val currencies: JsonObject = JsonObject(),
+        var currencies: JsonObject = JsonObject(),
 
         @Expose
         @SerializedName("web_tours")
-        val webTours: JsonArray = JsonArray(),
+        var webTours: JsonArray = JsonArray(),
 
         var imageSmall: String = "",
         var password: String = ""

@@ -8,9 +8,9 @@ data class SearchReadResult(
 
         @field:Expose
         @field:SerializedName("records")
-        val records: JsonArray = JsonArray(),
+        var records: JsonArray = JsonArray(),
 
         @field:Expose
         @field:SerializedName("length")
-        val length: Int = 0
+        var length: Int = 0
 )

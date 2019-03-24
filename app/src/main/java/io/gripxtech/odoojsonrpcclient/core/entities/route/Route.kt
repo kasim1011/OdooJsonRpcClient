@@ -10,11 +10,11 @@ data class Route(
 
         @Expose
         @SerializedName("result")
-        val result: JsonElement = JsonObject(),
+        var result: JsonElement = JsonObject(),
 
         @Expose
         @SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()

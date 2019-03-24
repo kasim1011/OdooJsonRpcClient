@@ -8,11 +8,11 @@ data class Create(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: Long = 0L,
+        var result: Long = 0L,
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()

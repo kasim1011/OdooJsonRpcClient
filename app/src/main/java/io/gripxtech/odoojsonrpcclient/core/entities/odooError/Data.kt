@@ -6,21 +6,21 @@ import com.google.gson.annotations.SerializedName
 data class Data(
         @field:Expose
         @field:SerializedName("debug")
-        val debug: String = "",
+        var debug: String = "",
 
         @field:Expose
         @field:SerializedName("exception_type")
-        val exceptionType: String = "",
+        var exceptionType: String = "",
 
         @field:Expose
         @field:SerializedName("message")
-        val message: String = "",
+        var message: String = "",
 
         @field:Expose
         @field:SerializedName("name")
-        val name: String = "",
+        var name: String = "",
 
         @field:Expose
         @field:SerializedName("arguments")
-        val arguments: List<String> = listOf()
+        var arguments: List<String> = listOf()
 )

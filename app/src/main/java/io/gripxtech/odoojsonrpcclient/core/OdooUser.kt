@@ -10,21 +10,21 @@ import io.gripxtech.odoojsonrpcclient.GlideApp
 import io.gripxtech.odoojsonrpcclient.core.utils.Retrofit2Helper
 
 data class OdooUser(
-    val protocol: Retrofit2Helper.Companion.Protocol = Retrofit2Helper.Companion.Protocol.HTTP,
-    val host: String = "",
-    val login: String = "",
-    val password: String = "",
-    val database: String = "",
-    val serverVersion: String = "",
-    val isAdmin: Boolean = false,
-    val isSuperUser: Boolean = false,
-    val id: Int = 0,
-    val name: String = "",
-    val imageSmall: String = "",
-    val partnerId: Int = 0,
-    val context: JsonObject = JsonObject(),
-    val isActive: Boolean = false,
-    val account: Account = Account("false", App.KEY_ACCOUNT_TYPE)
+    var protocol: Retrofit2Helper.Companion.Protocol = Retrofit2Helper.Companion.Protocol.HTTP,
+    var host: String = "",
+    var login: String = "",
+    var password: String = "",
+    var database: String = "",
+    var serverVersion: String = "",
+    var isAdmin: Boolean = false,
+    var isSuperUser: Boolean = false,
+    var id: Int = 0,
+    var name: String = "",
+    var imageSmall: String = "",
+    var partnerId: Int = 0,
+    var context: JsonObject = JsonObject(),
+    var isActive: Boolean = false,
+    var account: Account = Account("false", App.KEY_ACCOUNT_TYPE)
 ) {
     val androidName: String
         get() = "$login[$database]"

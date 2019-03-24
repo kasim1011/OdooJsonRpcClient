@@ -7,17 +7,17 @@ data class AuthenticateReqBody(
 
         @field:Expose
         @field:SerializedName("id")
-        val id: String = "0",
+        var id: String = "0",
 
         @field:Expose
         @field:SerializedName("jsonrpc")
-        val jsonRPC: String = "2.0",
+        var jsonRPC: String = "2.0",
 
         @field:Expose
         @field:SerializedName("method")
-        val method: String = "call",
+        var method: String = "call",
 
         @field:Expose
         @field:SerializedName("params")
-        val params: AuthenticateParams = AuthenticateParams()
+        var params: AuthenticateParams = AuthenticateParams()
 )

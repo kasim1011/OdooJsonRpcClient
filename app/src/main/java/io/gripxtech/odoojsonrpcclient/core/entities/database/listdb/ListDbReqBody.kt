@@ -8,17 +8,17 @@ data class ListDbReqBody(
 
         @Expose
         @SerializedName("id")
-        val id: String = "0",
+        var id: String = "0",
 
         @Expose
         @SerializedName("jsonrpc")
-        val jsonRPC: String = "2.0",
+        var jsonRPC: String = "2.0",
 
         @Expose
         @SerializedName("method")
-        val method: String = "call",
+        var method: String = "call",
 
         @Expose
         @SerializedName("params")
-        val params: JsonObject = JsonObject()
+        var params: JsonObject = JsonObject()
 )

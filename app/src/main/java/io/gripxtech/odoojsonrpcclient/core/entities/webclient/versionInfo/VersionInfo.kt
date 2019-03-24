@@ -8,11 +8,11 @@ data class VersionInfo(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: VersionInfoResult = VersionInfoResult(),
+        var result: VersionInfoResult = VersionInfoResult(),
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()

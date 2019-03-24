@@ -49,6 +49,7 @@ class ResponseObserver<T> : Observer<Response<T>> {
     }
 
     override fun onError(error: Throwable) {
+        Odoo.resetRetrofitClient()
         this.error.invoke(error)
     }
 

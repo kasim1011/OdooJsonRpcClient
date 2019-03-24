@@ -8,7 +8,7 @@ data class Destroy(
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 
 ) {
     val isSuccessful get() = !isOdooError

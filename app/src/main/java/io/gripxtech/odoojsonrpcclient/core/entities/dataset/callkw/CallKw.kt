@@ -10,11 +10,11 @@ data class CallKw(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: JsonElement = JsonObject(),
+        var result: JsonElement = JsonObject(),
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 
 ) {
     val isSuccessful get() = !isOdooError

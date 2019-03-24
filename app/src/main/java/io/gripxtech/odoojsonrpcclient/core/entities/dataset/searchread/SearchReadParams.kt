@@ -8,29 +8,29 @@ data class SearchReadParams(
 
         @field:Expose
         @field:SerializedName("model")
-        val model: String = "",
+        var model: String = "",
 
         @field:Expose
         @field:SerializedName("fields")
-        val fields: List<String> = listOf(),
+        var fields: List<String> = listOf(),
 
         @field:Expose
         @field:SerializedName("domain")
-        val domain: List<Any> = listOf(),
+        var domain: List<Any> = listOf(),
 
         @field:Expose
         @field:SerializedName("offset")
-        val offset: Int = 0,
+        var offset: Int = 0,
 
         @field:Expose
         @field:SerializedName("limit")
-        val limit: Int = 0,
+        var limit: Int = 0,
 
         @field:Expose
         @field:SerializedName("sort")
-        val sort: String = "",
+        var sort: String = "",
 
         @field:Expose
         @field:SerializedName("context")
-        val context: JsonObject = JsonObject()
+        var context: JsonObject = JsonObject()
 )

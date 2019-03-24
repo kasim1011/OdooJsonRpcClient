@@ -8,11 +8,11 @@ data class Unlink(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: Boolean = false,
+        var result: Boolean = false,
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()

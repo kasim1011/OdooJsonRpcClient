@@ -7,21 +7,21 @@ import com.google.gson.annotations.SerializedName
 data class CallKwParams(
         @field:Expose
         @field:SerializedName("model")
-        val model: String = "",
+        var model: String = "",
 
         @field:Expose
         @field:SerializedName("method")
-        val method: String = "",
+        var method: String = "",
 
         @field:Expose
         @field:SerializedName("args")
-        val args: List<Any> = listOf(),
+        var args: List<Any> = listOf(),
 
         @field:Expose
         @field:SerializedName("kwargs")
-        val kwArgs: Map<String, Any> = mapOf(),
+        var kwArgs: Map<String, Any> = mapOf(),
 
         @field:Expose
         @field:SerializedName("context")
-        val context: JsonObject = JsonObject()
+        var context: JsonObject = JsonObject()
 )

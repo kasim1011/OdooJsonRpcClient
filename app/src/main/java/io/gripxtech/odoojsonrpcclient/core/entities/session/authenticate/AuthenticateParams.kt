@@ -7,17 +7,17 @@ data class AuthenticateParams(
 
         @field:Expose
         @field:SerializedName("base_location")
-        val baseLocation: String = "",
+        var baseLocation: String = "",
 
         @field:Expose
         @field:SerializedName("login")
-        val login: String = "",
+        var login: String = "",
 
         @field:Expose
         @field:SerializedName("password")
-        val password: String = "",
+        var password: String = "",
 
         @field:Expose
         @field:SerializedName("db")
-        val db: String = ""
+        var db: String = ""
 )

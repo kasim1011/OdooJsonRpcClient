@@ -1,72 +1,81 @@
 package io.gripxtech.odoojsonrpcclient.customer.entities
 
+import android.os.Parcelable
 import android.util.Base64
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.GlideApp
+import io.gripxtech.odoojsonrpcclient.core.utils.JsonElementParceler
+import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.TypeParceler
 
+@Parcelize
 data class Customer(
 
     @Expose
     @SerializedName("id")
-    val id: Int,
+    var id: Long = 0,
 
     @Expose
     @SerializedName("name")
-    val name: String,
+    var name: String = "false",
 
     @Expose
     @SerializedName("email")
-    val email: String,
+    var email: String = "false",
 
     @Expose
     @SerializedName("company_name")
-    val companyName: String,
+    var companyName: String = "false",
 
     @Expose
     @SerializedName("parent_name")
-    val parentName: String,
+    var parentName: String = "false",
 
     @Expose
     @SerializedName("image_small")
-    val imageSmall: String,
+    var imageSmall: String = "false",
 
     @Expose
     @SerializedName("website")
-    val website: String,
+    var website: String = "false",
 
     @Expose
     @SerializedName("phone")
-    val phone: String,
+    var phone: String = "false",
 
     @Expose
     @SerializedName("mobile")
-    val mobile: String,
+    var mobile: String = "false",
 
     @Expose
     @SerializedName("full_address")
-    val fullAddress: String,
+    var fullAddress: String = "false",
 
     @Expose
     @SerializedName("state_id")
-    val stateId: JsonElement,
+    @TypeParceler<JsonElement, JsonElementParceler>
+    var stateId: JsonElement = JsonArray(),
 
     @Expose
     @SerializedName("country_id")
-    val countryId: JsonElement,
+    @TypeParceler<JsonElement, JsonElementParceler>
+    var countryId: JsonElement = JsonArray(),
 
     @Expose
     @SerializedName("comment")
-    val comment: String,
+    var comment: String = "false",
 
     @Expose
     @SerializedName("is_company")
-    val isCompany: Boolean
-) {
+    var isCompany: Boolean = false
+
+) : Parcelable {
     companion object {
         @JvmStatic
         @BindingAdapter("image_small", "name")

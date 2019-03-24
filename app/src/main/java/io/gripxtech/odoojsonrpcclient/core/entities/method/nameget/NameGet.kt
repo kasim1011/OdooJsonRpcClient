@@ -9,11 +9,11 @@ data class NameGet(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: JsonArray = JsonArray(),
+        var result: JsonArray = JsonArray(),
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()

@@ -9,11 +9,11 @@ data class ExecWorkflow(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: JsonObject = JsonObject(),
+        var result: JsonObject = JsonObject(),
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()

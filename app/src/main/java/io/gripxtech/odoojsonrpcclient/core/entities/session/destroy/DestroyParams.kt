@@ -8,5 +8,5 @@ data class DestroyParams(
 
         @field:Expose
         @field:SerializedName("context")
-        val context: JsonObject = JsonObject()
+        var context: JsonObject = JsonObject()
 )

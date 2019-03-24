@@ -10,11 +10,11 @@ data class Read(
 
         @field:Expose
         @field:SerializedName("result")
-        val result: JsonElement = JsonArray(),
+        var result: JsonElement = JsonArray(),
 
         @field:Expose
         @field:SerializedName("error")
-        val odooError: OdooError = OdooError()
+        var odooError: OdooError = OdooError()
 ) {
     val isSuccessful get() = !isOdooError
     val isOdooError get() = odooError.message.isNotEmpty()

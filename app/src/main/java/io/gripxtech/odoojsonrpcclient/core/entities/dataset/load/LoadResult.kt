@@ -8,5 +8,5 @@ data class LoadResult(
 
         @field:Expose
         @field:SerializedName("value")
-        val value: JsonObject = JsonObject()
+        var value: JsonObject = JsonObject()
 )

@@ -13,7 +13,7 @@
 
     <!-- if pre_config_database set to false, it allows user to manually select the database. -->
     <!-- if true then define pre_config_database_name with database name below. -->
-    <bool name="pre_config_database">true</bool>
+    <bool name="pre_config_database">false</bool>
 
     <!-- set your database -->
     <string name="pre_config_database_name" translatable="false">db_v11</string>
