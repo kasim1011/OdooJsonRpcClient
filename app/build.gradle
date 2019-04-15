@@ -49,9 +49,9 @@ android {
     androidExtensions {
         experimental = true
     }
-    dataBinding {
-        enabled true
-    }
+//    dataBinding {
+//        enabled true
+//    }
     packagingOptions {
         exclude 'LICENSE.txt'
     }
@@ -75,8 +75,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.8'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.intuit.sdp:sdp-android:1.0.6'

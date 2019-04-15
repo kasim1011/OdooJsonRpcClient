@@ -18,7 +18,7 @@ import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
+import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -68,6 +68,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
 
+        logfile.isVisible = false
         logfile.setOnPreferenceClickListener {
             val logFileUri = Retrofit2Helper.getLogfile()
             activity.startActivity(
@@ -123,7 +124,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 Snackbar.make(
-                    activity.binding.root,
+                    activity.clRoot,
                     R.string.preference_error_email_intent,
                     Snackbar.LENGTH_LONG
                 ).show()

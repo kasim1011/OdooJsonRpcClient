@@ -1,112 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?attr/selectableItemBackground">
 
-    <data>
-
-        <import type="io.gripxtech.odoojsonrpcclient.UtilsKt"/>
-
-        <variable
-                name="user"
-                type="io.gripxtech.odoojsonrpcclient.core.OdooUser"/>
-    </data>
-
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackground">
+            android:padding="8dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+        <ImageView
+                android:id="@+id/civImage"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription"/>
+
+        <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                app:layout_constraintStart_toEndOf="@+id/civImage"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Aliasgar Vadivala"/>
 
-            <ImageView
-                    android:id="@+id/civImage"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    app:civ_border_color="@color/icons"
-                    app:civ_border_width="2dp"
-                    app:image_small="@{UtilsKt.trimFalse(user.imageSmall)}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:name="@{UtilsKt.trimFalse(user.name)}"
-                    tools:ignore="ContentDescription"/>
+        <TextView
+                android:id="@+id/tvHost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                app:layout_constraintStart_toEndOf="@+id/civImage"
+                app:layout_constraintTop_toBottomOf="@+id/tvName"
+                tools:text="http://192.168.0.1:8069"/>
 
-            <TextView
-                    android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@{UtilsKt.trimFalse(user.name)}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    app:layout_constraintStart_toEndOf="@+id/civImage"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Aliasgar Vadivala"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:minHeight="42dp"
+                android:minWidth="42dp"
+                app:civ_border_color="@color/android_red_dark"
+                app:civ_border_width="9dp"
+                app:civ_circle_background_color="@color/android_red_dark"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/civImage"
+                tools:ignore="UnusedAttribute"/>
 
-            <TextView
-                    android:id="@+id/tvHost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:text="@{user.host}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    app:layout_constraintStart_toEndOf="@+id/civImage"
-                    app:layout_constraintTop_toBottomOf="@+id/tvName"
-                    tools:text="http://192.168.0.1:8069"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:minHeight="42dp"
+                android:minWidth="42dp"
+                app:civ_border_color="@color/android_orange"
+                app:civ_border_width="9dp"
+                app:civ_circle_background_color="@color/android_orange"
+                app:layout_constraintEnd_toStartOf="@+id/civDelete"
+                app:layout_constraintTop_toBottomOf="@id/civImage"
+                tools:ignore="UnusedAttribute"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/civDelete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:minHeight="42dp"
-                    android:minWidth="42dp"
-                    app:civ_border_color="@color/android_red_dark"
-                    app:civ_border_width="9dp"
-                    app:civ_circle_background_color="@color/android_red_dark"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/civImage"
-                    tools:ignore="UnusedAttribute"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:minHeight="42dp"
+                android:minWidth="42dp"
+                app:civ_border_color="@color/android_green_dark"
+                app:civ_border_width="9dp"
+                app:civ_circle_background_color="@color/android_green_dark"
+                app:layout_constraintEnd_toStartOf="@+id/civLogout"
+                app:layout_constraintTop_toBottomOf="@+id/civImage"
+                tools:ignore="UnusedAttribute"/>
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/civLogout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:minHeight="42dp"
-                    android:minWidth="42dp"
-                    app:civ_border_color="@color/android_orange"
-                    app:civ_border_width="9dp"
-                    app:civ_circle_background_color="@color/android_orange"
-                    app:layout_constraintEnd_toStartOf="@+id/civDelete"
-                    app:layout_constraintTop_toBottomOf="@id/civImage"
-                    tools:ignore="UnusedAttribute"/>
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/civLogin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:minHeight="42dp"
-                    android:minWidth="42dp"
-                    app:civ_border_color="@color/android_green_dark"
-                    app:civ_border_width="9dp"
-                    app:civ_circle_background_color="@color/android_green_dark"
-                    app:layout_constraintEnd_toStartOf="@+id/civLogout"
-                    app:layout_constraintTop_toBottomOf="@+id/civImage"
-                    tools:ignore="UnusedAttribute"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-</layout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

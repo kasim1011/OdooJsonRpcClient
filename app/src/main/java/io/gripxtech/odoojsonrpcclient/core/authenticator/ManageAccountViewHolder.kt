@@ -1,8 +1,6 @@
 package io.gripxtech.odoojsonrpcclient.core.authenticator
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import io.gripxtech.odoojsonrpcclient.databinding.ItemViewManageAccountBinding
 
-class ManageAccountViewHolder(
-        val binding: ItemViewManageAccountBinding
-) : RecyclerView.ViewHolder(binding.root)
+class ManageAccountViewHolder(view: View) : RecyclerView.ViewHolder(view)

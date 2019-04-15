@@ -81,7 +81,7 @@
     <!-- Network Connection Strings BEGIN -->
     <string name="network_alert_title">اتصال إنترنت معطل</string>
     <string name="network_alert_message">قم بتشغيل اتصال الإنترنت</string>
-    <string name="create_account_error" translatable="false">لم يتمكن %s من إنشاء حساب بسبب %s. من فضلك ، تسجيل الخروج
+    <string name="create_account_error">لم يتمكن %1$s من إنشاء حساب بسبب %2$s. من فضلك ، تسجيل الخروج
         ثم تسجيل الدخول مرة أخرى
     </string>
     <string name="no_channel">لا توجد قناة في النظام</string>

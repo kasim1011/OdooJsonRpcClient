@@ -90,7 +90,7 @@
     <!-- Network Connection Strings BEGIN -->
     <string name="network_alert_title">Internet Connection Disabled</string>
     <string name="network_alert_message">Turn on Internet Connection</string>
-    <string name="create_account_error" translatable="false">%s was unable to create account due to %s. Please, Logout
+    <string name="create_account_error">%1$s was unable to create account due to %2$s. Please, Logout
         then Login Again
     </string>
     <string name="no_channel">There\'s no channel found in the system</string>

@@ -1,5 +1,6 @@
 package io.gripxtech.odoojsonrpcclient.core.authenticator
 
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,34 +11,35 @@ import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
 import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.gripxtech.odoojsonrpcclient.core.utils.recycler.RecyclerBaseAdapter
-import io.gripxtech.odoojsonrpcclient.databinding.ItemViewManageAccountBinding
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_manage_account.*
+import kotlinx.android.synthetic.main.item_view_manage_account.view.*
 
 class ManageAccountAdapter(
-        private val activity: ManageAccountActivity,
-        items: ArrayList<Any>
-) : RecyclerBaseAdapter(items, activity.binding.rv) {
+    private val activity: ManageAccountActivity,
+    items: ArrayList<Any>
+) : RecyclerBaseAdapter(items, activity.rv) {
 
     companion object {
         private const val VIEW_TYPE_ITEM = 0
     }
 
     private val rowItems: ArrayList<OdooUser> = ArrayList(
-            items.filterIsInstance<OdooUser>()
+        items.filterIsInstance<OdooUser>()
     )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         when (viewType) {
-            ManageAccountAdapter.VIEW_TYPE_ITEM -> {
-                val binding = ItemViewManageAccountBinding.inflate(
-                        inflater,
-                        parent,
-                        false
+            VIEW_TYPE_ITEM -> {
+                val view = inflater.inflate(
+                    R.layout.item_view_manage_account,
+                    parent,
+                    false
                 )
-                return ManageAccountViewHolder(binding)
+                return ManageAccountViewHolder(view)
             }
         }
         return super.onCreateViewHolder(parent, viewType)
@@ -47,33 +49,43 @@ class ManageAccountAdapter(
         super.onBindViewHolder(baseHolder, basePosition)
         val position = baseHolder.adapterPosition
         when (getItemViewType(basePosition)) {
-            ManageAccountAdapter.VIEW_TYPE_ITEM -> {
+            VIEW_TYPE_ITEM -> {
                 val holder = baseHolder as ManageAccountViewHolder
                 val item = items[position] as OdooUser
-                val binding = holder.binding
-                binding.user = item
+
+                val imageSmall = item.imageSmall.trimFalse()
+                val name = item.name.trimFalse()
+
+                activity.glideRequests.asBitmap().load(
+                    if (imageSmall.isNotEmpty())
+                        Base64.decode(imageSmall, Base64.DEFAULT)
+                    else
+                        activity.app.getLetterTile(if (name.isNotEmpty()) name else "X")
+                ).dontAnimate().circleCrop().into(holder.itemView.civImage)
+                holder.itemView.tvName.text = name
+                holder.itemView.tvHost.text = item.host
 
                 val loginDrawable = ContextCompat
-                        .getDrawable(activity, R.drawable.ic_done_all_white_24dp)
+                    .getDrawable(activity, R.drawable.ic_done_all_white_24dp)
                 val logoutDrawable = ContextCompat
-                        .getDrawable(activity, R.drawable.ic_exit_to_app_white_24dp)
+                    .getDrawable(activity, R.drawable.ic_exit_to_app_white_24dp)
                 val deleteDrawable = ContextCompat
-                        .getDrawable(activity, R.drawable.ic_close_white_24dp)
+                    .getDrawable(activity, R.drawable.ic_close_white_24dp)
 
-                binding.civLogin.setImageDrawable(loginDrawable)
-                binding.civLogout.setImageDrawable(logoutDrawable)
-                binding.civDelete.setImageDrawable(deleteDrawable)
+                holder.itemView.civLogin.setImageDrawable(loginDrawable)
+                holder.itemView.civLogout.setImageDrawable(logoutDrawable)
+                holder.itemView.civDelete.setImageDrawable(deleteDrawable)
 
                 val activeUser = activity.getActiveOdooUser()
                 if (activeUser != null && item == activeUser) {
-                    binding.civLogin.visibility = View.GONE
-                    binding.civLogout.visibility = View.VISIBLE
+                    holder.itemView.civLogin.visibility = View.GONE
+                    holder.itemView.civLogout.visibility = View.VISIBLE
                 } else {
-                    binding.civLogin.visibility = View.VISIBLE
-                    binding.civLogout.visibility = View.GONE
+                    holder.itemView.civLogin.visibility = View.VISIBLE
+                    holder.itemView.civLogout.visibility = View.GONE
                 }
 
-                binding.civLogin.setOnClickListener {
+                holder.itemView.civLogin.setOnClickListener {
                     val clickedPosition = baseHolder.adapterPosition
                     val clickedItem = items[clickedPosition] as OdooUser
                     Odoo.user = clickedItem
@@ -85,14 +97,14 @@ class ManageAccountAdapter(
                     authenticate(user = clickedItem, dialog = dialog)
                 }
 
-                binding.civLogout.setOnClickListener {
+                holder.itemView.civLogout.setOnClickListener {
                     val clickedPosition = baseHolder.adapterPosition
                     val clickedItem = items[clickedPosition] as OdooUser
                     Odoo.destroy {}
                     logoutUser(clickedItem)
                 }
 
-                binding.civDelete.setOnClickListener {
+                holder.itemView.civDelete.setOnClickListener {
                     val clickedPosition = baseHolder.adapterPosition
                     val clickedItem = items[clickedPosition] as OdooUser
                     val clickedActiveUser = activity.getActiveOdooUser()
@@ -126,8 +138,11 @@ class ManageAccountAdapter(
     private fun updateRowItems() {
         updateSearchItems()
         rowItems.clear()
-        rowItems.addAll(ArrayList(
-                items.filterIsInstance<OdooUser>()))
+        rowItems.addAll(
+            ArrayList(
+                items.filterIsInstance<OdooUser>()
+            )
+        )
     }
 
     override fun clear() {
@@ -152,8 +167,8 @@ class ManageAccountAdapter(
                         loginUser(user)
                     } else {
                         activity.showMessage(
-                                title = activity.getString(R.string.odoo_error),
-                                message = authenticate.errorMessage
+                            title = activity.getString(R.string.odoo_error),
+                            message = authenticate.errorMessage
                         )
                     }
                 } else {
@@ -166,8 +181,8 @@ class ManageAccountAdapter(
                     dialog.dismiss()
                 }
                 activity.showMessage(
-                        title = activity.getString(R.string.operation_failed),
-                        message = error.message
+                    title = activity.getString(R.string.operation_failed),
+                    message = error.message
                 )
             }
         }
@@ -181,90 +196,90 @@ class ManageAccountAdapter(
             Odoo.pendingAuthenticateCookies.clear()
             result
         }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeEx {
-                    onSubscribe {
-                        // Must be complete, not dispose in between
-                        // compositeDisposable.add(d)
-                    }
-
-                    onNext {
-                        activity.restartApp()
-                    }
-
-                    onError { error ->
-                        error.printStackTrace()
-                        activity.showMessage(
-                                title = activity.getString(R.string.operation_failed),
-                                message = error.message
-                                        ?: activity.getString(R.string.generic_error)
-                        )
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeEx {
+                onSubscribe {
+                    // Must be complete, not dispose in between
+                    // compositeDisposable.add(d)
                 }
+
+                onNext {
+                    activity.restartApp()
+                }
+
+                onError { error ->
+                    error.printStackTrace()
+                    activity.showMessage(
+                        title = activity.getString(R.string.operation_failed),
+                        message = error.message
+                            ?: activity.getString(R.string.generic_error)
+                    )
+                }
+            }
     }
 
     private fun logoutUser(user: OdooUser) {
         Observable.fromCallable {
             activity.logoutOdooUser(user)
         }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeEx {
-                    onSubscribe {
-                        // Must be complete, not dispose in between
-                        // compositeDisposable.add(d)
-                    }
-
-                    onNext {
-                        activity.restartApp()
-                    }
-
-                    onError { error ->
-                        error.printStackTrace()
-                        activity.showMessage(
-                                title = activity.getString(R.string.operation_failed),
-                                message = error.message
-                                        ?: activity.getString(R.string.generic_error)
-                        )
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeEx {
+                onSubscribe {
+                    // Must be complete, not dispose in between
+                    // compositeDisposable.add(d)
                 }
+
+                onNext {
+                    activity.restartApp()
+                }
+
+                onError { error ->
+                    error.printStackTrace()
+                    activity.showMessage(
+                        title = activity.getString(R.string.operation_failed),
+                        message = error.message
+                            ?: activity.getString(R.string.generic_error)
+                    )
+                }
+            }
     }
 
     private fun deleteUser(user: OdooUser, activeOdooUser: OdooUser?, position: Int) {
         Observable.fromCallable {
             activity.deleteOdooUser(user)
         }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeEx {
-                    onSubscribe {
-                        // Must be complete, not dispose in between
-                        // compositeDisposable.add(d)
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeEx {
+                onSubscribe {
+                    // Must be complete, not dispose in between
+                    // compositeDisposable.add(d)
+                }
 
-                    onNext { t ->
-                        if (t) {
-                            removeRow(position)
-                            if (rowItems.size == 0 || (activeOdooUser != null && user == activeOdooUser)) {
-                                activity.restartApp()
-                            }
-                        } else {
-                            activity.showMessage(
-                                    title = activity.getString(R.string.operation_failed),
-                                    message = activity.getString(R.string.manage_account_remove_error)
-                            )
+                onNext { t ->
+                    if (t) {
+                        removeRow(position)
+                        if (rowItems.size == 0 || (activeOdooUser != null && user == activeOdooUser)) {
+                            activity.restartApp()
                         }
-                    }
-
-                    onError { error ->
-                        error.printStackTrace()
+                    } else {
                         activity.showMessage(
-                                title = activity.getString(R.string.operation_failed),
-                                message = error.message
-                                        ?: activity.getString(R.string.generic_error)
+                            title = activity.getString(R.string.operation_failed),
+                            message = activity.getString(R.string.manage_account_remove_error)
                         )
                     }
                 }
+
+                onError { error ->
+                    error.printStackTrace()
+                    activity.showMessage(
+                        title = activity.getString(R.string.operation_failed),
+                        message = error.message
+                            ?: activity.getString(R.string.generic_error)
+                    )
+                }
+            }
     }
 }

@@ -83,7 +83,7 @@
     <!-- Network Connection Strings BEGIN -->
     <string name="network_alert_title">Conexión a Internet desactivada</string>
     <string name="network_alert_message">Activar conexión a internet</string>
-    <string name="create_account_error" translatable="false">%s no pudo crear una cuenta debido a %s. Por favor, cierre
+    <string name="create_account_error">%1$s no pudo crear una cuenta debido a %2$s. Por favor, cierre
         la sesión y vuelva a iniciar sesión
     </string>
     <string name="no_channel">No se ha encontrado ningún canal en el sistema.</string>

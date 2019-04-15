@@ -6,15 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
 import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.customer.entities.Customer
-import io.gripxtech.odoojsonrpcclient.databinding.FragmentCustomerBinding
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_customer.*
+import kotlinx.android.synthetic.main.fragment_customer.tb
 
-class CustomerFragment : androidx.fragment.app.Fragment() {
+class CustomerFragment : Fragment() {
 
     companion object {
 
@@ -35,7 +38,7 @@ class CustomerFragment : androidx.fragment.app.Fragment() {
     }
 
     lateinit var activity: MainActivity private set
-    lateinit var binding: FragmentCustomerBinding private set
+    lateinit var glideRequests: GlideRequests private set
     private var compositeDisposable: CompositeDisposable? = null
 
     private var customerType: CustomerType = CustomerType.Customer
@@ -56,36 +59,36 @@ class CustomerFragment : androidx.fragment.app.Fragment() {
         compositeDisposable = CompositeDisposable()
 
         // Inflate the layout for this fragment
-        binding = FragmentCustomerBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.fragment_customer, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity = getActivity() as MainActivity
+        glideRequests = GlideApp.with(this)
         arguments?.let {
             customerType = CustomerType.valueOf(it.getString(TYPE) ?: "")
         }
 
         // Hiding MainActivity's AppBarLayout as well as NestedScrollView first
-        activity.binding.abl.visibility = View.GONE
-        activity.binding.nsv.visibility = View.GONE
+        activity.abl.visibility = View.GONE
+        activity.nsv.visibility = View.GONE
 
         when (customerType) {
             CustomerType.Supplier -> {
-                activity.binding.nv.menu.findItem(R.id.nav_supplier).isChecked = true
+                activity.nv.menu.findItem(R.id.nav_supplier).isChecked = true
                 activity.setTitle(R.string.action_supplier)
             }
             CustomerType.Company -> {
-                activity.binding.nv.menu.findItem(R.id.nav_company).isChecked = true
+                activity.nv.menu.findItem(R.id.nav_company).isChecked = true
                 activity.setTitle(R.string.action_company)
             }
             else -> {
-                activity.binding.nv.menu.findItem(R.id.nav_customer).isChecked = true
+                activity.nv.menu.findItem(R.id.nav_customer).isChecked = true
                 activity.setTitle(R.string.action_customer)
             }
         }
-        activity.setSupportActionBar(binding.tb)
+        activity.setSupportActionBar(tb)
         val actionBar = activity.supportActionBar
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true)
@@ -93,24 +96,24 @@ class CustomerFragment : androidx.fragment.app.Fragment() {
         }
 
         drawerToggle = ActionBarDrawerToggle(
-            activity, activity.binding.dl,
-            binding.tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+            activity, activity.dl,
+            tb, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
-        activity.binding.dl.addDrawerListener(drawerToggle)
+        activity.dl.addDrawerListener(drawerToggle)
         drawerToggle.syncState()
 
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
             activity, RecyclerView.VERTICAL, false
         )
-        binding.rv.layoutManager = layoutManager
-        binding.rv.addItemDecoration(
+        rv.layoutManager = layoutManager
+        rv.addItemDecoration(
             androidx.recyclerview.widget.DividerItemDecoration(
                 activity,
                 androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
             )
         )
 
-        adapter.setupScrollListener(binding.rv)
+        adapter.setupScrollListener(rv)
 
         if (!adapter.hasRetryListener()) {
             adapter.retryListener {
@@ -118,14 +121,14 @@ class CustomerFragment : androidx.fragment.app.Fragment() {
             }
         }
 
-        binding.srl.setOnRefreshListener {
+        srl.setOnRefreshListener {
             adapter.clear()
             if (!adapter.hasMoreListener()) {
                 adapter.showMore()
                 fetchCustomer()
             }
-            binding.srl.post {
-                binding.srl.isRefreshing = false
+            srl.post {
+                srl.isRefreshing = false
             }
         }
 
@@ -134,7 +137,7 @@ class CustomerFragment : androidx.fragment.app.Fragment() {
             fetchCustomer()
         }
 
-        binding.rv.adapter = adapter
+        rv.adapter = adapter
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

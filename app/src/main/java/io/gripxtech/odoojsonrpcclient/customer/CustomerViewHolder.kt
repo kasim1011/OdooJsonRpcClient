@@ -1,8 +1,6 @@
 package io.gripxtech.odoojsonrpcclient.customer
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import io.gripxtech.odoojsonrpcclient.databinding.ItemViewCustomerBinding
 
-class CustomerViewHolder(
-        val binding: ItemViewCustomerBinding
-) : RecyclerView.ViewHolder(binding.root)
+class CustomerViewHolder(view: View) : RecyclerView.ViewHolder(view)

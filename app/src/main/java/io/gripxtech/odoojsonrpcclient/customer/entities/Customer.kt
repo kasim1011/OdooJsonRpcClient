@@ -1,15 +1,10 @@
 package io.gripxtech.odoojsonrpcclient.customer.entities
 
 import android.os.Parcelable
-import android.util.Base64
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import io.gripxtech.odoojsonrpcclient.App
-import io.gripxtech.odoojsonrpcclient.GlideApp
 import io.gripxtech.odoojsonrpcclient.core.utils.JsonElementParceler
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.TypeParceler
@@ -77,23 +72,6 @@ data class Customer(
 
 ) : Parcelable {
     companion object {
-        @JvmStatic
-        @BindingAdapter("image_small", "name")
-        fun loadImage(view: ImageView, imageSmall: String, name: String) {
-            GlideApp.with(view.context)
-                .asBitmap()
-                .load(
-                    if (imageSmall.isNotEmpty())
-                        Base64.decode(imageSmall, Base64.DEFAULT)
-                    else
-                        (view.context.applicationContext as App)
-                            .getLetterTile(if (name.isNotEmpty()) name else "X")
-                )
-                .dontAnimate()
-                .circleCrop()
-                .into(view)
-        }
-
         @JvmField
         val fieldsMap: Map<String, String> = mapOf(
             "id" to "id", "name" to "Name", "email" to "Email", "parent_name" to "Parent name",

@@ -2,16 +2,13 @@ package io.gripxtech.odoojsonrpcclient.core.authenticator
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.gripxtech.odoojsonrpcclient.App
-import io.gripxtech.odoojsonrpcclient.R
+import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.utils.BaseActivity
 import io.gripxtech.odoojsonrpcclient.core.utils.recycler.decorators.VerticalLinearItemDecorator
-import io.gripxtech.odoojsonrpcclient.databinding.ActivityManageAccountBinding
-import io.gripxtech.odoojsonrpcclient.getOdooUsers
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_manage_account.*
 
 class ManageAccountActivity : BaseActivity() {
 
@@ -22,22 +19,23 @@ class ManageAccountActivity : BaseActivity() {
     }
 
     lateinit var app: App private set
+    lateinit var glideRequests: GlideRequests
     var compositeDisposable: CompositeDisposable? = null
         private set
-    lateinit var binding: ActivityManageAccountBinding private set
     lateinit var adapter: ManageAccountAdapter private set
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         app = application as App
+        glideRequests = GlideApp.with(this)
         compositeDisposable?.dispose()
         compositeDisposable = CompositeDisposable()
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_manage_account)
+        setContentView(R.layout.activity_manage_account)
 
-        setSupportActionBar(binding.toolbar)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.toolbar.setNavigationOnClickListener {
+        toolbar.setNavigationOnClickListener {
             onBackPressed()
         }
 
@@ -45,13 +43,15 @@ class ManageAccountActivity : BaseActivity() {
         val layoutManager = LinearLayoutManager(
             this, RecyclerView.VERTICAL, false
         )
-        binding.rv.layoutManager = layoutManager
-        binding.rv.addItemDecoration(VerticalLinearItemDecorator(
+        rv.layoutManager = layoutManager
+        rv.addItemDecoration(
+            VerticalLinearItemDecorator(
                 resources.getDimensionPixelOffset(R.dimen.default_8dp)
-        ))
+            )
+        )
 
         adapter = ManageAccountAdapter(this, ArrayList(users))
-        binding.rv.adapter = adapter
+        rv.adapter = adapter
     }
 
     override fun onDestroy() {
