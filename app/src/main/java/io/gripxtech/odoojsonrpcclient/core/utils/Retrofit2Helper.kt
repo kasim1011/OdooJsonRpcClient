@@ -27,7 +27,7 @@ import javax.net.ssl.X509TrustManager
 
 
 class Retrofit2Helper(
-    _protocol: Retrofit2Helper.Companion.Protocol,
+    _protocol: Protocol,
     _host: String
 ) {
     companion object {
@@ -48,7 +48,7 @@ class Retrofit2Helper(
         lateinit var app: App
     }
 
-    var protocol: Retrofit2Helper.Companion.Protocol = _protocol
+    var protocol: Protocol = _protocol
         set(value) {
             field = value
             _retrofit = null
@@ -75,10 +75,10 @@ class Retrofit2Helper(
                 _retrofit = Retrofit.Builder()
                     .baseUrl(
                         when (protocol) {
-                            Retrofit2Helper.Companion.Protocol.HTTP -> {
+                            Companion.Protocol.HTTP -> {
                                 "http://"
                             }
-                            Retrofit2Helper.Companion.Protocol.HTTPS -> {
+                            Companion.Protocol.HTTPS -> {
                                 "https://"
                             }
                         } + host

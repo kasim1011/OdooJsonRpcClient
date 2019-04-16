@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import androidx.multidex.MultiDexApplication
 import io.gripxtech.odoojsonrpcclient.core.Odoo
+import io.gripxtech.odoojsonrpcclient.core.OdooDatabase
 import io.gripxtech.odoojsonrpcclient.core.utils.CookiePrefs
 import io.gripxtech.odoojsonrpcclient.core.utils.LetterTileProvider
 import io.gripxtech.odoojsonrpcclient.core.utils.LocaleHelper
@@ -41,6 +42,7 @@ class App : MultiDexApplication() {
         super.onCreate()
         Retrofit2Helper.app = this
         Odoo.app = this
+        OdooDatabase.app = this
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

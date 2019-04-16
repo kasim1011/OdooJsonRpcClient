@@ -91,6 +91,7 @@ object Odoo {
             field = value
             protocol = value.protocol
             host = value.host
+            OdooDatabase.database = null
         }
 
     @Suppress("PlatformExtensionReceiverOfInline")

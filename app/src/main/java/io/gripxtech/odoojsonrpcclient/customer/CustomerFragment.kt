@@ -11,11 +11,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.reflect.TypeToken
 import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
+import io.gripxtech.odoojsonrpcclient.core.OdooDatabase
+import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.gripxtech.odoojsonrpcclient.customer.entities.Customer
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_customer.*
 import kotlinx.android.synthetic.main.fragment_customer.tb
+import timber.log.Timber
 
 class CustomerFragment : Fragment() {
 
@@ -180,6 +186,7 @@ class CustomerFragment : Fragment() {
                         adapter.hideError()
                         adapter.hideMore()
                         val items: ArrayList<Customer> = gson.fromJson(searchRead.result.records, customerListType)
+                        // insertCustomers(items)
                         if (items.size < limit) {
                             adapter.removeMoreListener()
                             if (items.size == 0 && adapter.rowItemCount == 0) {
@@ -207,6 +214,49 @@ class CustomerFragment : Fragment() {
                 error.printStackTrace()
                 adapter.showError(error.message ?: getString(R.string.generic_error))
                 adapter.finishedMoreLoading()
+            }
+        }
+    }
+
+    private fun insertCustomers(items: ArrayList<Customer>) {
+        Single.fromCallable<List<Long>> {
+            OdooDatabase.database?.customerDao()?.insertCustomers(items)
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeEx {
+            onSubscribe { disposable ->
+                compositeDisposable?.add(disposable)
+            }
+
+            onSuccess { response ->
+                Timber.d("insertCustomers() > ...subscribeEx{...} > onSuccess{...} response: $response")
+                retrieveData()
+            }
+
+            onError { error ->
+                error.printStackTrace()
+                activity.showMessage(message = error.message)
+            }
+        }
+    }
+
+    private fun retrieveData() {
+        Single.fromCallable<List<Customer>> {
+            OdooDatabase.database?.customerDao()?.getCustomers()
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeEx {
+            onSubscribe { disposable ->
+                compositeDisposable?.add(disposable)
+            }
+
+            onSuccess { response ->
+                Timber.d("retrieveData() > ...subscribeEx{...} > onSuccess{...} response:")
+                val items = ArrayList(response)
+                for (item in items) {
+                    Timber.i("Item is $item")
+                }
+            }
+
+            onError { error ->
+                error.printStackTrace()
+                activity.showMessage(message = error.message)
             }
         }
     }
