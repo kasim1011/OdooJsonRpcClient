@@ -10,6 +10,7 @@ import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateResult
+import io.gripxtech.odoojsonrpcclient.core.persistence.SyncWorker
 import io.gripxtech.odoojsonrpcclient.core.utils.BaseActivity
 import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.subscribeEx
 import io.reactivex.Observable
@@ -38,6 +39,8 @@ class SplashActivity : BaseActivity() {
         app = application as App
         compositeDisposable?.dispose()
         compositeDisposable = CompositeDisposable()
+
+        SyncWorker.initWorkManager()
     }
 
     override fun onPostResume() {

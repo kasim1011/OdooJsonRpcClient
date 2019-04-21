@@ -94,24 +94,23 @@ object Odoo {
             OdooDatabase.database = null
         }
 
-    @Suppress("PlatformExtensionReceiverOfInline")
     fun fromAccount(manager: AccountManager, account: Account) = OdooUser(
         Retrofit2Helper.Companion.Protocol.valueOf(
-            manager.getUserData(account, "protocol")
+            manager.getUserData(account, "protocol") ?: Retrofit2Helper.Companion.Protocol.HTTP.name
         ),
-        manager.getUserData(account, "host"),
-        manager.getUserData(account, "login"),
-        manager.getUserData(account, "password").decryptAES(),
-        manager.getUserData(account, "database"),
-        manager.getUserData(account, "serverVersion"),
-        manager.getUserData(account, "isAdmin").toBoolean(),
-        manager.getUserData(account, "isSuperuser").toBoolean(),
-        manager.getUserData(account, "id").toInt(),
-        manager.getUserData(account, "name"),
-        manager.getUserData(account, "imageSmall"),
-        manager.getUserData(account, "partnerId").toInt(),
-        manager.getUserData(account, "context").toJsonObject(),
-        manager.getUserData(account, "active").toBoolean(),
+        manager.getUserData(account, "host") ?: "",
+        manager.getUserData(account, "login") ?: "",
+        manager.getUserData(account, "password")?.decryptAES() ?: "",
+        manager.getUserData(account, "database") ?: "",
+        manager.getUserData(account, "serverVersion") ?: "",
+        manager.getUserData(account, "isAdmin")?.toBoolean() ?: false,
+        manager.getUserData(account, "isSuperuser")?.toBoolean() ?: false,
+        manager.getUserData(account, "id")?.toInt() ?: 0,
+        manager.getUserData(account, "name") ?: "",
+        manager.getUserData(account, "imageSmall") ?: "",
+        manager.getUserData(account, "partnerId")?.toInt() ?: 0,
+        manager.getUserData(account, "context")?.toJsonObject() ?: JsonObject(),
+        manager.getUserData(account, "active")?.toBoolean() ?: false,
         account
     )
 

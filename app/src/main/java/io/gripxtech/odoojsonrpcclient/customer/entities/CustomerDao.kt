@@ -1,9 +1,6 @@
 package io.gripxtech.odoojsonrpcclient.customer.entities
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface CustomerDao {
@@ -16,4 +13,10 @@ interface CustomerDao {
 
     @Query("SELECT * FROM `res.partner`")
     fun getCustomers(): List<Customer>
+
+    @Update(onConflict = OnConflictStrategy.ABORT)
+    fun updateCustomer(customer: Customer): Int
+
+    @Delete
+    fun deleteCustomer(customer: Customer): Int
 }
