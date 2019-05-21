@@ -52,43 +52,63 @@ class Retrofit2Helper(
         set(value) {
             field = value
             _retrofit = null
+            _retrofitW = null
         }
 
     var host: String = _host
         set(value) {
             field = value
             _retrofit = null
+            _retrofitW = null
         }
 
     private var _retrofit: Retrofit? = null
+    private var _retrofitW: Retrofit? = null
 
     fun resetClient() {
         _retrofit = null
     }
 
+    fun resetClientW() {
+        _retrofitW = null
+    }
+
+    private fun retrofitBuilder(): Retrofit.Builder {
+        if (host.isEmpty()) {
+            host = app.getString(R.string.host_url)
+        }
+        return Retrofit.Builder()
+            .baseUrl(
+                when (protocol) {
+                    Companion.Protocol.HTTP -> {
+                        "http://"
+                    }
+                    Companion.Protocol.HTTPS -> {
+                        "https://"
+                    }
+                } + host
+            )
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+    }
+
     val retrofit: Retrofit
         get() {
             if (_retrofit == null) {
-                if (host.isEmpty()) {
-                    host = app.getString(R.string.host_url)
-                }
-                _retrofit = Retrofit.Builder()
-                    .baseUrl(
-                        when (protocol) {
-                            Companion.Protocol.HTTP -> {
-                                "http://"
-                            }
-                            Companion.Protocol.HTTPS -> {
-                                "https://"
-                            }
-                        } + host
-                    )
-                    .client(client)
+                _retrofit = retrofitBuilder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build()
             }
             return _retrofit!!
+        }
+
+    val retrofitW: Retrofit
+        get() {
+            if (_retrofitW == null) {
+                _retrofitW = retrofitBuilder()
+                    .build()
+            }
+            return _retrofitW!!
         }
 
     private val client: OkHttpClient

@@ -39,8 +39,6 @@ class SplashActivity : BaseActivity() {
         app = application as App
         compositeDisposable?.dispose()
         compositeDisposable = CompositeDisposable()
-
-        SyncWorker.initWorkManager()
     }
 
     override fun onPostResume() {
@@ -62,6 +60,7 @@ class SplashActivity : BaseActivity() {
                         val check = response.body()!!
                         if (check.isSuccessful) {
                             app.cookiePrefs.setCookies(Odoo.pendingAuthenticateCookies)
+                            SyncWorker.initWorkManager()
                             startMainActivity()
                         } else {
                             val odooError = check.odooError

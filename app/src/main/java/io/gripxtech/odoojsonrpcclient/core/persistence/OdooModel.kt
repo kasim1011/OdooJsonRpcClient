@@ -1,8 +1,5 @@
 package io.gripxtech.odoojsonrpcclient.core.persistence
 
-import timber.log.Timber
-import java.util.*
-
 interface OdooModel {
 
     companion object {
@@ -23,16 +20,4 @@ interface OdooModel {
     var localWriteDate: String
     var localDirty: Boolean
     var localActive: Boolean
-
-    fun getFields(): List<String> {
-        val fields = arrayListOf<String>()
-
-        val clazz = this::class.java
-        val declaredFields = clazz.declaredFields
-        for (declaredField in declaredFields) {
-            val annotations = declaredField.annotations
-            Timber.i("annotations: ${Arrays.toString(annotations)}")
-        }
-        return fields
-    }
 }

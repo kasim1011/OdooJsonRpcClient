@@ -58,6 +58,7 @@
 
 # Application classes that will be serialized/deserialized over Gson
 -keep class io.gripxtech.odoojsonrpcclient.core.entities.** { *; }
+-keep class io.gripxtech.odoojsonrpcclient.core.persistence.entities.** { *; }
 -keep interface io.gripxtech.odoojsonrpcclient.core.web.** { *; }
 -keep class io.gripxtech.odoojsonrpcclient.customer.entities.** { *; }
 

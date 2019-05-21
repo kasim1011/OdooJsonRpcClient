@@ -69,6 +69,7 @@ import io.gripxtech.odoojsonrpcclient.toJsonObject
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.Cookie
+import retrofit2.Call
 import retrofit2.Response
 
 object Odoo {
@@ -123,8 +124,15 @@ object Odoo {
         retrofit2Helper.resetClient()
     }
 
+    fun resetRetrofitClientW() {
+        retrofit2Helper.resetClientW()
+    }
+
     private val retrofit
         get() = retrofit2Helper.retrofit
+
+    private val retrofitW
+        get() = retrofit2Helper.retrofitW
 
     private var jsonRpcId: String = "0"
         get() {
@@ -231,6 +239,22 @@ object Odoo {
             .subscribe(ResponseObserver<GetSessionInfo>().apply(callback))
     }
 
+    private fun searchReadBuilder(
+        model: String,
+        fields: List<String>,
+        domain: List<Any>,
+        offset: Int,
+        limit: Int,
+        sort: String,
+        context: JsonObject
+    ): SearchReadReqBody {
+        return SearchReadReqBody(
+            id = jsonRpcId, params = SearchReadParams(
+                model, fields, domain, offset, limit, sort, context
+            )
+        )
+    }
+
     fun searchRead(
         model: String,
         fields: List<String> = listOf(),
@@ -242,15 +266,29 @@ object Odoo {
         callback: ResponseObserver<SearchRead>.() -> Unit
     ) {
         val request = retrofit.create(SearchReadRequest::class.java)
-        val requestBody = SearchReadReqBody(
-            id = jsonRpcId, params = SearchReadParams(
-                model, fields, domain, offset, limit, sort, context
-            )
+        val requestBody = searchReadBuilder(
+            model, fields, domain, offset, limit, sort, context
         )
         val observable = request.searchRead(requestBody)
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(ResponseObserver<SearchRead>().apply(callback))
+    }
+
+    fun searchReadW(
+        model: String,
+        fields: List<String> = listOf(),
+        domain: List<Any> = listOf(),
+        offset: Int = 0,
+        limit: Int = 0,
+        sort: String = "",
+        context: JsonObject = user.context
+    ): Call<SearchRead> {
+        val request = retrofitW.create(SearchReadRequest::class.java)
+        val requestBody = searchReadBuilder(
+            model, fields, domain, offset, limit, sort, context
+        )
+        return request.searchReadW(requestBody)
     }
 
     fun load(
@@ -793,6 +831,14 @@ object Odoo {
             callback = callback
         )
 
+    fun fieldsGetW(
+        models: List<String> = listOf(),
+        fields: List<String> = listOf()
+    ): Call<SearchRead> =
+        searchReadW(
+            "ir.model.fields", fields,
+            if (models.isNotEmpty()) listOf(listOf("model_id", "in", models)) else listOf()
+        )
 
     fun accessGet(
         model: String = "",

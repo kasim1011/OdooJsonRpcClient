@@ -10,6 +10,7 @@ import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateResult
 import io.gripxtech.odoojsonrpcclient.core.entities.webclient.versionInfo.VersionInfo
+import io.gripxtech.odoojsonrpcclient.core.persistence.SyncPrefs
 import io.gripxtech.odoojsonrpcclient.core.utils.BaseActivity
 import io.gripxtech.odoojsonrpcclient.core.utils.Retrofit2Helper
 import io.gripxtech.odoojsonrpcclient.core.utils.android.ktx.addTextChangedListenerEx
@@ -424,6 +425,7 @@ class LoginActivity : BaseActivity() {
                     if (authenticate.isSuccessful) {
                         val authenticateResult = authenticate.result
                         authenticateResult.password = password
+                        SyncPrefs(this@LoginActivity).clear()
                         searchReadUserInfo(authenticateResult = authenticateResult)
                     } else {
                         val errorMessage = authenticate.errorMessage
