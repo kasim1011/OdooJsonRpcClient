@@ -25,13 +25,10 @@ abstract class OdooDatabase : RoomDatabase() {
 
         lateinit var app: App
 
-        val dbName: String
-            get() = "${Odoo.user.androidName}.db"
-
         var database: OdooDatabase? = null
             get() {
                 if (field == null) {
-                    field = Room.databaseBuilder(app, OdooDatabase::class.java, dbName).build()
+                    field = Room.databaseBuilder(app, OdooDatabase::class.java, "${Odoo.user.androidName}.db").build()
                 }
                 return field
             }

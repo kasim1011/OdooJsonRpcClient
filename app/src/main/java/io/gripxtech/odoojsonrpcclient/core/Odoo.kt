@@ -833,12 +833,15 @@ object Odoo {
 
     fun fieldsGetW(
         models: List<String> = listOf(),
-        fields: List<String> = listOf()
-    ): Call<SearchRead> =
-        searchReadW(
+        fields: List<String> = listOf(),
+        modelFields: List<String> = listOf("id")
+    ): Call<SearchRead> {
+        if (modelFields.isEmpty()) throw IllegalArgumentException("modelFields must not blank, it should at least listOf(\"id\")")
+        return searchReadW(
             "ir.model.fields", fields,
-            if (models.isNotEmpty()) listOf(listOf("model_id", "in", models)) else listOf()
+            if (models.isNotEmpty()) listOf(listOf("model_id", "in", models), listOf("name", "in", modelFields)) else listOf()
         )
+    }
 
     fun accessGet(
         model: String = "",

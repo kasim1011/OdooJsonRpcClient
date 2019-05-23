@@ -14,6 +14,10 @@ data class Table(
     var sql: String = "",
 
     @Expose
+    @SerializedName("local_fields")
+    var localFields: List<LocalField> = listOf(),
+
+    @Expose
     @SerializedName("fields")
     var fields: List<Field> = listOf()
 
@@ -21,5 +25,8 @@ data class Table(
 
     val fieldsName: List<String>
         get() = fields.map { it.name }
+
+    val localFieldsName: List<String>
+        get() = localFields.map { it.name }
 
 }
