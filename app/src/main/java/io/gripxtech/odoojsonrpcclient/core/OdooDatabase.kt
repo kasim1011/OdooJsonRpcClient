@@ -6,14 +6,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import io.gripxtech.odoojsonrpcclient.App
 import io.gripxtech.odoojsonrpcclient.core.persistence.AppTypeConverters
-import io.gripxtech.odoojsonrpcclient.customer.entities.Customer
-import io.gripxtech.odoojsonrpcclient.customer.entities.CustomerDao
+import io.gripxtech.odoojsonrpcclient.customer.entities.*
 
 @Database(
     entities = [
         /* Add Room Entities here: BEGIN */
 
-        Customer::class // res.partner
+        Customer::class, // res.partner
+        Country::class, // res.partner
+        State::class // res.partner
 
         /* Add Room Entities here: END */
     ], version = 1, exportSchema = true
@@ -37,6 +38,8 @@ abstract class OdooDatabase : RoomDatabase() {
     /* Add Room DAO(s) here: BEGIN */
 
     abstract fun customerDao(): CustomerDao
+    abstract fun countryDao(): CountryDao
+    abstract fun stateDao(): StateDao
 
     /* Add Room DAO(s) here: END */
 }

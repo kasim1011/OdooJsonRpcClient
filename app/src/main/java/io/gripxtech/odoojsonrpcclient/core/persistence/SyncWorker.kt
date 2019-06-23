@@ -30,6 +30,10 @@ class SyncWorker(
         private const val uniqueWorkName = "${BuildConfig.APPLICATION_ID}.core.persistence.sync_worker"
         private const val KeyCause = "cause"
 
+        private const val OneToMany = "one2many"
+        private const val ManyToMany = "many2many"
+        private const val ManyToOne = "many2one"
+
         fun initWorkManager() {
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -98,17 +102,10 @@ class SyncWorker(
         )
     }
 
-    // TODO("See what Local records are missing on Remote")
-
-    // TODO("See what Remote records are missing on Local")
-
-    // TODO("Updating remote records")
-
-    // TODO("Updating local records")
     override fun doWork(): Result {
         val context = applicationContext
         val genericError = context.getString(R.string.generic_error)
-        val tag = "$TAG::doWork"
+//        val tag = "$TAG::doWork"
 
         if (context.getOdooUsers().isEmpty()) {
             return Result.success(Data.Builder().build())
@@ -205,7 +202,45 @@ class SyncWorker(
             }
         }
 
-        // TODO("Prioritize the table and find out missing table's if any")
+        val missingModels = ArrayList<String>()
+        val tableNames = tables.map { it.name }
+        for (i in 0 until tables.size) {
+            val table = tables[i]
+            table.fields.filter {
+                it.ttype in listOf(OneToMany, ManyToMany, ManyToOne)
+            }.forEach {
+                val relationTableName = it.relation
+                if (relationTableName !in tableNames) {
+                    missingModels += "Model $relationTableName is not found but, it is referenced by field ${it.name} of ${table.name} model"
+                } else {
+                    val relationTable = tables.find { it.name == relationTableName }
+                    if (relationTable != null) {
+                        table dependsOn relationTable
+                    }
+                }
+            }
+        }
+        if (missingModels.isNotEmpty()) {
+            val causeBuilder = StringBuilder()
+            missingModels.forEach {
+                causeBuilder.append(it)
+                causeBuilder.append('\n')
+            }
+            return failure(causeBuilder.toString())
+        }
+
+        for (i in 0 until tables.size) {
+            val table = tables[i]
+            table.dependencyTree.addAll(table.calculateDependencyTree())
+        }
+
+        val sortedTables = tables.sorted()
+        for (i in 0 until sortedTables.size) {
+            val table = sortedTables[i]
+            table.syncOrder = i
+            table.dependencies = arrayListOf()
+            table.dependencyTree = arrayListOf()
+        }
 
         return Result.success(Data.Builder().build())
     }

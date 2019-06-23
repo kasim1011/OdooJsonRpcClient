@@ -8,6 +8,7 @@ import android.text.Html
 import androidx.core.app.ActivityCompat
 import io.gripxtech.odoojsonrpcclient.*
 import io.gripxtech.odoojsonrpcclient.core.Odoo
+import io.gripxtech.odoojsonrpcclient.core.OdooDatabase
 import io.gripxtech.odoojsonrpcclient.core.OdooUser
 import io.gripxtech.odoojsonrpcclient.core.entities.session.authenticate.AuthenticateResult
 import io.gripxtech.odoojsonrpcclient.core.persistence.SyncWorker
@@ -60,7 +61,6 @@ class SplashActivity : BaseActivity() {
                         val check = response.body()!!
                         if (check.isSuccessful) {
                             app.cookiePrefs.setCookies(Odoo.pendingAuthenticateCookies)
-                            SyncWorker.initWorkManager()
                             startMainActivity()
                         } else {
                             val odooError = check.odooError
@@ -101,7 +101,7 @@ class SplashActivity : BaseActivity() {
                         }
                     } else {
                         val errorBody = response.errorBody()?.string()
-                                ?: getString(R.string.generic_error)
+                            ?: getString(R.string.generic_error)
                         @Suppress("DEPRECATION")
                         val message: CharSequence = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                             Html.fromHtml(errorBody, Html.FROM_HTML_MODE_COMPACT)
@@ -109,17 +109,17 @@ class SplashActivity : BaseActivity() {
                             Html.fromHtml(errorBody)
 
                         showMessage(
-                                title = getString(R.string.server_request_error, response.code(), response.message()),
-                                message = message,
+                            title = getString(R.string.server_request_error, response.code(), response.message()),
+                            message = message,
                             positiveButton = getString(R.string.login_again),
-                                positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
-                                    authenticate(user)
-                                },
-                                showNegativeButton = true,
-                                negativeButton = getString(R.string.quit),
-                                negativeButtonListener = DialogInterface.OnClickListener { _, _ ->
-                                    ActivityCompat.finishAffinity(this@SplashActivity)
-                                },
+                            positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
+                                authenticate(user)
+                            },
+                            showNegativeButton = true,
+                            negativeButton = getString(R.string.quit),
+                            negativeButtonListener = DialogInterface.OnClickListener { _, _ ->
+                                ActivityCompat.finishAffinity(this@SplashActivity)
+                            },
                             showNeutralButton = true,
                             neutralButton = getString(R.string.preference_logout_title),
                             neutralButtonListener = DialogInterface.OnClickListener { _, _ ->
@@ -131,10 +131,10 @@ class SplashActivity : BaseActivity() {
 
                 onError { error ->
                     showMessage(title = getString(R.string.operation_failed),
-                            message = error.message,
-                            positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
-                                ActivityCompat.finishAffinity(this@SplashActivity)
-                            })
+                        message = error.message,
+                        positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
+                            ActivityCompat.finishAffinity(this@SplashActivity)
+                        })
                 }
             }
         } else {
@@ -182,10 +182,10 @@ class SplashActivity : BaseActivity() {
 
             onError { error ->
                 showMessage(title = getString(R.string.operation_failed),
-                        message = error.message,
-                        positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
-                            ActivityCompat.finishAffinity(this@SplashActivity)
-                        })
+                    message = error.message,
+                    positiveButtonListener = DialogInterface.OnClickListener { _, _ ->
+                        ActivityCompat.finishAffinity(this@SplashActivity)
+                    })
             }
         }
     }
@@ -206,27 +206,27 @@ class SplashActivity : BaseActivity() {
                 false
             }
         }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeEx {
-                    onSubscribe {
-                        // Must be complete, not dispose in between
-                        // compositeDisposable.add(d)
-                    }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeEx {
+                onSubscribe {
+                    // Must be complete, not dispose in between
+                    // compositeDisposable.add(d)
+                }
 
-                    onNext { t: Boolean ->
-                        if (t) {
-                            restartApp()
-                        } else {
-                            closeApp()
-                        }
-                    }
-
-                    onError { error: Throwable ->
-                        error.printStackTrace()
-                        closeApp(message = error.message ?: getString(R.string.generic_error))
+                onNext { t: Boolean ->
+                    if (t) {
+                        restartApp()
+                    } else {
+                        closeApp()
                     }
                 }
+
+                onError { error: Throwable ->
+                    error.printStackTrace()
+                    closeApp(message = error.message ?: getString(R.string.generic_error))
+                }
+            }
     }
 
     private fun startLoginActivity() {
@@ -235,8 +235,33 @@ class SplashActivity : BaseActivity() {
     }
 
     private fun startMainActivity() {
-        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-        finish()
+        Single.fromCallable {
+            OdooDatabase.database?.let {
+                // it.stateDao().getCount()
+                it.countryDao().getCount()
+                // it.customerDao().getCount()
+                Unit
+            }
+            Unit
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeEx {
+                onSubscribe {
+                    // Must be complete, not dispose in between
+                    // compositeDisposable.add(d)
+                }
+
+                onSuccess {
+                    SyncWorker.initWorkManager()
+                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    finish()
+                }
+
+                onError { error ->
+                    error.printStackTrace()
+                    closeApp(message = error.message ?: getString(R.string.generic_error))
+                }
+            }
     }
 
     override fun onDestroy() {

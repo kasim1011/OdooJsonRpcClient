@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "85a15101c0417431f00a4c319c1eb510",
+    "identityHash": "a572c7995a06da32802fd36ab1acc4f0",
     "entities": [
       {
         "tableName": "res.partner",
@@ -138,11 +138,137 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "res.country",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`_id`, `id`))",
+        "fields": [
+          {
+            "fieldPath": "localId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createDate",
+            "columnName": "create_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "writeDate",
+            "columnName": "write_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localWriteDate",
+            "columnName": "_write_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localDirty",
+            "columnName": "_dirty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localActive",
+            "columnName": "_active",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id",
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "res.country.state",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`_id`, `id`))",
+        "fields": [
+          {
+            "fieldPath": "localId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createDate",
+            "columnName": "create_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "writeDate",
+            "columnName": "write_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localWriteDate",
+            "columnName": "_write_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localDirty",
+            "columnName": "_dirty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localActive",
+            "columnName": "_active",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id",
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"85a15101c0417431f00a4c319c1eb510\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a572c7995a06da32802fd36ab1acc4f0\")"
     ]
   }
 }
