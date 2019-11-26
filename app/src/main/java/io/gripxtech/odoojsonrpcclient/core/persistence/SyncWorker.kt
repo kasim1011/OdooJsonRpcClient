@@ -34,7 +34,7 @@ class SyncWorker(
         private const val ManyToMany = "many2many"
         private const val ManyToOne = "many2one"
 
-        fun initWorkManager() {
+        fun initWorkManager(context: Context) {
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .apply {
@@ -56,13 +56,13 @@ class SyncWorker(
                 .addTag(TAG)
                 .build()
 
-            WorkManager.getInstance().enqueueUniquePeriodicWork(
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 uniqueWorkName,
                 if (BuildConfig.DEBUG) ExistingPeriodicWorkPolicy.REPLACE else ExistingPeriodicWorkPolicy.KEEP,
                 backgroundRequest
             )
 
-            WorkManager.getInstance()
+            WorkManager.getInstance(context)
                 .getWorkInfosForUniqueWorkLiveData(uniqueWorkName)
                 .observeForever { workInfoList: MutableList<WorkInfo>? ->
                     if (workInfoList != null) {
@@ -119,15 +119,22 @@ class SyncWorker(
         val cursor = db.query(
             "SELECT name, sql FROM sqlite_master WHERE type = 'table' AND name != 'android_metadata' AND name != 'room_master_table'",
             null
-        ) ?: return failure("null cursor returned by query on sqlite_master")
+        )
 
         val data = JsonArray()
         while (cursor.moveToNext()) {
             val row = JsonObject()
             for (i in 0 until cursor.columnCount) {
-                row.addProperty(cursor.getColumnName(i), cursor.getString(i))
+                val columnName = cursor.getColumnName(i)
+                val value = cursor.getString(i)
+                if (columnName == "name" && value.startsWith("sqlite_")) {
+                    break
+                }
+                row.addProperty(columnName, value)
             }
-            data.add(row)
+            if (row.has("name")) {
+                data.add(row)
+            }
         }
         cursor.close()
 
@@ -136,10 +143,9 @@ class SyncWorker(
             return failure("no record found in query result on table name sqlite_master")
         }
 
-        for (i in 0 until tables.size) {
+        for (i in tables.indices) {
             val table = tables[i]
             val tableCursor = db.query("PRAGMA table_info('${table.name}')", null)
-                ?: return failure("null cursor returned by query on PRAGMA table_info('${table.name}')")
 
             val tableData = JsonArray()
             while (tableCursor.moveToNext()) {
@@ -195,7 +201,7 @@ class SyncWorker(
             return failure("no fields found")
         }
 
-        for (i in 0 until tables.size) {
+        for (i in tables.indices) {
             val table = tables[i]
             table.fields = fields.filter {
                 it.model == table.name
@@ -204,7 +210,7 @@ class SyncWorker(
 
         val missingModels = ArrayList<String>()
         val tableNames = tables.map { it.name }
-        for (i in 0 until tables.size) {
+        for (i in tables.indices) {
             val table = tables[i]
             table.fields.filter {
                 it.ttype in listOf(OneToMany, ManyToMany, ManyToOne)
@@ -213,7 +219,7 @@ class SyncWorker(
                 if (relationTableName !in tableNames) {
                     missingModels += "Model $relationTableName is not found but, it is referenced by field ${it.name} of ${table.name} model"
                 } else {
-                    val relationTable = tables.find { it.name == relationTableName }
+                    val relationTable = tables.find { table -> table.name == relationTableName }
                     if (relationTable != null) {
                         table dependsOn relationTable
                     }
@@ -229,17 +235,22 @@ class SyncWorker(
             return failure(causeBuilder.toString())
         }
 
-        for (i in 0 until tables.size) {
+        for (i in tables.indices) {
             val table = tables[i]
             table.dependencyTree.addAll(table.calculateDependencyTree())
         }
 
         val sortedTables = tables.sorted()
-        for (i in 0 until sortedTables.size) {
+        for (i in sortedTables.indices) {
             val table = sortedTables[i]
             table.syncOrder = i
             table.dependencies = arrayListOf()
             table.dependencyTree = arrayListOf()
+        }
+
+        for (i in sortedTables.indices) {
+            val table = sortedTables[i]
+            Timber.i("table is $table")
         }
 
         return Result.success(Data.Builder().build())

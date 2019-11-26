@@ -40,13 +40,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         activity = getActivity() as SettingsActivity
         addPreferencesFromResource(R.xml.preferences)
 
-        build = findPreference(getString(R.string.preference_build_key))
-        language = findPreference(getString(R.string.preference_language_key)) as ListPreference
-        logfile = findPreference(getString(R.string.preference_logfile_key))
-        organization = findPreference(getString(R.string.preference_organization_key))
-        privacy = findPreference(getString(R.string.preference_privacy_policy_key))
-        contact = findPreference(getString(R.string.preference_contact_key))
-        logout = findPreference(getString(R.string.preference_logout_key))
+        build = findPreference(getString(R.string.preference_build_key)) ?: return
+        language =
+            findPreference(getString(R.string.preference_language_key)) as? ListPreference ?: return
+        logfile = findPreference(getString(R.string.preference_logfile_key)) ?: return
+        organization = findPreference(getString(R.string.preference_organization_key)) ?: return
+        privacy = findPreference(getString(R.string.preference_privacy_policy_key)) ?: return
+        contact = findPreference(getString(R.string.preference_contact_key)) ?: return
+        logout = findPreference(getString(R.string.preference_logout_key)) ?: return
 
         build.summary = getString(R.string.preference_build_summary, BuildConfig.VERSION_NAME)
 
@@ -75,7 +76,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 Intent.createChooser(
                     Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
-                        putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.preference_contact_summary)))
+                        putExtra(
+                            Intent.EXTRA_EMAIL,
+                            arrayOf(getString(R.string.preference_contact_summary))
+                        )
                         putExtra(
                             Intent.EXTRA_SUBJECT,
                             "Contact by ${getString(R.string.app_name)} user: ${activity.getActiveOdooUser()?.name
@@ -153,7 +157,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun emailIntent(address: Array<String>, cc: Array<String>, subject: String, body: String): Intent {
+    private fun emailIntent(
+        address: Array<String>,
+        cc: Array<String>,
+        subject: String, @Suppress("SameParameterValue") body: String
+    ): Intent {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("mailto:"))
         intent.putExtra(Intent.EXTRA_EMAIL, address)
         intent.putExtra(Intent.EXTRA_CC, cc)

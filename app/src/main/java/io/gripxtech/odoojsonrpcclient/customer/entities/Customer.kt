@@ -13,35 +13,8 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.android.parcel.TypeParceler
 
 @Parcelize
-@Entity(tableName = "res.partner", primaryKeys = [OdooModel.LocalId, OdooModel.Id])
-data class Customer(
-
-    @ColumnInfo(name = OdooModel.LocalId)
-    override var localId: Long = 0,
-
-    @Expose
-    @SerializedName(OdooModel.Id)
-    @ColumnInfo(name = OdooModel.Id)
-    override var id: Long = 0,
-
-    @Expose
-    @SerializedName(OdooModel.CreateDate)
-    @ColumnInfo(name = OdooModel.CreateDate)
-    override var createDate: String = "false",
-
-    @Expose
-    @SerializedName(OdooModel.WriteDate)
-    @ColumnInfo(name = OdooModel.WriteDate)
-    override var writeDate: String = "false",
-
-    @ColumnInfo(name = OdooModel.LocalWriteDate)
-    override var localWriteDate: String = "false",
-
-    @ColumnInfo(name = OdooModel.LocalDirty)
-    override var localDirty: Boolean = false,
-
-    @ColumnInfo(name = OdooModel.LocalActive)
-    override var localActive: Boolean = false,
+@Entity(tableName = "res.partner")
+class Customer(
 
     @Expose
     @SerializedName("name")
@@ -110,11 +83,11 @@ data class Customer(
     @ColumnInfo(name = "is_company")
     var isCompany: Boolean = false
 
-) : OdooModel, Parcelable {
+) : OdooModel(), Parcelable {
     companion object {
         @JvmField
         val fieldsMap: Map<String, String> = mapOf(
-            OdooModel.Id to "id", OdooModel.CreateDate to "Created On", OdooModel.WriteDate to "Last Updated On",
+            Id to "id", CreateDate to "Created On", WriteDate to "Last Updated On",
             "name" to "Name", "email" to "Email", "parent_name" to "Parent name", "company_name" to "Company Name",
             "image_small" to "Image", "website" to "Website", "phone" to "Phone Number", "mobile" to "Mobile Number",
             /* "full_address" to "Full Address",*/"state_id" to "State", "country_id" to "Country",

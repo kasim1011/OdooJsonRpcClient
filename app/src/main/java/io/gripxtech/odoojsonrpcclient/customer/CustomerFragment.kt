@@ -123,7 +123,7 @@ class CustomerFragment : Fragment() {
 
         if (!adapter.hasRetryListener()) {
             adapter.retryListener {
-                fetchCustomer()
+                // fetchCustomer()
             }
         }
 
@@ -131,7 +131,7 @@ class CustomerFragment : Fragment() {
             adapter.clear()
             if (!adapter.hasMoreListener()) {
                 adapter.showMore()
-                fetchCustomer()
+                // fetchCustomer()
             }
             srl.post {
                 srl.isRefreshing = false
@@ -140,7 +140,7 @@ class CustomerFragment : Fragment() {
 
         if (adapter.rowItemCount == 0) {
             adapter.showMore()
-            fetchCustomer()
+            // fetchCustomer()
         }
 
         rv.adapter = adapter

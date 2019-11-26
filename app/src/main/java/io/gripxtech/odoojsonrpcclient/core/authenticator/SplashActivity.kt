@@ -252,7 +252,7 @@ class SplashActivity : BaseActivity() {
                 }
 
                 onSuccess {
-                    SyncWorker.initWorkManager()
+                    SyncWorker.initWorkManager(this@SplashActivity)
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                     finish()
                 }

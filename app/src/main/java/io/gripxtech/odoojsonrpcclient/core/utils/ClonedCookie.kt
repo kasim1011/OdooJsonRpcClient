@@ -49,11 +49,11 @@ data class ClonedCookie(
     companion object {
 
         fun fromCookie(cookie: Cookie) = ClonedCookie(
-                cookie.name(), cookie.value(),
-                cookie.domain(), cookie.path(),
-                cookie.expiresAt(), cookie.secure(),
-                cookie.httpOnly(), cookie.persistent(),
-                cookie.hostOnly()
+            cookie.name, cookie.value,
+            cookie.domain, cookie.path,
+            cookie.expiresAt, cookie.secure,
+            cookie.httpOnly, cookie.persistent,
+            cookie.hostOnly
         )
     }
 

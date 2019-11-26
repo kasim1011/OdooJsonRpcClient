@@ -9,7 +9,7 @@ import io.gripxtech.odoojsonrpcclient.setCookies
 import okhttp3.Cookie
 import timber.log.Timber
 
-class CookiePrefs(context: Context) : Prefs(CookiePrefs.TAG, context) {
+class CookiePrefs(context: Context) : Prefs(TAG, context) {
 
     companion object {
         const val TAG = "CookiePrefs"

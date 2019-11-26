@@ -2,54 +2,12 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a572c7995a06da32802fd36ab1acc4f0",
+    "identityHash": "2af1352c41680dbe3543a6a1d12d3c3b",
     "entities": [
       {
         "tableName": "res.partner",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL, `name` TEXT NOT NULL, `email` TEXT NOT NULL, `company_name` TEXT NOT NULL, `parent_name` TEXT NOT NULL, `image_small` TEXT NOT NULL, `website` TEXT NOT NULL, `phone` TEXT NOT NULL, `mobile` TEXT NOT NULL, `full_address` TEXT NOT NULL, `state_id` TEXT NOT NULL, `country_id` TEXT NOT NULL, `comment` TEXT NOT NULL, `is_company` INTEGER NOT NULL, PRIMARY KEY(`_id`, `id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `email` TEXT NOT NULL, `company_name` TEXT NOT NULL, `parent_name` TEXT NOT NULL, `image_small` TEXT NOT NULL, `website` TEXT NOT NULL, `phone` TEXT NOT NULL, `mobile` TEXT NOT NULL, `full_address` TEXT NOT NULL, `state_id` TEXT NOT NULL, `country_id` TEXT NOT NULL, `comment` TEXT NOT NULL, `is_company` INTEGER NOT NULL, `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL)",
         "fields": [
-          {
-            "fieldPath": "localId",
-            "columnName": "_id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "createDate",
-            "columnName": "create_date",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "writeDate",
-            "columnName": "write_date",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "localWriteDate",
-            "columnName": "_write_date",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "localDirty",
-            "columnName": "_dirty",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "localActive",
-            "columnName": "_active",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
           {
             "fieldPath": "name",
             "columnName": "name",
@@ -127,22 +85,69 @@
             "columnName": "is_company",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "localId",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createDate",
+            "columnName": "create_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "writeDate",
+            "columnName": "write_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localWriteDate",
+            "columnName": "_write_date",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localDirty",
+            "columnName": "_dirty",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localActive",
+            "columnName": "_active",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "_id",
-            "id"
+            "_id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "res.country",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`_id`, `id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL)",
         "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "localId",
             "columnName": "_id",
@@ -184,28 +189,27 @@
             "columnName": "_active",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "_id",
-            "id"
+            "_id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "res.country.state",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`_id`, `id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `id` INTEGER NOT NULL, `create_date` TEXT NOT NULL, `write_date` TEXT NOT NULL, `_write_date` TEXT NOT NULL, `_dirty` INTEGER NOT NULL, `_active` INTEGER NOT NULL)",
         "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
           {
             "fieldPath": "localId",
             "columnName": "_id",
@@ -247,28 +251,22 @@
             "columnName": "_active",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "_id",
-            "id"
+            "_id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
         "indices": [],
         "foreignKeys": []
       }
     ],
+    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"a572c7995a06da32802fd36ab1acc4f0\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2af1352c41680dbe3543a6a1d12d3c3b')"
     ]
   }
 }

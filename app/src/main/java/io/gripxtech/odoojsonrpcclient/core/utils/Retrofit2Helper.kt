@@ -21,6 +21,7 @@ import java.io.File
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import java.util.*
+import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
@@ -116,18 +117,19 @@ class Retrofit2Helper(
             .newBuilder()
             .cookieJar(object : CookieJar {
 
-                private var cookies: MutableList<Cookie>? = Retrofit2Helper.app.cookiePrefs.getCookies()
+                private var cookies: List<Cookie> =
+                    app.cookiePrefs.getCookies()
 
-                override fun saveFromResponse(url: HttpUrl?, cookies: MutableList<Cookie>?) {
-                    if (cookies != null && cookies.isNotEmpty()) {
+                override fun loadForRequest(url: HttpUrl): List<Cookie> = cookies
+
+                override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+                    if (cookies.isNotEmpty()) {
                         this.cookies = cookies
                         Odoo.pendingAuthenticateCookies.clear()
                         Odoo.pendingAuthenticateCookies.addAll(cookies)
                     }
                 }
 
-                override fun loadForRequest(url: HttpUrl?): MutableList<Cookie>? =
-                    cookies
             })
             .addInterceptor { chain: Interceptor.Chain? ->
                 writeFile(dateStamp, Context.MODE_PRIVATE)
@@ -135,17 +137,19 @@ class Retrofit2Helper(
 
                 val request = original.newBuilder()
                     .header("User-Agent", android.os.Build.MODEL)
-                    .method(original.method(), original.body())
+                    .method(original.method, original.body)
                     .build()
 
                 chain.proceed(request).also {
                     writeFile(dateStamp, Context.MODE_APPEND)
                 }
             }
-            .addInterceptor(HttpLoggingInterceptor {
-                Timber.tag("OkHttp").d(it)
-                writeFile("$it\n", Context.MODE_APPEND)
-            }.apply {
+            .addInterceptor(HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+                override fun log(message: String) {
+                    Timber.tag("OkHttp").d(message)
+                    writeFile("$message\n", Context.MODE_APPEND)
+                }
+            }).apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
             .apply {
@@ -157,9 +161,11 @@ class Retrofit2Helper(
 
     private fun unsafeCert(builder: OkHttpClient.Builder) {
         val trustManagers = arrayOf<TrustManager>(object : X509TrustManager {
-            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit
+            override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) =
+                Unit
 
-            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) = Unit
+            override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) =
+                Unit
 
             override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
 
@@ -170,7 +176,7 @@ class Retrofit2Helper(
         }.socketFactory
 
         builder.sslSocketFactory(sslSocketFactory, trustManagers[0] as X509TrustManager)
-        builder.hostnameVerifier { _, _ -> true }
+        builder.hostnameVerifier(HostnameVerifier { _, _ -> true })
     }
 
     private val dateStamp: String

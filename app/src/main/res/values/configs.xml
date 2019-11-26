@@ -26,8 +26,10 @@
     <string-array name="supported_odoo_versions">
         <item>10</item>
         <item>11</item>
+        <item>saas~11</item>
         <item>12</item>
         <item>saas~12</item>
+        <item>13</item>
     </string-array>
 
     <!-- organization name -->

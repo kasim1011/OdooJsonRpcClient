@@ -1,7 +1,41 @@
 package io.gripxtech.odoojsonrpcclient.core.persistence
 
-interface OdooModel {
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
+abstract class OdooModel(
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = LocalId)
+    var localId: Long = 0,
+
+    @Expose
+    @SerializedName(Id)
+    @ColumnInfo(name = Id)
+    var id: Long = 0,
+
+    @Expose
+    @SerializedName(CreateDate)
+    @ColumnInfo(name = CreateDate)
+    var createDate: String = "false",
+
+    @Expose
+    @SerializedName(WriteDate)
+    @ColumnInfo(name = WriteDate)
+    var writeDate: String = "false",
+
+    @ColumnInfo(name = LocalWriteDate)
+    var localWriteDate: String = "false",
+
+    @ColumnInfo(name = LocalDirty)
+    var localDirty: Boolean = false,
+
+    @ColumnInfo(name = LocalActive)
+    var localActive: Boolean = false
+
+) {
     companion object {
         const val LocalId = "_id"
         const val Id = "id"
@@ -11,13 +45,4 @@ interface OdooModel {
         const val LocalDirty = "_dirty"
         const val LocalActive = "_active"
     }
-
-    // Following properties must override in constructor
-    var localId: Long
-    var id: Long
-    var createDate: String
-    var writeDate: String
-    var localWriteDate: String
-    var localDirty: Boolean
-    var localActive: Boolean
 }
